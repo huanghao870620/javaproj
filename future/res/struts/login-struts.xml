@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+ <package name="struts-login" extends="custom-default">
+    
+    <interceptors>
+      <interceptor name="loginInterceptor" class="com.ld.interceptor.BackLoginInterceptor"/>
+      
+      <interceptor-stack name="loginStack">
+        <interceptor-ref name="loginInterceptor"/>
+        <interceptor-ref name="defaultStack"/>
+      </interceptor-stack>
+      
+    </interceptors>
+    
+    
+     
+ <!-- <default-interceptor-ref name="loginStack"/> -->
+     
+     <global-results>
+       <result name="noLogin" type="redirect">
+         /login/toLogin.htm
+       </result>
+      
+     </global-results>
+ </package>
+ 
+ 
+ <package name="struts-front-login" extends="custom-default">
+   <interceptors>
+     <interceptor name="frontLoginInterceptor" class="com.ld.interceptor.FrontLoginInterceptor"/>
+     <interceptor-stack name="frontLoginStack">
+       <interceptor-ref name="frontLoginInterceptor"/>
+       <interceptor-ref name="defaultStack"/>
+     </interceptor-stack>
+   </interceptors>
+ 
+ 
+  <global-results>
+    <result name="noLogin" type="redirect">
+      /login/toLogin.htm
+    </result>
+  </global-results>
+ 
+ </package>
+
+</struts>

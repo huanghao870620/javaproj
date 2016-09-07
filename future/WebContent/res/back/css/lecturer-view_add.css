@@ -1,0 +1,24 @@
+@charset "utf-8";
+/* CSS Document */
+body{ overflow-y:auto;}
+.contain_main{height:auto;}
+.choose_con .cho2 .con p{ display:block; height:35px; width:160px; border:1px solid #ccc; margin:5px 0 0 20px; line-height:35px; padding-left:10px;}
+.choose_con .cho2 .con span{line-height: 50px; font-size: 12px; color: #1977df; margin-left: 10px;}
+.choose_con .cho2 .con .laydate-icon{ display:block; width:160px; float:left; background:url(../images/mark-calendar.png) no-repeat 155px center; height:38px; margin-top:5px;}
+.choose_con .cho2 .con .view{width:478px;}
+.choose_con .cho2 .con b,.choose_con .cho2 .con i{ display:block; float:left;}
+.choose_con .cho2 .con i{ margin:7px 20px;}
+.choose_con .cho2 .con i img{ display:block; float:left;}
+.choose_con .cho2 .con i .early ,.choose_con .cho2 .con i .earlyred{ display:block; padding:7px; border:1px solid #1977df; margin-right:10px;}
+.choose_con .cho2 .con i .earlyred{ border:1px solid #df1919;}
+.choose_con .cho3 .con i{ padding-left:15px;}
+.choose_con .cho3 .con b{ display:block; float:left;}
+.choose_con .cho3 .con b input ,.con textarea{width:110px; height:36px;line-height:36px; margin-top:6px; padding-left:10px; margin:0; margin:6px 10px 0;}
+.choose_con .cho3 .con i ,.choose_con .cho3 .con input ,.con textarea{ display:block; float:left;}
+.choose_con .cho3 .con p{ display:block; line-height:50px; color:#1977df; font-size:12px;}
+.con em{ float:left; line-height:50px; font-style:normal;}
+.con textarea{width:488px; height:30px; border:1px solid #909090; text-align:left; margin-left:20px; resize:none; overflow:auto; line-height:30px; font-size:14px;padding-left:10px;}
+
+.file-up{position: relative;display: inline-block;background: #D0EEFF!important;border: 1px solid #99D3F5;border-radius: 4px;padding: 4px 12px;overflow: hidden;color: #1E88C7;text-decoration: none;text-indent: 0;line-height: 20px;}
+.file-up input {position: absolute;font-size: 100px;right: 0;top: 0;opacity: 0;filter: alpha(opacity=0);}
+.file-up:hover {background: #AADFFD;border-color: #78C3F3;color: #004974;text-decoration: none;}

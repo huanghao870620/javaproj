@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.CourseWareMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.CourseWare" >
+    <id column="COURSEWARE_ID" property="courseWareId" jdbcType="DECIMAL" />
+    <result column="CFILE_ID" property="cfileId" jdbcType="DECIMAL" />
+    <result column="COURSE_NAME" property="courseName" jdbcType="VARCHAR" />
+    <result column="LINK_ADDRESS" property="linkAddress" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="COURSEWARE_TYPE" property="courseWareType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "COURSEWARE_ID" as courseWareId, "CFILE_ID" as cfileId, "COURSE_NAME" as courseName,  "LINK_ADDRESS" as linkAddress,  
+    "CREATE_TIME" as createTime, "UPDATE_TIME" as updateTime, "COURSEWARE_TYPE" as courseWareType
+  </sql>
+  
+  <!-- 根据ID查询交易课件信息 -->
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM "COURSEWARE"
+    WHERE "COURSEWARE_ID" = #{courseWareId,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 分页查询课件信息 -->
+  <select id="findAllByPaging" resultType="com.ld.dto.CourseWareDto" parameterType="com.ld.model.CourseWare">
+  	SELECT 
+    <include refid="Base_Column_List" />,
+    TO_CHAR(t."CREATE_TIME",'day') as week
+    FROM "COURSEWARE" t
+    WHERE t.COURSEWARE_TYPE = #{courseWareType,jdbcType=VARCHAR}
+    <if test="courseName != null">
+    	AND t."COURSE_NAME" like CONCAT('%',CONCAT(#{courseName},'%'))
+    </if>
+    ORDER BY decode(week,'星期一',1,'星期二',2,'星期三',3,'星期四',4,'星期五',5,'星期六',6,'星期日',7),t."CREATE_TIME" DESC
+  </select>
+  
+  <!-- 删除交易课件信息 -->
+  <delete id="delete" parameterType="java.math.BigDecimal" >
+    DELETE FROM "COURSEWARE"
+    WHERE "COURSEWARE_ID" = #{courseWareId,jdbcType=DECIMAL}
+  </delete>
+  
+  <!-- 添加交易课件信息 -->
+  <insert id="insert" parameterType="com.ld.model.CourseWare" >
+  	<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="courseWareId">
+		SELECT SEQ_COURSEWARE.NEXTVAL as courseWareId  FROM DUAL
+	</selectKey> 
+    INSERT INTO "COURSEWARE" 
+    	("COURSEWARE_ID", "CFILE_ID", "COURSE_NAME", "LINK_ADDRESS", "CREATE_TIME", "UPDATE_TIME", "COURSEWARE_TYPE")
+    VALUES 
+    	(#{courseWareId,jdbcType=DECIMAL}, #{cfileId,jdbcType=DECIMAL}, #{courseName,jdbcType=VARCHAR} , #{linkAddress,jdbcType=VARCHAR},
+    	#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{courseWareType,jdbcType=VARCHAR})
+  </insert>
+  <!-- 更新交易课件信息 -->
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.CourseWare" >
+	UPDATE "COURSEWARE"
+	SET "CFILE_ID" = #{cfileId,jdbcType=DECIMAL},
+	"COURSE_NAME" = #{courseName,jdbcType=VARCHAR},
+	"LINK_ADDRESS" = #{linkAddress,jdbcType=VARCHAR},
+	"CREATE_TIME" = #{createTime,jdbcType=TIMESTAMP},
+	"UPDATE_TIME" = #{updateTime,jdbcType=TIMESTAMP},
+	"COURSEWARE_TYPE" = #{courseWareType,jdbcType=VARCHAR}
+	WHERE "COURSEWARE_ID" = #{courseWareId,jdbcType=DECIMAL}
+  </update>
+   <!-- 根据ID查询交易课件信息 -->
+  <select id="queryAllCourseWare" resultMap="BaseResultMap"  >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM "COURSEWARE"
+    	ORDER BY "COURSEWARE_ID"
+  </select>
+  
+</mapper>

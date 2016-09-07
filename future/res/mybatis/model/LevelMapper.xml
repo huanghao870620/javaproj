@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.LevelMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.Level" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="LEVEL_NAME" property="levelName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "ID", "LEVEL_NAME"
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from "JUNCHUAN"."LEVEL"
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from "JUNCHUAN"."LEVEL"
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.ld.model.Level" >
+    insert into "JUNCHUAN"."LEVEL" ("ID", "LEVEL_NAME")
+    values (#{id,jdbcType=DECIMAL}, #{levelName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.model.Level" >
+    insert into "JUNCHUAN"."LEVEL"
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        "ID",
+      </if>
+      <if test="levelName != null" >
+        "LEVEL_NAME",
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="levelName != null" >
+        #{levelName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ld.model.Level" >
+    update "JUNCHUAN"."LEVEL"
+    <set >
+      <if test="levelName != null" >
+        "LEVEL_NAME" = #{levelName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.Level" >
+    update "JUNCHUAN"."LEVEL"
+    set "LEVEL_NAME" = #{levelName,jdbcType=VARCHAR}
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  
+  <select id="findAll" resultType="com.ld.model.Level">
+     select
+       t.ID AS ID,
+       t.LEVEL_NAME AS LEVELNAME 
+      from MEMBER_LEVEL  t
+  </select>
+</mapper>

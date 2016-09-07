@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.RoomconfigCfileMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.RoomconfigCfile" >
+    <result column="ROOM_ID" property="roomId" jdbcType="DECIMAL" />
+    <result column="CFILE_ID" property="cfileId" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ld.model.RoomconfigCfile" >
+    insert into "JUNCHUAN"."ROOMCONFIG_CFILE" ("ROOM_ID", "CFILE_ID")
+    values (#{roomId,jdbcType=DECIMAL}, #{cfileId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.model.RoomconfigCfile" >
+    insert into "JUNCHUAN"."ROOMCONFIG_CFILE"
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roomId != null" >
+        "ROOM_ID",
+      </if>
+      <if test="cfileId != null" >
+        "CFILE_ID",
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roomId != null" >
+        #{roomId,jdbcType=DECIMAL},
+      </if>
+      <if test="cfileId != null" >
+        #{cfileId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+    <select id="findById" parameterType="java.math.BigDecimal" resultType="com.ld.model.RoomconfigCfile">
+     SELECT  t.ROOM_ID   as roomId, t.CFILE_ID  as cfileId   FROM "JUNCHUAN"."ROOMCONFIG_CFILE"  t  WHERE "ROOM_ID"=#{roomId,jdbcType=DECIMAL}
+  </select>
+  
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.RoomconfigCfile" >
+    update "JUNCHUAN"."ROOMCONFIG_CFILE"
+     set "ROOM_ID" = #{roomId,jdbcType=DECIMAL},
+         "CFILE_ID" = #{cfileId,jdbcType=DECIMAL}
+      where "ROOM_ID" = #{roomId,jdbcType=DECIMAL}
+  </update>
+  
+  
+</mapper>

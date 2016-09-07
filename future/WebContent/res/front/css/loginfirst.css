@@ -1,0 +1,5 @@
+@charset "utf-8";
+/* CSS Document */
+body{ background:none;}
+.login_last{position:absolute; top:50%; left:50%; width:580px; height:500px; margin-top:-350x; margin-left:-290px;}
+

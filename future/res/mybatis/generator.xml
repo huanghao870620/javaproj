@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <classPathEntry location="C:\\Users\\zeng.nian\\.m2\\repository\\com\\oracle\\ojdbc6\\11.2.0\\ojdbc6-11.2.0.jar" />
+
+  <context id="oracleTables" targetRuntime="MyBatis3">
+  	<property name="autoDelimitKeywords" value="true" />
+  	<!--
+  	<property name="beginningDelimiter" value="'"/>
+  	<property name="endingDelimiter" value="'"/>  
+  	-->
+
+  	
+  <commentGenerator> 
+    <property name="suppressAllComments" value="true" /> 
+  </commentGenerator> 
+  	
+    <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+        connectionURL="jdbc:oracle:thin:@192.168.10.14:1521:orcl"
+        userId="junchuan"
+        password="junchuan">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="com.ld.model" targetProject="d:/dest">
+    	<property name="enableSubPackages" value="false" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="com.ld.model.xml"  targetProject="d:/dest">
+      <property name="enableSubPackages" value="false" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.ld.mapper"  targetProject="d:/dest">
+      <property name="enableSubPackages" value="false" />
+    </javaClientGenerator>
+
+   	   <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="PRIVATE_MESSAGE" 
+    	 domainObjectName="privateMessage" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="true"
+    	 delimitAllColumns="true"
+    	 >
+    	 </table>
+  </context>
+</generatorConfiguration>

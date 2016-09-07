@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.PlateMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.entity.Plate" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="content_type" property="contentType" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="BIGINT" />
+    <result column="link" property="link" jdbcType="VARCHAR" />
+    <result column="click_event" property="clickEvent" jdbcType="INTEGER" />
+    <result column="upload_file" property="uploadFile" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, "name", "location", content_type, logo, link, click_event, upload_file
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from plate
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from plate
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ld.entity.Plate" >
+    insert into plate (id, "name", "location", 
+      content_type, logo, link, 
+      click_event, upload_file)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, 
+      #{contentType,jdbcType=VARCHAR}, #{logo,jdbcType=BIGINT}, #{link,jdbcType=VARCHAR}, 
+      #{clickEvent,jdbcType=INTEGER}, #{uploadFile,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.entity.Plate" >
+    insert into plate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        "name",
+      </if>
+      <if test="location != null" >
+        "location",
+      </if>
+      <if test="contentType != null" >
+        content_type,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="link != null" >
+        link,
+      </if>
+      <if test="clickEvent != null" >
+        click_event,
+      </if>
+      <if test="uploadFile != null" >
+        upload_file,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=BIGINT},
+      </if>
+      <if test="link != null" >
+        #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="clickEvent != null" >
+        #{clickEvent,jdbcType=INTEGER},
+      </if>
+      <if test="uploadFile != null" >
+        #{uploadFile,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ld.entity.Plate" >
+    update plate
+    <set >
+      <if test="name != null" >
+        "name" = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        "location" = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        content_type = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=BIGINT},
+      </if>
+      <if test="link != null" >
+        link = #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="clickEvent != null" >
+        click_event = #{clickEvent,jdbcType=INTEGER},
+      </if>
+      <if test="uploadFile != null" >
+        upload_file = #{uploadFile,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ld.entity.Plate" >
+    update plate
+    set "name" = #{name,jdbcType=VARCHAR},
+      "location" = #{location,jdbcType=VARCHAR},
+      content_type = #{contentType,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=BIGINT},
+      link = #{link,jdbcType=VARCHAR},
+      click_event = #{clickEvent,jdbcType=INTEGER},
+      upload_file = #{uploadFile,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

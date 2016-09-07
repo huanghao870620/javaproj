@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS Document */
+body{ overflow-y:auto; background-color:#f2f2f2;}
+/*.header{ position:absolute; z-index:999;}*/
+.contain_main{width:100%; height:100%; position:absolute;top:0;left:0;background-color:white;font-family:"微软雅黑"; padding-bottom:50px;}
+.contain_main .theme h2 p{ background:url(../images/look.png) no-repeat 10px center;}
+.contain_main .theme ul .twice{ width:200px;}
+.contain_main .theme ul .sec{width:150px;}
+.contain_main .theme ul .four{ width:120px;}
+.contain_main .theme ul .thr{ width:230px;}
+.contain_main .theme ul .six { width:180px;}
+.contain_main .theme ul .seve{ width:180px;}
+.contain_main .theme ul .last{ min-width:150px; width:22%; border:none;}
+.contain_main .theme ul .last input{ position:relative; width:180px; height:32px; border:1px solid #ccc;left:30%; margin-top:8px; cursor:inherit;}
+.contain_main .theme ul .last button{ display:block; position:relative; left:35%; margin-top:10px;}
+.contain_main .theme .title .last p{ left:25%;}
+/*跟单记录*/
+.recored{min-width:1100px; width:85%;border:1px solid #368ee0;font-family:"微软雅黑";}
+.record h1{ display:block; font-weight:normal; font-size:16px; color:#5b5b5b; padding-left:30px; background:url(../images/look_main.png) no-repeat 5px center; margin:40px 0 10px 20px;}
+.record .record_con{ width:85%; margin-left:20px; border:1px solid #1977df;}
+.record .record_con>ul{ display:block; overflow:hidden; height:40px; border-bottom:1px solid #cedce5;}
+.record .record_con>ul li{ display:block; float:left;border-right:1px solid #cedee5;line-height:40px; text-align:center; height:40px;}
+.record .record_con>ul .num01{min-width:300px;}
+.record .record_con>ul .num02{min-width:300px;}
+.record .record_con>ul .num03{ border:none;min-width:300px; width:33%;}
+.record .record_con .title{ display:block; height:38px; background-color:#1977df; color:white; font-weight:600; }
+.record .record_con .title li{ border:none; background:inherit;}
+/*操作记录部分*/
+.recored_1{min-width:1100px; width:86%;border:1px solid #368ee0;font-family:"微软雅黑"; margin-top:50px;}
+.record_1 h1{ display:block; font-weight:normal; font-size:16px; color:#5b5b5b; padding-left:30px; background:url(../images/look_main.png) no-repeat 5px center; margin:40px 0 10px 20px;}
+.record_1 .record_con{ width:85%; margin-left:20px; border:1px solid #1977df;}
+.record_1 .record_con .title{ height:38px; background-color:#1977df; overflow:hidden;}
+.record_1 .record_con .title li{ display:block; float:left; text-align:center; color:white; font-weight:600; line-height:38px;}
+.record_1 .record_con .title .num01 ,.record_1 .record_con .title .num02{min-width:300px; width:32%;}
+.record_1 .record_con .title .num03 ,.record_1 .record_main .number{ width:39%; border-right:none;}
+.record_1 .record_main{ overflow:hidden; height:328px;}
+.record_main>ul{ display:block; float:left; height:328px; border-right:1px solid #cedce5; margin-right:-1px;}
+.record_main>ul li{ height:40px; line-height:40px; text-align:center;border-bottom:1px solid #cedce5;}
+.record_main .time ,.record_main .content{width:28%;}
+.record_main .time{ display:block; margin-left:5%;padding-top:40px;}
+.record_main .time b{ margin-top:190px;}
+
+
+
+
+
+

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.TeacherViewMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.TeacherView" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="VIEW_CONTENT" property="viewContent" jdbcType="VARCHAR" />
+    <result column="ADVICE_ID" property="adviceId" jdbcType="DECIMAL" />
+    <result column="MINERAL_ID" property="mineralId" jdbcType="VARCHAR" />
+    <result column="TEACHER_ID" property="teacherId" jdbcType="VARCHAR" />
+    <result column="TEACHER_NAME" property="teacherName" jdbcType="VARCHAR" />
+     <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "ID", "VIEW_CONTENT", "ADVICE_ID", "MINERAL_ID", "TEACHER_ID","TEACHER_NAME", "CREATE_TIME"
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from "JUNCHUAN"."TEACHER_VIEW"
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from "JUNCHUAN"."TEACHER_VIEW"
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <!-- 删除记录 -->
+  <delete id="delete" parameterType="java.math.BigDecimal">
+    delete from "JUNCHUAN"."TEACHER_VIEW"  where "ID" = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <select id="selectGoneData"    resultType="com.ld.model.TeacherView">
+    SELECT tv.ID as id,  tv.VIEW_CONTENT as viewContent  , tv.ADVICE_ID as adviceId,   tv.MINERAL_ID as  mineralId,  tv.TEACHER_ID as teacherId, tv.TEACHER_NAME as teacherName,tv.CREATE_TIME as createTime  from "JUNCHUAN"."TEACHER_VIEW" tv  where
+    <![CDATA[ to_char(CREATE_TIME, 'yyyy-mm-dd') <(select to_char(sysdate-2,'yyyy-mm-dd') from dual) ]]>
+  </select>
+  
+  <insert id="insert" parameterType="com.ld.model.TeacherView" >
+  
+  <selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="id">
+		SELECT SEQ_TEACHERVIEW.NEXTVAL as id  FROM DUAL
+	</selectKey> 
+	
+    insert into "JUNCHUAN"."TEACHER_VIEW" ("ID", "VIEW_CONTENT", "ADVICE_ID", 
+      "MINERAL_ID", "TEACHER_ID","TEACHER_NAME","CREATE_TIME")
+    values (#{id,jdbcType=DECIMAL}, #{viewContent,jdbcType=VARCHAR}, #{adviceId,jdbcType=DECIMAL}, 
+      #{mineralId,jdbcType=DECIMAL}, #{teacherId,jdbcType=DECIMAL}, #{teacherName,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.model.TeacherView" >
+    insert into "JUNCHUAN"."TEACHER_VIEW"
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        "ID",
+      </if>
+      <if test="viewContent != null" >
+        "VIEW_CONTENT",
+      </if>
+      <if test="adviceId != null" >
+        "ADVICE_ID",
+      </if>
+      <if test="mineralId != null" >
+        "MINERAL_ID",
+      </if>
+      <if test="teacherId != null" >
+        "TEACHER_ID",
+      </if>
+      <if test="teacherName != null" >
+        "TEACHER_NAME",
+      </if>
+       <if test="createTime != null" >
+        "CREATE_TIME"  
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="viewContent != null" >
+        #{viewContent,jdbcType=VARCHAR},
+      </if>
+      <if test="adviceId != null" >
+        #{adviceId,jdbcType=DECIMAL},
+      </if>
+      <if test="mineralId != null" >
+        #{mineralId,jdbcType=DECIMAL},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=DECIMAL},
+      </if>
+       <if test="teacherName != null" >
+        #{teacherName,jdbcType=VARCHAR},
+      </if>
+       <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </insert>
+	<select id="getLatestTeacherView" parameterType="com.ld.dto.TeacherViewDto"  resultType="com.ld.model.TeacherView">
+		SELECT tv.ID as id,  tv.VIEW_CONTENT as viewContent  , tv.ADVICE_ID as adviceId,
+		tv.MINERAL_ID as  mineralId,  tv.TEACHER_ID as teacherId, tv.TEACHER_NAME as teacherName,
+		tv.CREATE_TIME as createTime  from  "TEACHER_VIEW" tv where 1 = 1
+		<if test="adviceArr != null">
+			and tv.ADVICE_ID in
+			<foreach item="advice" index="index" collection="adviceArr" open="(" separator="," close=")">
+	        	#{advice}       
+	        </foreach>
+        </if>
+		<if test="mineralArr != null">
+			and tv.MINERAL_ID in
+			<foreach item="mineral" index="index" collection="mineralArr" open="(" separator="," close=")">
+	        	#{mineral}       
+	        </foreach>
+        </if>
+		ORDER BY CREATE_TIME DESC
+	</select>
+	<select id="findById" parameterType="java.math.BigDecimal" resultType="com.ld.model.TeacherView">
+	   SELECT tv.ID as id,  tv.VIEW_CONTENT as viewContent  , tv.ADVICE_ID as adviceId,   tv.MINERAL_ID as  mineralId,  tv.TEACHER_ID as teacherId, tv.TEACHER_NAME as teacherName,tv.CREATE_TIME as createTime  
+	   from  "JUNCHUAN"."TEACHER_VIEW" tv
+	   WHERE ID=#{id,jdbcType=DECIMAL}
+	</select>
+</mapper>

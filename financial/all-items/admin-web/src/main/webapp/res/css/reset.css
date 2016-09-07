@@ -1,0 +1,33 @@
+@charset "utf-8";
+/* CSS Document */
+/*属性重置*/
+body,p,b,i,h1,h2,h3,h4,ul,li,ol,a,img,input,span{margin:0; padding:0;}
+i{ font-style:normal;}
+a{ text-decoration:none;}
+b{ font-weight:normal;}
+img,input,textarea{border:none;}
+li{ list-style:none;}
+#iframepage{width:88%;height: 920px; background: #fff;float: right;}
+.clearfix:after {visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
+.clearfix {zoom:1;}
+
+#nav {width: 100%;background: #fff;height: 100%; font-family: 微软雅黑;}
+#nav .subNav{width: 11.5%;background: #fff;float: left;position: fixed; height: 100%;}
+#nav .subNav ul li{list-style: none;border-bottom: 1px solid #fff;width:100%;text-align: center;font-size: 16px;
+  color: black;line-height: 50px;cursor: pointer;border-bottom: 1px solid #ccc;}
+#nav .subNav ul li .hideCon{display:none;font-size:14px;}
+#nav .subNav ul li .hideCon a{line-height:45px;display:block;text-decoration:none;background:#fff;font-size:14px;color: #000;text-align: center; padding-left: 10px;}
+#nav .subNav ul li .hideCon a:hover{background: #1977df;color: #fff;}
+#nav .subNav ul li .hideCon a.active{background: #1977df;color: #fff;}
+#nav .subNav ul li a.title{font-size: 16px;text-align: center;display: block; color: #000;}
+.refush {
+  background-color: #24b7e7;
+  border: none;
+  color: white;
+  width: 100%;
+  line-height: 40px;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 10px;
+  font-family: "微软雅黑";
+}

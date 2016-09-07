@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.UserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.UserRole" >
+    <result column="ROLEID" property="roleid" jdbcType="DECIMAL" />
+    <result column="USERID" property="userid" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ld.model.UserRole" >
+    insert into "JUNCHUAN"."USERROLE" ("ROLEID", "USERID")
+    values (#{roleid,jdbcType=DECIMAL}, #{userid,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.model.UserRole" >
+    insert into "JUNCHUAN"."USERROLE"
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        "ROLEID",
+      </if>
+      <if test="userid != null" >
+        "USERID",
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        #{roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+    <!-- 根据userid 获取 UserRole对象 -->
+  <select id="captureRoleByUserId" parameterType="java.math.BigDecimal" resultType="com.ld.model.UserRole">
+  	SELECT ur.ROLEID as roleid, ur.USERID as userid  FROM "JUNCHUAN"."USERROLE"  ur  WHERE "USERID"=#{userId,jdbcType=DECIMAL} 
+  </select>
+  <!-- 删除用户角色关联关系 -->
+  <delete id="delete" parameterType="java.math.BigDecimal">
+  	delete from "USERROLE" t
+  	where t."USERID" = #{userId,jdbcType=DECIMAL}
+  </delete>
+</mapper>

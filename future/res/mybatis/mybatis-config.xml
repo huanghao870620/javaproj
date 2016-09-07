@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration    
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+    
+    <configuration>  
+    
+    <!-- 引入配置信息文件 -->  
+    <properties resource="mybatis/jdbc.properties" >
+    </properties>  
+    <!-- 必须放在environments和properties之间，不然解析xml会发生错误 -->  
+<!--     <typeAliases> -->
+<!--     </typeAliases> -->
+    
+     <plugins>
+     <!-- 
+     <plugin interceptor="com.ld.interceptor.PageInterceptor" >
+     </plugin>
+     <plugin interceptor="com.ld.interceptor.ResultSetInterceptor"></plugin>
+      -->
+      <plugin interceptor="com.github.pagehelper.PageHelper">
+        <property name="dialect" value="oracle"/>
+        <property name="offsetAsPageNum" value="true"/>
+        <property name="rowBoundsWithCount" value="true"/>
+      </plugin>
+    </plugins>
+    <!-- 
+     -->
+     
+    <environments default="demo">  
+        <environment id="demo">  
+            <transactionManager type="JDBC" />  
+            <dataSource type="POOLED">  
+                <property value="${driver}" name="driver" />  
+                <property value="${url}" name="url" />  
+                <property value="${username}" name="username" />  
+                <property value="${password}" name="password" />  
+            </dataSource>  
+        </environment>  
+    </environments>  
+    
+   
+</configuration>  

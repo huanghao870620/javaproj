@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document */
+
+.contain_main .course a{ display:block; width:274px; height:221px; float:left; margin:10px 0 0 20px; border:1px solid white;}
+.course .cour011 { background:url(../../images/course011.png) no-repeat left top;}
+.course .cour011:hover{background:url(../../images/course011_hover.png) no-repeat left top;}
+.course .cour021 { background:url(../../images/course021.png) no-repeat left top;}
+.course .cour021:hover{background:url(../../images/course021_hover.png) no-repeat left top;}
+

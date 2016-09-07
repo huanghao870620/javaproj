@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.PrivateMessageReplyMapper" >
+	<resultMap id="BaseResultMap" type="com.ld.model.PrivateMessageReply" >
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="PRIVATE_MESSAGE_ID" property="privateMessageId" jdbcType="DECIMAL" />
+	</resultMap>
+  
+	<sql id="Base_Column_List" >
+		"ID" as id, "CONTENT" as content,"CREATE_TIME" as createTime,"CREATOR_ID" as creatorId,"PRIVATE_MESSAGE_ID" as privateMessageId
+	</sql>
+  
+	<!-- 新增私信回复信息 -->
+	<insert id="insert" parameterType="com.ld.model.PrivateMessageReply" >
+		<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="id">
+			SELECT SEQ_PRIVATE_MESSAGE_REPLY.NEXTVAL as id  FROM DUAL
+		</selectKey>
+		insert into "PRIVATE_MESSAGE_REPLY" ("ID", "CONTENT", "CREATOR_ID","CREATE_TIME", "PRIVATE_MESSAGE_ID")
+		values (#{id,jdbcType=DECIMAL}, #{content,jdbcType=VARCHAR}, #{creatorId,jdbcType=DECIMAL}, 
+		#{createTime,jdbcType=TIMESTAMP}, #{privateMessageId,jdbcType=DECIMAL})
+	</insert>
+	
+	<!-- 删除私信回复信息 -->
+	<delete id="delete" parameterType="java.math.BigDecimal">
+		delete from "PRIVATE_MESSAGE_REPLY"
+		where PRIVATE_MESSAGE_ID = #{privateMessageId,jdbcType=DECIMAL}
+	</delete>
+	
+	<!-- 根据私信ID获取私信回复信息 -->
+	<select id="findByPrivateMessageId" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+		select
+		<include refid="Base_Column_List" />
+		from "PRIVATE_MESSAGE_REPLY"
+		where "PRIVATE_MESSAGE_ID" = #{privateMessageId,jdbcType=DECIMAL}
+	</select>
+	
+</mapper>

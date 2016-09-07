@@ -1,0 +1,38 @@
+@charset "utf-8";
+/* CSS Document */
+/*账号添加*/
+.contain_main .theme h2 p{ background:url(../images/customer.png) no-repeat 13px center;}
+.theme .the_main{ display:block; font-family:"微软雅黑";}
+.theme .the_main li{ display:block; height:60px; border-bottom:1px solid #cedce5;overflow: hidden;}
+.theme .the_main li p{ display:block; float:left; width:180px; border-right:1px solid #cedce5; line-height:60px; background-color:#f4f8fb; padding-left:30px;}
+.theme .the_main li input{ width:220px; height:36px; border:1px solid #909090; margin-top:11px; margin-left:30px; font-size:15px; color:#4a4a4a; padding-left:10px; line-height:36px;}
+.theme .the_main li select{ width:84px; height:28px; border:1px solid #909090; border-radius:4px; font-size:15px; color:#4a4a4a; margin-left:30px; margin-top:15px;}
+.theme .the_main li span{line-height:60px; margin-left:20px; color:#1977df; font-size:12px;}
+.theme .the_main .check i{ display:block; float:left; margin:12px 5px; font-size:15px; color:#4a4a4a; line-height:36px;}
+.theme .the_main .check i input{ display:block; float:left; width:15px; height:15px; border:1px solid #909090;margin-right:5px;}
+/*按钮*/
+.theme .butt{ height:160px;}
+.theme .butt a{ display:block; width:100px; height:34px; font-size:16px; color:white; text-align:center; line-height:34px; float:left; border-radius:4px; margin-top:60px;}
+.theme .butt .finish{ background-color:#1977df; margin-right:50px; margin-left:230px;}
+.theme .butt .finish:hover{ background-color:#1668c2;}
+.theme .butt .cancel{ background-color:#bebebe;}
+.theme .butt .cancel:hover{ background-color:#a7a7a7;}
+.the_main input[type=checkbox]{width:16px!important; height:35px!important;vertical-align: -11px;}
+.the_main label{cursor: pointer;background:transparent;}
+
+.cho1{ height:140px;border-bottom:1px solid #cedce5;}
+ .cho1 .tit { height:140px; min-width:210px;border-right:1px solid #cedce5; float:left; margin-right:-1px; line-height:50px;color:#1d1d1d;background:#f4f8fb}
+ .tit p{ padding-left:30px;}
+.cho1 .con { min-width:550px; width:80%; float:left;height:79px;}
+.cho1 .con p{ display:block; margin-left:20px; overflow:hidden;height:69px;}
+.cho1 .con p span{ display:block; float:left; width:45px; height:40px; border-radius:5px; border:1px solid #909090; margin-top:20px;}
+.cho1 .con p i{ font-size:14px; display:block; float:left;color:#1d1d1d; margin:45px 0 0 10px;}
+.cho1 .con a{ display:block; width:115px; height:34px; background:#bebebe; color:#555; line-height:34px; text-align:center; margin:10px 0 0 20px;}
+.cho2 .con input ,.cho3 .con input{ display:block; width:248px; height:30px; border:1px solid #909090; margin:9px 0 0 20px; font-size:14px; padding-left:10px;}
+.cho3 .con input{ width:478px;}
+.choose_con>ul .tit{ background-color:#f4f8fb;}
+
+.file-up{position: relative;display: inline-block;background: #D0EEFF!important;border: 1px solid #99D3F5;border-radius: 4px;padding:0;overflow: hidden;color: #1E88C7;text-decoration: none;text-indent: 0;line-height: 20px;}
+.file-up input {position: absolute;font-size: 100px;right: 0;top: 0;opacity: 0;filter: alpha(opacity=0);}
+.file-up:hover {background: #AADFFD;border-color: #78C3F3;color: #004974;text-decoration: none;}
+

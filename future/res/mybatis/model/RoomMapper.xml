@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.RoomMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.Room" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ROOM_ID" property="roomId" jdbcType="DECIMAL" />
+    <result column="ROOM_NAME" property="roomName" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "ID", "ROOM_ID", "ROOM_NAME", "TYPE"
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from "JUNCHUAN"."ROOM"
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from "JUNCHUAN"."ROOM"
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.ld.model.Room" >
+    insert into "JUNCHUAN"."ROOM" ("ID", "ROOM_ID", "ROOM_NAME", 
+      "TYPE")
+    values (#{id,jdbcType=DECIMAL}, #{roomId,jdbcType=DECIMAL}, #{roomName,jdbcType=VARCHAR}, 
+      #{type,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.model.Room" >
+    insert into "JUNCHUAN"."ROOM"
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        "ID",
+      </if>
+      <if test="roomId != null" >
+        "ROOM_ID",
+      </if>
+      <if test="roomName != null" >
+        "ROOM_NAME",
+      </if>
+      <if test="type != null" >
+        "TYPE",
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=DECIMAL},
+      </if>
+      <if test="roomName != null" >
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ld.model.Room" >
+    update "JUNCHUAN"."ROOM"
+    <set >
+      <if test="roomId != null" >
+        "ROOM_ID" = #{roomId,jdbcType=DECIMAL},
+      </if>
+      <if test="roomName != null" >
+        "ROOM_NAME" = #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        "TYPE" = #{type,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.Room" >
+    update "JUNCHUAN"."ROOM"
+    set "ROOM_ID" = #{roomId,jdbcType=DECIMAL},
+      "ROOM_NAME" = #{roomName,jdbcType=VARCHAR},
+      "TYPE" = #{type,jdbcType=DECIMAL}
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="findAllByPaging" resultType="com.ld.model.Room" parameterType="com.ld.dto.RoomDto">
+    SELECT t.*,
+    t.room_name as roomName 
+     FROM ROOM t
+  </select>
+  
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <beans  
+      xmlns="http://www.springframework.org/schema/beans"  
+      xmlns:tx="http://www.springframework.org/schema/tx"  
+      xmlns:p="http://www.springframework.org/schema/p"  
+      xmlns:aop="http://www.springframework.org/schema/aop"   
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+      xmlns:context="http://www.springframework.org/schema/context"
+      xsi:schemaLocation="http://www.springframework.org/schema/beans   
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+     http://www.springframework.org/schema/tx   
+     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd   
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-2.5.xsd
+      http://www.springframework.org/schema/aop   
+       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	       <context:annotation-config/>
+	        <aop:aspectj-autoproxy />
+           <context:component-scan base-package="com.ld"/>
+           <context:property-placeholder location="classpath:mybatis/jdbc.properties"/>
+           
+     <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+
+	     <property name="driverClassName">  
+	         <value>${jdbc.driver}</value>  
+	    </property>  
+	     <property name="url">  
+	         <value>${jdbc.url}</value>  
+	     </property>  
+	     <property name="username">  
+	         <value>${jdbc.username}</value>  
+	     </property>  
+	     <property name="password">  
+	         <value>${jdbc.password}</value>  
+	     </property>  
+ 	</bean>  
+
+ 
+ <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+     <property name="dataSource" ref="jdbcDataSource" />  
+     <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>  
+     <property name="mapperLocations" value="classpath*:mybatis/model/**/*Mapper.xml"></property>  
+     <property name="plugins">
+       <list>
+         <bean class="com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor">
+           <property name="dialectClass" value="com.github.miemiedev.mybatis.paginator.dialect.OracleDialect"></property>
+         </bean>
+       </list>
+     </property>
+ </bean>  
+ 
+ 
+  <!-- DAO接口所在包名，Spring会自动查找其下的类 -->  
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+        <property name="basePackage" value="com.ld.mapper" />  
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
+    </bean>  
+  
+  
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
+    <bean id="transactionManager"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="jdbcDataSource" />  
+    </bean>  
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+     <!-- (启动多空对决 聊天(微博)推送服务 -->  
+     <!-- <bean id="weiboPushThread" class="com.ld.chat.web.WeiboPushThread"
+		factory-method="getInstance" lazy-init="false" /> -->
+	 <!-- (启动多空对决  写入聊天(微博)数据线程 -->  
+	<!-- <bean id="writeWeiboThread" class="com.ld.chat.web.WriteWeiboThread"
+		factory-method="getInstance" lazy-init="false" /> -->
+		
+		<!-- (启动多空对决 聊天(私聊)推送服务 -->  
+     <!-- <bean id="privatePushThread" class="com.ld.chat.web.PrivatePushThread"
+		factory-method="getInstance" lazy-init="false" /> -->
+		
+		 <!-- (启动多空对决  写入聊天(私聊)数据线程 -->  
+	<!-- <bean id="writePrivateThread" class="com.ld.chat.web.WritePrivateThread"
+		factory-method="getInstance" lazy-init="false" /> -->
+		
+      <!-- (启动实盘房间  讲师观点(微博)数据推送线程 -->  
+	<bean id="quotationPushThread" class="com.ld.chat.web.QuotationPushThread"
+		factory-method="getInstance" lazy-init="false" />
+		
+		 <!-- (启动实盘房间  实时聊天数据推送线程 -->  
+	<bean id="quotationActualPushThread" class="com.ld.chat.web.QuotationActualPushThread"
+		factory-method="getInstance" lazy-init="false" />
+		
+			 <!-- (启动实盘房间  实时聊天数据 讲师点击 客户发来的消息审核后，确认公开，即可发送此条消息到别的客户实时聊天界面 -->  
+	<bean id="quotationActualAuditPushThread" class="com.ld.chat.web.QuotationActualAuditPushThread"
+		factory-method="getInstance" lazy-init="false" />
+		
+		 <!-- (启动实盘房间  实时聊天数据 讲师删除消息-->  
+		<bean id="quotationActualDeletePushThread" class="com.ld.chat.web.QuotationActualDeletePushThread"
+		factory-method="getInstance" lazy-init="false" />
+		
+		<!-- (启动实盘房间  客户与讲师 交互 消息推送线程 -->  
+	<bean id="quotationInteractionPushThread" class="com.ld.chat.web.QuotationInteractionPushThread"
+	   factory-method="getInstance" lazy-init="false" />
+		
+		
+ </beans>  

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.TeacherviewCfileMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.TeacherviewCfile" >
+    <result column="VIEW_ID" property="viewId" jdbcType="DECIMAL" />
+    <result column="CFILE_ID" property="cfileId" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ld.model.TeacherviewCfile" >
+    insert into "JUNCHUAN"."TEACHERVIEW_CFILE" ("VIEW_ID", "CFILE_ID")
+    values (#{viewId,jdbcType=DECIMAL}, #{cfileId,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.model.TeacherviewCfile" >
+    insert into "JUNCHUAN"."TEACHERVIEW_CFILE"
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="viewId != null" >
+        "VIEW_ID",
+      </if>
+      <if test="cfileId != null" >
+        "CFILE_ID",
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="viewId != null" >
+        #{viewId,jdbcType=DECIMAL},
+      </if>
+      <if test="cfileId != null" >
+        #{cfileId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+   <select id="findById" parameterType="java.math.BigDecimal" resultType="com.ld.model.TeacherviewCfile">
+     SELECT  t.VIEW_ID   as viewId, t.CFILE_ID  as cfileId   FROM "JUNCHUAN"."TEACHERVIEW_CFILE"  t  WHERE "VIEW_ID"=#{viewId,jdbcType=DECIMAL}
+  </select>
+    <delete id="delete" parameterType="java.math.BigDecimal" >
+     delete from "JUNCHUAN"."TEACHERVIEW_CFILE"
+      where "VIEW_ID" = #{viewId,jdbcType=DECIMAL}
+  </delete>
+</mapper>

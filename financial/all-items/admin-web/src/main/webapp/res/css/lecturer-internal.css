@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+.contain_main .theme{min-width:1600px; width:85%;border:1px solid #368ee0; margin:20px;font-family:"微软雅黑";}
+
+.contain_main .theme h2 p{ display:block; float:left; padding-left:40px; background:url(../images/mark_internal.png) no-repeat 10px center; font-size:18px; color:white;}
+.contain_main .theme ul .six i{ display:block; float:left; margin:0 10px;}
+.contain_main .theme ul .six{ width:460px;}
+.contain_main .theme .title .last p{position:relative; left:40%;}
+.contain_main .theme ul .last .button{width:130px; height:28px; margin-top:12px; position:relative; left:35%;}
+
+
+
+
+
+

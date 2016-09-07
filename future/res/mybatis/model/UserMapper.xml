@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.UserMapper" >
+	 <resultMap id="BaseResultMap" type="com.ld.model.User" >
+		<id column="USER_ID" property="userId" jdbcType="DECIMAL" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="CHAR" />
+		<result column="FIRM_OFFER_ACCOUNT" property="firmOfferAccount" jdbcType="VARCHAR" />
+		<result column="REGIST_TIME" property="registTime" jdbcType="TIMESTAMP" />
+		<result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="TIMESTAMP" />
+		<result column="NICK_NAME" property="nickName" jdbcType="VARCHAR" />
+		<result column="LEVEL_ID" property="levelId" jdbcType="DECIMAL" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="CFILE_ID" property="CFileId" jdbcType="DECIMAL" />
+	 </resultMap>
+	 
+	 <sql id="Base_Column_List" >
+	   "USER_ID" as userId, "USER_NAME" as userName, "PASSWORD", "NAME", "FIRM_OFFER_ACCOUNT" as firmOfferAccount,
+	   "REGIST_TIME" as registTime, "LAST_LOGIN_TIME" as lastLoginTime, "NICK_NAME" as nickName,
+	   "LEVEL_ID" as levelId, "EMAIL" as email, "PHONE" as phone, "ADDRESS" as address, "UPDATE_TIME" as updateTime , "CFILE_ID" as CFileId
+	 </sql>
+	 
+	 <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+	   select
+	   <include refid="Base_Column_List" />
+	   from "USER"
+	   where "USER_ID" = #{userId,jdbcType=DECIMAL}
+	 </select>
+	 
+	 <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+	   delete from "USER"
+	   where "USER_ID" = #{userId,jdbcType=DECIMAL}
+	 </delete>
+	 
+	 <delete id="delete" parameterType="java.math.BigDecimal" >
+	   delete from "USER"
+	   where "USER_ID" = #{userId,jdbcType=DECIMAL}
+	 </delete>
+	 
+	 <insert id="insert" parameterType="com.ld.model.User"  keyProperty="userId">
+		<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="userId">
+			SELECT seq_user.NEXTVAL as userId FROM DUAL
+		</selectKey> 
+		insert into "USER" ("USER_ID", "USER_NAME", "PASSWORD",
+		  "NAME", "FIRM_OFFER_ACCOUNT", "REGIST_TIME",
+		  "LAST_LOGIN_TIME", "NICK_NAME", "LEVEL_ID",
+		  "EMAIL", "PHONE", "ADDRESS",
+		  "UPDATE_TIME" ,"CFILE_ID")
+		values (#{userId,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+		  #{name,jdbcType=CHAR}, #{firmOfferAccount,jdbcType=VARCHAR}, #{registTime,jdbcType=TIMESTAMP},
+		  #{lastLoginTime,jdbcType=TIMESTAMP}, #{nickName,jdbcType=VARCHAR}, #{levelId,jdbcType=DECIMAL},
+		  #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+		  #{updateTime,jdbcType=TIMESTAMP} ,#{CFileId,jdbcType=DECIMAL})
+	 </insert>
+	 
+	 <update id="updateByPrimaryKey" parameterType="com.ld.model.User" >
+		update "USER"
+		set "USER_NAME" = #{userName,jdbcType=VARCHAR},
+		  "PASSWORD" = #{password,jdbcType=VARCHAR},
+		  "NAME" = #{name,jdbcType=CHAR},
+		  "FIRM_OFFER_ACCOUNT" = #{firmOfferAccount,jdbcType=VARCHAR},
+		  "REGIST_TIME" = #{registTime,jdbcType=TIMESTAMP},
+		  "LAST_LOGIN_TIME" = #{lastLoginTime,jdbcType=TIMESTAMP},
+		  "NICK_NAME" = #{nickName,jdbcType=VARCHAR},
+		  "LEVEL_ID" = #{levelId,jdbcType=DECIMAL},
+		  "EMAIL" = #{email,jdbcType=VARCHAR},
+		  "PHONE" = #{phone,jdbcType=VARCHAR},
+		  "ADDRESS" = #{address,jdbcType=VARCHAR},
+		  "UPDATE_TIME" = #{updateTime,jdbcType=TIMESTAMP},
+		   "CFILE_ID" = #{CFileId,jdbcType=DECIMAL}
+		where "USER_ID" = #{userId,jdbcType=DECIMAL}
+	 </update>
+	 
+	 <!-- 获取用户 -->
+	<select id="findUserByNameAndPass" parameterType="com.ld.model.User" resultType="com.ld.model.User">
+	  SELECT
+	  <include refid="Base_Column_List" />
+	  FROM "USER" WHERE USER_NAME=#{userName,jdbcType=VARCHAR} AND PASSWORD=#{password,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findUser" parameterType="com.ld.dto.UserDto" resultType="com.ld.model.User">
+		SELECT
+			u.NAME as name, 
+			u.PASSWORD as password,
+			u.USER_ID as userId,
+			u.USER_NAME as userName,
+			u.FIRM_OFFER_ACCOUNT as firmOfferAccount,
+			u.REGIST_TIME as registTime,
+			u.LAST_LOGIN_TIME as lastLoginTime 
+			FROM "USER" u 
+		WHERE USER_NAME=#{userName,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findTeachersList" resultType="com.ld.model.User">
+	     SELECT 
+	     	u.USER_ID as  userId,   u.USER_NAME as userName FROM  "USER"  u
+	     WHERE  
+	     EXISTS( select ur.USERID from "USERROLE"  ur where  u.USER_ID  =ur.USERID and ur.ROLEID=1)
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="findAllByPaging" parameterType="com.ld.dto.UserDto" resultType="com.ld.model.User">
+	  SELECT distinct
+	   <include refid="Base_Column_List" />
+	  FROM  "USER" t,USERROLE t1 where t.USER_ID = t1.USERID and t1.ROLEID != 5 
+	  <if test="userName != null">
+	  	AND t.USER_NAME like CONCAT('%',CONCAT(#{userName},'%'))
+	  </if>
+	  ORDER BY t.regist_time DESC
+	</select>
+	<!-- 分页查询客户 -->
+	<select id="findCustomerByPaging" parameterType="com.ld.dto.UserDto" resultType="com.ld.dto.UserDto">
+		SELECT
+		<include refid="Base_Column_List"></include>,
+		t2.LEVEL_NAME as levelName
+		FROM  "USER" t,USERROLE t1,MEMBER_LEVEL t2 where t.USER_ID = t1.USERID and t1.ROLEID = 5 and t.LEVEL_ID = t2."ID"
+		<if test="userName != null">
+			AND t.USER_NAME like CONCAT('%',CONCAT(#{userName},'%'))
+		</if>
+		ORDER BY t.regist_time DESC
+	</select>
+	<!-- 根据ID查询用户信息 -->
+	<select id="findById" parameterType="java.math.BigDecimal" resultType="com.ld.dto.UserDto">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM "USER" t WHERE t."USER_ID" = #{userId,jdbcType=DECIMAL}
+	</select>
+</mapper>

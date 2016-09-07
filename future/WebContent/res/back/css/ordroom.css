@@ -1,0 +1,29 @@
+@charset "utf-8";
+/* CSS Document */
+<<<<<<< HEAD
+.contain_main .theme{min-width:1300px; width:85%;border:1px solid #368ee0; margin:20px;font-family:"微软雅黑";}
+=======
+.contain_main .theme{min-width:1300px; width:85%;border:1px solid #368ee0; margin:20px;font-family:"微软雅黑"; margin-bottom:30px;}
+>>>>>>> dd1202f5e763c822c4bf58bc0309200206a638ec
+.contain_main .theme h2 p{ display:block; float:left; padding-left:40px; background:url(../images/mark_room.png) no-repeat 10px center; font-size:18px; color:white;}
+.contain_main .theme ul .first{ width:70px;}
+.contain_main .theme ul .sec{ width:120px;}
+.contain_main .theme ul .thr{ width:100px;}
+.contain_main .theme .result .thr i{ color:#1977df;}
+.contain_main .theme ul .four{ width:120px;}
+.contain_main .theme ul .six { width:120px;}
+.contain_main .theme ul .seve{ width:300px;}
+.contain_main .theme ul .last{min-width:320px; border:none;}
+.contain_main .theme .title .last p{position:relative; left:50%;}
+.contain_main .theme ul .last .button{width:320px; height:28px; margin-top:12px; position:relative; left:70%;}
+.contain_main .theme ul .last input{cursor:pointer;font-family:"微软雅黑"; display:block; float:left;}
+.contain_main .theme .title .last p{position:relative; left:60%;}
+.result .seve{ height:50px;}
+.result .seve select{ height:36px; font-size:14px; color:#1d1d1d; line-height:34px; margin-top:7px; padding-left:5px; border:1px solid #ccc; border-radius:4px;}
+
+
+
+
+
+
+

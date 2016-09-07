@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.CustomerLevelLimitRelaMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.CustomerLevelLimitRela" >
+    <result column="CUSTOMERLEVEL_ID" property="customerLevelId" jdbcType="DECIMAL" />
+    <result column="VIEWPOINT" property="viewPoint" jdbcType="VARCHAR" />
+    <result column="INTRANSACTION" property="inTransaction" jdbcType="VARCHAR" />
+    <result column="AROOM" property="aROOM" jdbcType="VARCHAR" />
+    <result column="ALLCOURSEWARELEVEL" property="allCourseWareLevel" jdbcType="VARCHAR" />
+  
+   
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "CUSTOMERLEVEL_ID" as customerLevelId, "VIEWPOINT" as viewPoint, "INTRANSACTION" as inTransaction, "AROOM" as aROOM,
+    "ALLCOURSEWARELEVEL" as allCourseWareLevel 
+  </sql>
+  
+  
+   <!-- 更新权限 -->
+  <update id="batchUpdateByCustomerLevelLimitRelaList" parameterType="java.util.List">
+  <foreach collection="list" item="list" index="index" open="begin" close=";end;" separator=";">
+  	UPDATE "CUSTOMER_LEVEL_LIMIT_RELA"
+    SET "VIEWPOINT" = #{list.viewPoint,jdbcType=VARCHAR},
+    	"INTRANSACTION" = #{list.inTransaction,jdbcType=VARCHAR},
+    	"AROOM" = #{list.aROOM,jdbcType=TIMESTAMP},
+    	"ALLCOURSEWARELEVEL" = #{list.allCourseWareLevel,jdbcType=VARCHAR}
+    WHERE "CUSTOMERLEVEL_ID" = #{list.customerLevelId,jdbcType=DECIMAL}
+   
+    </foreach>
+  </update>
+  
+  <!-- 根据级别ID查询权限列表 -->
+  <select id="batchFindCustomerLevelLimitRela"  resultType="com.ld.model.CustomerLevelLimitRela">
+  	SELECT 
+  	 <include refid="Base_Column_List" />
+  	FROM CUSTOMER_LEVEL_LIMIT_RELA 
+  	ORDER BY "CUSTOMERLEVEL_ID"
+  </select>
+  
+  <!-- 根据ID和图片顺序查询 -->
+  <select id="findById" parameterType="java.math.BigDecimal" resultType="com.ld.model.CustomerLevelLimitRela">
+  	 SELECT 
+    <include refid="Base_Column_List" />
+    FROM "CUSTOMER_LEVEL_LIMIT_RELA"
+    WHERE "CUSTOMERLEVEL_ID" = #{levelId,jdbcType=DECIMAL}
+  </select>
+  
+</mapper>

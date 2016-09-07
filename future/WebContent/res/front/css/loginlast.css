@@ -1,0 +1,23 @@
+@charset "utf-8";
+/* CSS Document */
+body{ background:url(/res/images/bg01.png) repeat;}
+.login_last{position:absolute; top:50%; left:50%; width:580px; height:450px; margin-top:-320px; margin-left:-290px; border:1px solid #d7d7d7; background-color:white;font-family:"微软雅黑";}
+.login_last .logo{ display:block; width:215px; height:40px; margin:0 auto; margin-top:40px;}
+.login_last .title{ display:block; width:270px; height:14px; margin:0 auto; margin-top:30px;}
+.login_last input{ display:block; height:38px; width:268px; border:1px solid #d7d7d7; margin:0 auto; font-size:16px; color:#b6b6b6; padding-left:45px;}
+.login_last .user{ margin-top:30px; background:url(/res/images/user.png) no-repeat 5px center;}
+.login_last .key{ margin-top:15px; background:url(/res/images/key.png) no-repeat 5px center; }
+.login_last .login-button{ display:block; height:42px;width:320px; border-radius:2px; background-color:#ec872f; color:white; margin:0 auto; text-align:center; line-height:42px; font-size:16px;  margin-top:30px;}
+.login_last .login-button:hover{ background-color:#ff7600;}
+.login_last .quest{ display:block; text-align:center; font-size:14px; color:#929292; padding-top:15px;}
+.login_last .qqkf{ width:320px; height:24px; margin:0 auto; margin-top:30px;}
+.login_last .qqkf a{ width:115px; height:24px; display:block;} 
+.login_last .qqkf .qleft{ float:left;}
+.login_last .qqkf .qright{ float:right;}
+
+/*验证码部分*/
+.login_last .yanzm{ overflow:hidden; width:315px; margin:0 auto; margin-top:20px;}
+.login_last .yanzm input{ width:120px; height:32px; display:block; float:left; padding-left:20px;}
+.login_last .yanzm p{ display:block; float:left; margin-left:30px;}
+.login_last .yanzm p img{ display:block; float:left;}
+.login_last .yanzm p a{ display:block; margin-left:10px; float:left;margin-top:8px;}

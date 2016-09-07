@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document */
+/*属性重置*/
+body,p,b,i,h1,h2,h3,h4,ul,li,ol,a,img,input,span{margin:0; padding:0;}
+i{ font-style:normal;}
+a{ text-decoration:none;}
+b{ font-weight:normal;}
+img,input,textarea{border:none;}
+li{ list-style:none;}

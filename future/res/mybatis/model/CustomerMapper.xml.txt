@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.CustomerMapper" >
+ 
+  <resultMap id="BaseResultMap" type="com.ld.model.Customer" >
+     <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="NICK_NAME" property="nickName" jdbcType="VARCHAR" />
+    <result column="FIRM_OFFER_ACCOUNT" property="firmOfferAccount" jdbcType="VARCHAR" />
+    <result column="LEVEL_ID" property="levelId" jdbcType="DECIMAL" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="REGISTRATION_TIME" property="registrationTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <insert id="insert"   parameterType="com.ld.model.Customer" >
+    
+    <selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="id">
+		SELECT seq_customer.NEXTVAL as id  FROM DUAL
+	</selectKey> 
+  
+     insert into "JUNCHUAN"."CUSTOMER" ( "ID","ACCOUNT", "PASSWORD", 
+      "NAME", "NICK_NAME", "FIRM_OFFER_ACCOUNT", 
+      "LEVEL_ID", "EMAIL", "PHONE", 
+      "ADDRESS", "REGISTRATION_TIME", "UPDATE_TIME")
+    values (  #{id,jdbcType=DECIMAL},#{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{firmOfferAccount,jdbcType=VARCHAR}, 
+      #{levelId,jdbcType=DECIMAL}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{registrationTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <!-- 客户帐号是否存在 -->
+  <select id="customerAccountIsExists" parameterType="com.ld.model.Customer" resultType="com.ld.model.Customer">
+  	SELECT * FROM JUNCHUAN.CUSTOMER WHERE "ACCOUNT"=#{account,jdbcType=VARCHAR} 
+  </select>
+  
+  <!-- 用户密码是否存在 -->
+  <select id="userNamePassAccrodingWhetherAccount" parameterType="com.ld.model.Customer" resultType="com.ld.model.Customer">
+  SELECT  ID as id, c.ACCOUNT as account,  c.PASSWORD as password ,c.name as name, c.NICK_NAME as nickName ,
+   c.FIRM_OFFER_ACCOUNT as firmOfferAccount,  c.LEVEL_ID as levelId, c.EMAIL as email,  c.phone as phone, c.address as address,c.REGISTRATION_TIME  as registrationTime, c.UPDATE_TIME as updateTime     from CUSTOMER  c  where "ACCOUNT"=#{account,jdbcType=VARCHAR} and "PASSWORD"=#{password, jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findAll" resultType="com.ld.model.Customer">
+  
+    SELECT  ID as id, c.ACCOUNT as account,  c.PASSWORD as password ,c.name as name, c.NICK_NAME as nickName ,
+   c.FIRM_OFFER_ACCOUNT as firmOfferAccount,  c.LEVEL_ID as levelId, c.EMAIL as email,  c.phone as phone, c.address as address,c.REGISTRATION_TIME  as registrationTime, c.UPDATE_TIME as updateTime     from CUSTOMER  c  
+  </select>
+  
+  <select id="findAllByPaging" resultType="com.ld.model.Customer" parameterType="com.ld.dto.CustomerDto">
+     SELECT 
+       t.NICK_NAME AS nickName,
+      t.* FROM CUSTOMER t
+  </select>
+  
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.Customer" >
+    update "JUNCHUAN"."CUSTOMER"
+    set "ACCOUNT" = #{account,jdbcType=VARCHAR},
+      "PASSWORD" = #{password,jdbcType=VARCHAR},
+      "NAME" = #{name,jdbcType=VARCHAR},
+      "NICK_NAME" = #{nickName,jdbcType=VARCHAR},
+      "FIRM_OFFER_ACCOUNT" = #{firmOfferAccount,jdbcType=VARCHAR},
+      "LEVEL_ID" = #{levelId,jdbcType=DECIMAL},
+      "EMAIL" = #{email,jdbcType=VARCHAR},
+      "PHONE" = #{phone,jdbcType=VARCHAR},
+      "ADDRESS" = #{address,jdbcType=VARCHAR},
+      "REGISTRATION_TIME" = #{registrationTime,jdbcType=TIMESTAMP},
+      "UPDATE_TIME" = #{updateTime,jdbcType=TIMESTAMP}
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <!-- 删除记录 -->
+  <delete id="delete" parameterType="java.math.BigDecimal">
+    delete from CUSTOMER where "ID"=#{id,jdbcType=DECIMAL}
+  </delete>
+  
+</mapper>

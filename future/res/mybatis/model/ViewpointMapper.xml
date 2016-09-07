@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.ViewpointMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.Viewpoint" >
+    <id column="viewpoint_id" property="viewpointId" jdbcType="DECIMAL" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+	"VIEWPOINT_ID" as viewpointId, "TITLE" as title, "CONTENT" as content,
+	"CREATE_TIME" as createTime, "UPDATE_TIME" as updateTime
+  </sql>
+  
+  <!-- 根据ID查询磊丹观点 -->
+  <select id="findById" resultMap="BaseResultMap" parameterType="Long">
+  	SELECT 
+  	<include refid="Base_Column_List"/>
+  	FROM VIEWPOINT t
+  	WHERE "VIEWPOINT_ID" = #{viewpointId,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 磊丹观点分页查询 -->
+  <select id="findAllByPaging" parameterType="com.ld.dto.ViewpointDto" resultType="com.ld.dto.ViewpointDto">
+  	SELECT to_char(t."CREATE_TIME",'day') as week,
+	<include refid="Base_Column_List"/>
+  	FROM VIEWPOINT t WHERE 1=1
+  	<if test="title != null">
+  		AND t."TITLE" like CONCAT('%',CONCAT(#{title},'%'))
+  	</if>
+  	ORDER BY t."CREATE_TIME" DESC
+  </select>
+  
+  <!-- 删除磊丹观点 -->
+  <delete id="delete" parameterType="java.lang.Short" >
+    DELETE FROM "VIEWPOINT"
+    WHERE "VIEWPOINT_ID" = #{viewpointId,jdbcType=DECIMAL}
+  </delete>
+  
+  <!-- 添加磊丹观点 -->
+  <insert id="insert" parameterType="com.ld.model.Viewpoint" >
+   	<selectKey resultType="Long" order="BEFORE" keyProperty="viewpointId">
+		SELECT seq_viewpoint.NEXTVAL as viewpointId  FROM DUAL
+	</selectKey> 
+    INSERT INTO "VIEWPOINT" ("VIEWPOINT_ID", "TITLE", "CONTENT", 
+      "CREATE_TIME", "UPDATE_TIME")
+    VALUES (#{viewpointId,jdbcType=DECIMAL}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <!-- 更新磊丹观点 -->
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.Viewpoint" >
+    UPDATE "VIEWPOINT"
+    SET "TITLE" = #{title,jdbcType=VARCHAR},
+      "CONTENT" = #{content,jdbcType=VARCHAR},
+      "UPDATE_TIME" = #{updateTime,jdbcType=TIMESTAMP}
+    WHERE "VIEWPOINT_ID" = #{viewpointId,jdbcType=DECIMAL}
+  </update>
+  
+</mapper>

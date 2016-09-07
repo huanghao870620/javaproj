@@ -1,0 +1,57 @@
+@charset "utf-8";
+/* CSS Document */
+.contain_main .theme h2 p{background:url(../images/choose_add.png) no-repeat 10px center;}
+.theme .choose_con>ul{ display:block; border-bottom:1px solid #cedce5; font-family:"微软雅黑"; overflow:hidden;}
+.choose_con .cho1{ height:270px;}
+.choose_con .cho1 .tit ,.choose_con .cho2 .tit ,.choose_con .cho3 .tit{ height:270px; min-width:160px; width:20%;border-right:1px solid #cedce5; float:left; margin-right:-1px; line-height:50px;color:#1d1d1d;}
+.choose_con .tit p{ padding-left:30px;}
+.choose_con .cho2 .tit ,.choose_con .cho3 .tit{ height:50px; line-height:50px;}
+.choose_con .cho1 .con ,.choose_con .cho2 .con ,.choose_con .cho3 .con{ min-width:550px; width:80%; float:left;}
+.choose_con .cho1 .con p{ display:block; margin-left:20px; overflow:hidden;}
+.choose_con .cho1 .con p span{ display:block; float:left; width:240px; height:184px; border-radius:5px; border:1px solid #909090; margin-top:20px;}
+.choose_con .cho1 .con p i{ font-size:14px; display:block; float:left;color:#1d1d1d; margin:185px 0 0 10px;}
+.choose_con .cho1 .con a{ display:block; width:115px; height:34px; background:#bebebe; color:#555; line-height:34px; text-align:center; margin:10px 0 0 20px;}
+.choose_con .cho2 .con input ,.choose_con .cho3 .con input{ display:block; width:248px; height:30px; border:1px solid #909090; margin:9px 0 0 20px; font-size:14px; padding-left:10px; float:left;}
+.choose_con>ul .tit{ background-color:#f4f8fb;}
+.filebtn{ width:100px; float:left; position:absolute; left:620px; opacity:0;filter:alpha(opacity=0);}
+.sebtn {
+    display: block;
+	float:left;
+    width: 110px;
+    line-height: 32px;
+    margin-top: 7px;
+    font-family: "微软雅黑";
+    font-size: 16px;
+    color: #555;
+    background-color: #d0eeff;
+    border: none;
+    border: 1px solid #99d3f5;
+    border-radius: 4px;
+	 position:relative;
+	left:10px;
+}
+.cho1 .con .filebtn{left:360px; height:38px;margin-top:5px;}
+.cho1 .con .sebtn{left:15px; width:100px;}
+
+
+
+/*完成取消按钮*/
+.theme .butt{ height:160px;}
+.theme .butt a{ display:block; width:100px; height:34px; font-size:16px; color:white; text-align:center; line-height:34px; float:left; border-radius:4px; margin-top:60px;}
+.theme .butt .finish{ background-color:#1977df; margin-right:50px; margin-left:350px;}
+.theme .butt .finish:hover{ background-color:#1668c2;}
+.theme .butt .cancel{ background-color:#bebebe;}
+.theme .butt .cancel:hover{ background-color:#a7a7a7;}
+.theme .butt .save{ background-color:#7f7f7f; margin-right:50px;}
+.theme .butt .save:hover{ background-color:#8c8c8c;}
+
+
+
+
+
+
+
+
+
+
+

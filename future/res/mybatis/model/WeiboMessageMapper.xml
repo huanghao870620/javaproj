@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.WeiboMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.WeiboMessage" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_ACCOUNT" property="customerAccount" jdbcType="VARCHAR" />
+    <result column="ROOM_ID" property="roomId" jdbcType="DECIMAL" />
+    <result column="ROOM_NAME" property="roomName" jdbcType="VARCHAR" />
+    <result column="LEVEL_ID" property="levelId" jdbcType="DECIMAL" />
+    <result column="PASS" property="pass" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "ID", "CUSTOMER_ID", "CUSTOMER_NAME", "MSG", "CREATE_TIME", "CUSTOMER_ACCOUNT", 
+    "ROOM_ID", "ROOM_NAME", "LEVEL_ID"
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from "JUNCHUAN"."WEIBO_MESSAGE"
+    where "ID" = #{id,jdbcType=DECIMAL}
+  </select>
+ 
+  <insert id="insert" parameterType="com.ld.model.WeiboMessage" >
+  
+    <selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="id">
+		SELECT SEQ_WEIBO_MESSAGE.NEXTVAL as id  FROM DUAL
+	</selectKey> 
+	
+    insert into "JUNCHUAN"."WEIBO_MESSAGE" ("ID", "CUSTOMER_ID", "CUSTOMER_NAME", 
+      "MSG",  "CUSTOMER_ACCOUNT", 
+      "ROOM_ID", "ROOM_NAME", "LEVEL_ID","INPUT_TIME", "PASS", "SESSIONID"
+      )
+    values (#{id,jdbcType=DECIMAL}, #{customerId,jdbcType=DECIMAL}, #{customerName,jdbcType=VARCHAR}, 
+      #{msg,jdbcType=VARCHAR},  #{customerAccount,jdbcType=VARCHAR}, 
+      #{roomId,jdbcType=DECIMAL}, #{roomName,jdbcType=VARCHAR}, #{levelId,jdbcType=DECIMAL}, #{inputTime,jdbcType=TIMESTAMP},
+      #{pass,jdbcType=DECIMAL}, #{sessionid,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <!-- 获取最近的50条消息 -->
+  
+  <select id="getRecentlyFifteenMsg" resultType="com.ld.model.WeiboMessage">
+   select 
+      t.LEVEL_ID AS levelId,
+      t.INPUT_TIME AS inputTime,
+      t.CUSTOMER_ID AS customerId,
+      t.CUSTOMER_NAME AS customerName,
+      t.CUSTOMER_ACCOUNT AS customerAccount,
+    t.* from WEIBO_MESSAGE t WHERE  PASS=1  AND  ROWNUM&lt;=50 ORDER BY INPUT_TIME 
+  </select>
+  
+  <!--  -->
+  <select id="findById" resultType="com.ld.model.WeiboMessage">
+   select 
+    t.LEVEL_ID AS levelId,
+    t.INPUT_TIME AS inputTime,
+    t.CUSTOMER_ACCOUNT AS customerAccount,
+    t.CUSTOMER_ID AS customerId,
+    t.CUSTOMER_NAME AS customerName,
+    t.ROOM_ID AS roomId,
+    t.ROOM_NAME AS roomName,
+   t.* from WEIBO_MESSAGE t where id=#{id,jdbcType=DECIMAL}
+  </select>
+  
+  
+  
+   <update id="updateByPrimaryKey" parameterType="com.ld.model.WeiboMessage" >
+     update  "WEIBO_MESSAGE"
+        set 
+        "CUSTOMER_ID"= #{customerId,jdbcType=DECIMAL},
+        "CUSTOMER_NAME"= #{customerName,jdbcType=VARCHAR},
+        "CUSTOMER_ACCOUNT" = #{customerAccount,jdbcType=VARCHAR},
+        "ROOM_ID" = #{roomId,jdbcType=DECIMAL},
+        "ROOM_NAME" = #{roomName,jdbcType=VARCHAR},
+        "LEVEL_ID" = #{levelId,jdbcType=DECIMAL},
+        "MSG" = #{msg,jdbcType=VARCHAR},
+        "INPUT_TIME" = #{inputTime,jdbcType=TIMESTAMP},
+        "PASS" = #{pass,jdbcType=DECIMAL} WHERE "ID" = #{id,jdbcType=DECIMAL}
+  </update>
+ 
+ 
+ 
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration    
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+    
+    <configuration>  
+    
+    <!-- 引入配置信息文件 -->  
+    <properties resource="jdbc.properties" >
+    </properties>  
+    
+     <plugins>
+      <plugin interceptor="com.github.pagehelper.PageHelper">
+        <property name="dialect" value="mysql"/>
+        <property name="offsetAsPageNum" value="true"/>
+        <property name="rowBoundsWithCount" value="true"/>
+      </plugin>
+    </plugins>
+     
+    <environments default="demo">  
+        <environment id="demo">  
+            <transactionManager type="JDBC" />  
+            <dataSource type="POOLED">  
+                <property value="${jdbc.driver}" name="driver" />  
+                <property value="${jdbc.url}" name="url" />  
+                <property value="${jdbc.username}" name="username" />  
+                <property value="${jdbc.password}" name="password" />  
+            </dataSource>  
+        </environment>  
+    </environments>  
+    
+   
+</configuration>  

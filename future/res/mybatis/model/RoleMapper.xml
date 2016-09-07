@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.Role" >
+    <id column="ROLEID" property="roleid" jdbcType="DECIMAL" />
+    <result column="ROLENAME" property="rolename" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "ROLEID", "ROLENAME"
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from "JUNCHUAN"."ROLE"
+    where "ROLEID" = #{roleid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from "JUNCHUAN"."ROLE"
+    where "ROLEID" = #{roleid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.ld.model.Role" >
+    insert into "JUNCHUAN"."ROLE" ("ROLEID", "ROLENAME")
+    values (#{roleid,jdbcType=DECIMAL}, #{rolename,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.model.Role" >
+    insert into "JUNCHUAN"."ROLE"
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        "ROLEID",
+      </if>
+      <if test="rolename != null" >
+        "ROLENAME",
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        #{roleid,jdbcType=DECIMAL},
+      </if>
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ld.model.Role" >
+    update "JUNCHUAN"."ROLE"
+    <set >
+      <if test="rolename != null" >
+        "ROLENAME" = #{rolename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where "ROLEID" = #{roleid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.Role" >
+    update "JUNCHUAN"."ROLE"
+    set "ROLENAME" = #{rolename,jdbcType=VARCHAR}
+    where "ROLEID" = #{roleid,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="findAllByPaging" resultType="com.ld.model.Role">
+    SELECT * FROM ROLE
+  </select>
+  
+  <select id="findAll" resultType="com.ld.model.Role">
+    SELECT * FROM ROLE
+  </select>
+  
+  
+  <!-- 根据角色查询用户 -->
+  <select id="findUserByRole" resultType="com.ld.model.User" parameterType="com.ld.dto.RoleDto">
+   	SELECT 
+   	 U.USER_NAME as userName,
+   	 U.USER_ID as userId,
+   	 U.*
+   	FROM USERROLE UR RIGHT JOIN "USER" U ON U.USER_ID = UR.USERID  WHERE UR.ROLEID= #{roleid, jdbcType=DECIMAL}
+  </select>
+  
+    <select id="findById" parameterType="java.math.BigDecimal" resultType="com.ld.model.Role">
+     SELECT  t.ROLEID   as roleId, t.ROLENAME  as roleName   FROM "JUNCHUAN"."ROLE"  t  WHERE "ROLEID"=#{roleId,jdbcType=DECIMAL}
+  </select>
+  
+</mapper>

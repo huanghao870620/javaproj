@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <classPathEntry location="C:\\Users\\huang.hao\\.m2\\repository\\mysql\\mysql-connector-java\\5.1.6\\mysql-connector-java-5.1.6.jar" />
+
+  <context id="mysqlTables" targetRuntime="MyBatis3">
+  	<property name="autoDelimitKeywords" value="true" />
+  	<!--
+  	<property name="beginningDelimiter" value="'"/>
+  	<property name="endingDelimiter" value="'"/>  
+  	-->
+  <property name="useActualColumnNames" value="false"/>	
+  
+  <commentGenerator> 
+    <property name="suppressAllComments" value="true" /> 
+  </commentGenerator> 
+  	
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://192.168.10.14:3306/test"
+        userId="root"
+        password="123">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="com.ld.entity" targetProject="d:/dest">
+    	<property name="enableSubPackages" value="false" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="com.ld.mapper.xml"  targetProject="d:/dest">
+      <property name="enableSubPackages" value="false" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.ld.mapper"  targetProject="d:/dest">
+      <property name="enableSubPackages" value="false" />
+    </javaClientGenerator>
+
+   	   <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="courseware" 
+    	 domainObjectName="Courseware" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="customer" 
+    	 domainObjectName="Customer" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="files" 
+    	 domainObjectName="Files" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="intoScope" 
+    	 domainObjectName="IntoScope" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="membershipGrade" 
+    	 domainObjectName="MembershipGrade" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="operationRecords" 
+    	 domainObjectName="OperationRecords" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="plate" 
+    	 domainObjectName="Plate" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="role" 
+    	 domainObjectName="Role" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="room" 
+    	 domainObjectName="Room" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="skin" 
+    	 domainObjectName="Skin" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	  <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="tutorial" 
+    	 domainObjectName="Tutorial" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	  <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="user" 
+    	 domainObjectName="User" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="JUNCHUAN" 
+    	 catalog=""
+    	 tableName="menu" 
+    	 domainObjectName="Menu" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	
+    	 
+      <!-- 
+      <generatedKey column="user_id" sqlStatement="oracle" identity="true" />
+      <columnOverride column="DATE_FIELD" property="startDate" />
+      <ignoreColumn column="FRED" />
+      <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />
+       -->
+       
+       
+        
+  </context>
+</generatorConfiguration>

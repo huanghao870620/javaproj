@@ -1,0 +1,11 @@
+@charset "utf-8";
+/* CSS Document */
+.contain_main .theme{min-width:1480px; width:85%;border:1px solid #368ee0; margin:20px;font-family:"微软雅黑";}
+.contain_main .theme h2 p{ display:block; float:left; padding-left:40px; background:url(/res/images/lecturer.png) no-repeat 10px center;}
+.contain_main .theme ul .six{ width:900px;}
+.contain_main .theme ul .last{min-width:500px; border:none;}
+.contain_main .theme .title .last p{position:relative; left:8%;}
+.contain_main .theme ul .last .button{width:380px; height:28px; margin-top:12px; position:relative; left:20%;}
+
+
+

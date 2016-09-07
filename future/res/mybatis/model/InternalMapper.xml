@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.InternalMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.Internal" >
+    <id column="INTERNAL_ID" property="internalId" jdbcType="DECIMAL" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="INTERNAL_TYPE" property="internalType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "INTERNAL_ID" as internalId, "TITLE" as title, "CONTENT" as content,  
+    "CREATE_TIME" as createTime, "UPDATE_TIME" as updateTime, "INTERNAL_TYPE" as internalType
+  </sql>
+  
+  <!-- 根据ID查询交易内参信息 -->
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM "INTERNAL"
+    WHERE "INTERNAL_ID" = #{internalId,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 分页查询内参信息 -->
+  <select id="findAllByPaging" resultType="com.ld.dto.InternalDto" parameterType="com.ld.model.Internal">
+  	SELECT 
+    <include refid="Base_Column_List" />,
+    TO_CHAR(t."CREATE_TIME",'day') as week
+    FROM "INTERNAL" t
+    WHERE t.INTERNAL_TYPE = #{internalType,jdbcType=DECIMAL}
+    <if test="title != null">
+    	AND t."TITLE" like CONCAT('%',CONCAT(#{title},'%'))
+    </if>
+    ORDER BY decode(week,'星期一',1,'星期二',2,'星期三',3,'星期四',4,'星期五',5,'星期六',6,'星期日',7),t."CREATE_TIME" DESC
+  </select>
+  
+  <!-- 删除交易内参信息 -->
+  <delete id="delete" parameterType="java.math.BigDecimal" >
+    DELETE FROM "INTERNAL"
+    WHERE "INTERNAL_ID" = #{internalId,jdbcType=DECIMAL}
+  </delete>
+  
+  <!-- 添加交易内参信息 -->
+  <insert id="insert" parameterType="com.ld.model.Internal" >
+  	<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="internalId">
+		SELECT seq_internal.NEXTVAL as internalId  FROM DUAL
+	</selectKey> 
+    INSERT INTO "INTERNAL" 
+    	("INTERNAL_ID", "TITLE", "CONTENT", "CREATE_TIME", "UPDATE_TIME", "INTERNAL_TYPE")
+    VALUES 
+    	(#{internalId,jdbcType=DECIMAL}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+    	#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{internalType,jdbcType=VARCHAR})
+  </insert>
+  <!-- 更新交易内参信息 -->
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.Internal" >
+	UPDATE "INTERNAL"
+	SET "TITLE" = #{title,jdbcType=VARCHAR},
+	"CONTENT" = #{content,jdbcType=VARCHAR},
+	"CREATE_TIME" = #{createTime,jdbcType=TIMESTAMP},
+	"UPDATE_TIME" = #{updateTime,jdbcType=TIMESTAMP},
+	"INTERNAL_TYPE" = #{internalType,jdbcType=VARCHAR}
+	WHERE "INTERNAL_ID" = #{internalId,jdbcType=DECIMAL}
+  </update>
+</mapper>

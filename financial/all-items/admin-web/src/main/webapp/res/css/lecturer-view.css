@@ -1,0 +1,21 @@
+@charset "utf-8";
+/* CSS Document */
+.contain_main .theme{min-width:1400px; width:97%;border:1px solid #368ee0; margin:20px;font-family:"微软雅黑";}
+
+.contain_main .theme h2 p{ display:block; float:left; padding-left:50px; background:url(../images/pointer_new.png) no-repeat 10px center; font-size:18px; color:white;}
+
+.contain_main .theme ul .first{ width:80px;}
+.contain_main .theme ul .sec{ width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:20em;}
+.contain_main .theme ul .thr{ width:200px;}
+.contain_main .theme ul .four{ width:350px;overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:20em;}
+.contain_main .theme ul .six{ width:300px;}
+.contain_main .theme ul .six i{ display:block; float:left; margin:0 20px;}
+.contain_main .theme ul .last{min-width:120px; border:none;}
+.contain_main .theme .title .last p{position:relative; left:100%;}
+.contain_main .theme ul .last .button{width:130px; height:28px; margin-top:12px; position:relative; left:80%;}
+.contain_main .theme ul .last .twot{margin-left:15px;}
+.result img{ padding:10px 0 0 5px;}
+
+
+
+

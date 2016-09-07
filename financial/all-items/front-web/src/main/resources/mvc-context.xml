@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"  
+    xmlns:p="http://www.springframework.org/schema/p" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd  
+                http://www.springframework.org/schema/aop  
+                http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+                 http://www.springframework.org/schema/tx
+        		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+                http://www.springframework.org/schema/beans 
+                http://www.springframework.org/schema/beans/spring-beans.xsd  
+        		http://www.springframework.org/schema/context 
+        		http://www.springframework.org/schema/context/spring-context.xsd">  
+        
+    <!-- 加载Spring的全局配置文件 -->  
+    <beans:import resource="root-context.xml" />   
+      
+    <!-- SpringMVC配置 -->  
+      
+    <!-- 通过component-scan 让Spring扫描org.swinglife.controller下的所有的类，让Spring的代码注解生效 -->  
+   <!--  <context:component-scan base-package="com.ld"></context:component-scan> --> 
+    
+      <context:annotation-config/>
+	        <aop:aspectj-autoproxy />
+           <context:component-scan base-package="com.ld"/>
+           <!-- <context:property-placeholder location="classpath:jdbc.properties"/> -->
+           
+            <!-- 引入jdbc配置文件 -->    
+    <beans:bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+        <beans:property name="locations"> 
+            <beans:list>    
+                <beans:value>classpath*:jdbc.properties</beans:value>    
+            </beans:list>    
+        </beans:property>    
+    </beans:bean>   
+           
+     <!--       
+     <beans:bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+	      <beans:property name="driverClassName">  
+	         <beans:value>${jdbc.driver}</beans:value>  
+	    </beans:property>  
+	     <beans:property name="url">  
+	         <beans:value>${jdbc.url}</beans:value>  
+	     </beans:property>  
+	     <beans:property name="username">  
+	          <beans:value>${jdbc.username}</beans:value>   
+	     </beans:property>  
+	     <beans:property name="password">  
+	         <beans:value>${jdbc.password}</beans:value>  
+	     </beans:property>   
+ 	</beans:bean>   -->
+ 	
+ 	
+ 	 <beans:bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+	      <beans:property name="driverClassName">  
+	         <beans:value>com.mysql.jdbc.Driver</beans:value>  
+	    </beans:property>  
+	     <beans:property name="url">  
+	         <beans:value>jdbc:mysql://192.168.10.14:3306/test</beans:value>  
+	     </beans:property>  
+	     <beans:property name="username">  
+	          <beans:value>root</beans:value>   
+	     </beans:property>  
+	     <beans:property name="password">  
+	         <beans:value>123</beans:value>  
+	     </beans:property>   
+ 	</beans:bean>  
+
+ 
+ <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+     <beans:property name="dataSource" ref="jdbcDataSource" />  
+     <beans:property name="configLocation" value="classpath:mybatis-config.xml"></beans:property>  
+     <beans:property name="mapperLocations" value="classpath*:mapper/xml/**/*Mapper.xml"></beans:property>  
+     <beans:property name="plugins">
+       <beans:list>
+         <beans:bean class="com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor">
+           <beans:property name="dialectClass" value="com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect"></beans:property>
+         </beans:bean>
+       </beans:list>
+     </beans:property>
+ </beans:bean>  
+ 
+ 
+  <!-- DAO接口所在包名，Spring会自动查找其下的类 -->  
+    <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+        <beans:property name="basePackage" value="com.ld.mapper" />  
+        <beans:property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></beans:property>  
+    </beans:bean>  
+  
+  
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
+    <beans:bean id="transactionManager"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <beans:property name="dataSource" ref="jdbcDataSource" />  
+    </beans:bean>  
+    
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/> 
+      
+    <!-- 配置SpringMVC的视图渲染器， 让其前缀为:/ 后缀为.jsp  将视图渲染到/page/<method返回值>.jsp中 -->  
+    <beans:bean  
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver"  
+        p:prefix="/page/" p:suffix=".jsp">  
+        </beans:bean>  
+  
+  
+</beans:beans>  

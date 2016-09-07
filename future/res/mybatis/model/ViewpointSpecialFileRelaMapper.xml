@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.ViewpointSpecialFileRelaMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.ViewpointSpecialFileRela" >
+    <id column="VIEWPOINT_ID" property="viewpointId" jdbcType="DECIMAL" />
+    <result column="CFILE_ID" property="cfileId" jdbcType="DECIMAL" />
+    <result column="SPECIAL_FILE_SEQU" property="specialFileSequ" jdbcType="DECIMAL" />
+    <result column="SPECIAL" property="special" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    "VIEWPOINT_ID" as viewpointId, "CFILE_ID" as cfileId, "SPECIAL_FILE_SEQU" as specialFileSequ, "SPECIAL" as special,
+    "CREATE_TIME" as createTime, "UPDATE_TIME" as updateTime
+  </sql>
+  <!-- 根据观点ID查询对应图片列表 -->
+  <select id="findListById" parameterType="java.math.BigDecimal" resultType="com.ld.model.ViewpointSpecialFileRela">
+  	SELECT
+  	<include refid="Base_Column_List"/>
+  	FROM VIEWPOINT_SPECIAL_FILE_RELA t where t."VIEWPOINT_ID" = #{viewpointId,jdbcType=DECIMAL}
+  	ORDER BY t."SPECIAL_FILE_SEQU"
+  </select>
+  <!-- 根据观点和图片顺序ID查询 -->
+  <select id="findByIdAndSequ" parameterType="com.ld.model.ViewpointSpecialFileRela" resultType="com.ld.model.ViewpointSpecialFileRela">
+  	SELECT
+  	<include refid="Base_Column_List"/>
+  	FROM VIEWPOINT_SPECIAL_FILE_RELA t where t."VIEWPOINT_ID" = #{viewpointId,jdbcType=DECIMAL}
+  	and t."SPECIAL_FILE_SEQU" = #{specialFileSequ,jdbcType=DECIMAL}
+  </select>
+  <!-- 新增观点图片关系 -->
+  <insert id="insert" parameterType="com.ld.model.ViewpointSpecialFileRela" >
+    INSERT INTO "VIEWPOINT_SPECIAL_FILE_RELA" ("VIEWPOINT_ID", "CFILE_ID", "SPECIAL_FILE_SEQU", 
+      "SPECIAL", "CREATE_TIME", "UPDATE_TIME")
+    VALUES (#{viewpointId,jdbcType=DECIMAL}, #{cfileId,jdbcType=DECIMAL}, #{specialFileSequ,jdbcType=DECIMAL}, 
+      #{special,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 更新观点图片关系 -->
+  <update id="updateByPrimaryKey" parameterType="com.ld.model.ViewpointSpecialFileRela">
+    UPDATE "VIEWPOINT_SPECIAL_FILE_RELA"
+    SET "CFILE_ID" = #{cfileId,jdbcType=DECIMAL},
+      "SPECIAL" = #{special,jdbcType=VARCHAR},
+      "UPDATE_TIME" = #{updateTime,jdbcType=TIMESTAMP}
+    WHERE "VIEWPOINT_ID" = #{viewpointId,jdbcType=DECIMAL}
+    and "SPECIAL_FILE_SEQU" = #{specialFileSequ,jdbcType=DECIMAL}
+  </update>
+  <!-- 删除观点专题图片关联关系 -->
+  <delete id="delete" parameterType="java.math.BigDecimal">
+  	DELETE FROM "VIEWPOINT_SPECIAL_FILE_RELA" t WHERE t."VIEWPOINT_ID" = #{viewpointId,jdbcType=DECIMAL}
+  </delete>
+</mapper>

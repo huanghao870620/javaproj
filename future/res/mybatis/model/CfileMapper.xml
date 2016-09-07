@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.CfileMapper" >
+  <resultMap id="BaseResultMap" type="com.ld.model.Cfile" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ORIGINAL_NAME" property="originalName" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="URL_CODE" property="urlCode" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="FILESIZE" property="filesize" jdbcType="DECIMAL" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <sql id="Base_Column_List" >
+    "ID" as id, "ORIGINAL_NAME" as originalName, "NAME" as name, "URL_CODE" as urlCode,
+    "TYPE" as type, "FILESIZE" as filesize , "CREATE_TIME" as createTime 
+  </sql>
+  <insert id="insert" parameterType="com.ld.model.Cfile" >
+    <selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="id">
+		SELECT seq_cfile.NEXTVAL as id  FROM DUAL
+	</selectKey> 
+	
+    insert into "JUNCHUAN"."CFILE" ("ID", "ORIGINAL_NAME", "NAME", 
+      "URL_CODE", "TYPE", "FILESIZE", 
+      "CREATE_TIME")
+    values (#{id,jdbcType=DECIMAL}, #{originalName,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{urlCode,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{filesize,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ld.model.Cfile" >
+    insert into "JUNCHUAN"."CFILE"
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        "ID",
+      </if>
+      <if test="originalName != null" >
+        "ORIGINAL_NAME",
+      </if>
+      <if test="name != null" >
+        "NAME",
+      </if>
+      <if test="urlCode != null" >
+        "URL_CODE",
+      </if>
+      <if test="type != null" >
+        "TYPE",
+      </if>
+      <if test="filesize != null" >
+        "FILESIZE",
+      </if>
+      <if test="createTime != null" >
+        "CREATE_TIME",
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="originalName != null" >
+        #{originalName,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="urlCode != null" >
+        #{urlCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="filesize != null" >
+        #{filesize,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="findById" resultType="com.ld.model.Cfile" parameterType="long">
+  	SELECT t."ID" as  id,   t."ORIGINAL_NAME" as originalName,    t."NAME" as name,   t."URL_CODE" as  urlCode,
+  	   t."TYPE" as type,   t."FILESIZE" as  filesize,   t."CREATE_TIME" as  createTime   
+  	           FROM "JUNCHUAN"."CFILE"  t where t."ID" = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="delete" parameterType="java.math.BigDecimal">
+  	delete from "JUNCHUAN"."CFILE"  c  where c."ID" = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <delete id="batchRemoveCfileById" parameterType="java.util.List">
+delete from "JUNCHUAN"."CFILE"  c  where c."ID" in 
+<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+#{item}
+</foreach>
+</delete>
+
+ <!-- 根据图片ID列表查询对应图片信息列表 -->
+  <select id="batchFindByCfileIdList" parameterType="java.util.List" resultType="com.ld.model.Cfile">
+  	SELECT
+  	<include refid="Base_Column_List"/>
+  	FROM "JUNCHUAN"."CFILE"  c where c."ID" in 
+ <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+#{item}
+</foreach>
+  </select>
+
+</mapper>

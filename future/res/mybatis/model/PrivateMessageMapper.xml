@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ld.mapper.PrivateMessageMapper" >
+	<resultMap id="BaseResultMap" type="com.ld.model.PrivateMessage" >
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="CREATOR_ID" property="creatorId" jdbcType="DECIMAL" />
+		<result column="VIEW_ID" property="viewId" jdbcType="DECIMAL" />
+	</resultMap>
+  
+	<sql id="Base_Column_List" >
+		"ID" as id, "CONTENT" as content,"CREATE_TIME" as createTime,"CREATOR_ID" as creatorId,"VIEW_ID" as viewId
+	</sql>
+  
+	<!-- 根据私信ID获取私信信息 -->
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+		select
+		<include refid="Base_Column_List" />
+		from "JUNCHUAN"."PRIVATE_MESSAGE"
+		where "ID" = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<!-- 删除私信信息 -->
+	<delete id="delete" parameterType="java.math.BigDecimal">
+		delete from "PRIVATE_MESSAGE"
+		where "VIEW_ID" = #{viewId,jdbcType=DECIMAL}
+	</delete>
+	
+	<!-- 新增私信信息 -->
+	<insert id="insert" parameterType="com.ld.model.PrivateMessage" >
+		<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="id">
+			SELECT SEQ_PRIVATE_MESSAGE.NEXTVAL as id  FROM DUAL
+		</selectKey> 
+		insert into "PRIVATE_MESSAGE" ("ID", "CONTENT","CREATE_TIME","CREATOR_ID","VIEW_ID")
+		values (#{id,jdbcType=DECIMAL}, #{content,jdbcType=VARCHAR},
+				#{createTime,jdbcType=TIMESTAMP},#{creatorId,jdbcType=DECIMAL},
+				#{viewId,jdbcType=DECIMAL})
+	</insert>
+	
+	<!-- 根据私信创建者ID获取该创建人提问过的观点ID -->
+	<select id="getViewIdByCreator" parameterType="com.ld.dto.PrivateMessageDto" resultType="java.math.BigDecimal">
+		select distinct t.view_id from private_message t,teacher_view t1 where t.view_id = t1.id and t.creator_id = #{creatorId,jdbcType=DECIMAL}
+		<if test="teacherId != null">
+			and t1.teacher_id = #{teacherId,jdbcType=DECIMAL}
+		</if>
+	</select>
+	
+	<!-- 根据私信创建者ID和观点ID获取私信信息 -->
+	<select id="getPrivateMessageInfo" parameterType="com.ld.model.PrivateMessage" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"></include>
+		from private_message t where t.creator_id = #{creatorId,jdbcType=DECIMAL} and t.view_id = #{viewId,jdbcType=DECIMAL}
+		order by t.create_time
+	</select>
+	
+	<!-- 讲师获取提问过的客户ID集合 -->
+	<select id="getCreatorIdByTeacherId" parameterType="java.math.BigDecimal" resultType="java.math.BigDecimal">
+		select distinct t1.creator_id from teacher_view t,private_message t1 where t.id = t1.view_id and t.teacher_id = #{teacherId,jdbcType=DECIMAL}
+	</select>
+	
+	<!-- 获取观点的提问信息ID -->
+	<select id="getPriMsgIdByViewId" parameterType="java.math.BigDecimal" resultType="java.math.BigDecimal">
+		select t.id from private_message t where t.view_id = #{viewId,jdbcType=DECIMAL}
+	</select>
+	
+	<!-- 检测提问是否存在回复 -->
+	<select id="checkExistsReply" parameterType="com.ld.model.PrivateMessage" resultType="java.math.BigDecimal">
+		select count(1) from private_message t ,private_message_reply t1 where t.id = t1.private_message_id and t.view_id = #{viewId,jdbcType=DECIMAL} and t.creator_id = #{creatorId,jdbcType=DECIMAL}
+	</select>
+	
+</mapper>
