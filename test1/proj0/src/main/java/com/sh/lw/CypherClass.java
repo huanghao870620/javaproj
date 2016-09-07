@@ -1,5 +1,8 @@
 package com.sh.lw;
-public class CypherClass{
+
+import java.util.Date;
+
+public class CypherClass extends Date{
 	
 	@Override
 	public String toString(){
