@@ -44,7 +44,7 @@ public class AjaxQueryInterceptor {
 	
 	
 	/**
-	 * ·ÖÒ³²éÑ¯ºóÖ´ÐÐ
+	 * ï¿½ï¿½Ò³ï¿½ï¿½Ñ¯ï¿½ï¿½Ö´ï¿½ï¿½
 	 * @param rvt
 	 */
 	@AfterReturning(returning="rvt",value="anyMethod()")

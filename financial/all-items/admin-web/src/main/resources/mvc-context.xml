@@ -22,11 +22,11 @@
     <!-- SpringMVC配置 -->  
       
     <!-- 通过component-scan 让Spring扫描org.swinglife.controller下的所有的类，让Spring的代码注解生效 -->  
-   <!--  <context:component-scan base-package="com.ld"></context:component-scan> --> 
+   <!--  <context:component-scan base-package="com.xa"></context:component-scan> --> 
     
       <context:annotation-config/>
 	        <aop:aspectj-autoproxy />
-           <context:component-scan base-package="com.ld"/>
+           <context:component-scan base-package="com.xa"/>
            <!-- <context:property-placeholder location="classpath:jdbc.properties"/> -->
            
             <!-- 引入jdbc配置文件 -->    
@@ -59,14 +59,16 @@
 	      <beans:property name="driverClassName">  
 	         <beans:value>com.mysql.jdbc.Driver</beans:value>  
 	    </beans:property>  
+	    
 	     <beans:property name="url">  
-	         <beans:value>jdbc:mysql://192.168.10.14:3306/test</beans:value>  
+	          <!-- <beans:value>jdbc:mysql://47.88.105.195:3306/test</beans:value> -->   
+	        <beans:value>jdbc:mysql://192.168.1.102:3306/test</beans:value> 
 	     </beans:property>  
 	     <beans:property name="username">  
 	          <beans:value>root</beans:value>   
 	     </beans:property>  
 	     <beans:property name="password">  
-	         <beans:value>123</beans:value>  
+	         <beans:value>xa</beans:value>  
 	     </beans:property>   
  	</beans:bean>  
 
@@ -87,7 +89,7 @@
  
   <!-- DAO接口所在包名，Spring会自动查找其下的类 -->  
     <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
-        <beans:property name="basePackage" value="com.ld.mapper" />  
+        <beans:property name="basePackage" value="com.xa.mapper" />  
         <beans:property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></beans:property>  
     </beans:bean>  
   

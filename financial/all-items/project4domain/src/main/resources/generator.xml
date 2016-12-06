@@ -4,10 +4,10 @@
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-  <classPathEntry location="C:\\Users\\huang.hao\\.m2\\repository\\mysql\\mysql-connector-java\\5.1.6\\mysql-connector-java-5.1.6.jar" />
+  <classPathEntry location="C:\\Users\\admin\\.m2\\repository\\mysql\\mysql-connector-java\\5.1.6\\mysql-connector-java-5.1.6.jar" />
 
   <context id="mysqlTables" targetRuntime="MyBatis3">
-  	<property name="autoDelimitKeywords" value="true" />
+  	<property name="autoDelimitKeywords" value="false" />
   	<!--
   	<property name="beginningDelimiter" value="'"/>
   	<property name="endingDelimiter" value="'"/>  
@@ -19,157 +19,31 @@
   </commentGenerator> 
   	
     <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-        connectionURL="jdbc:mysql://192.168.10.14:3306/test"
+        connectionURL="jdbc:mysql://192.168.1.102:3306/test"
         userId="root"
-        password="123">
+        password="xa">
     </jdbcConnection>
 
     <javaTypeResolver >
       <property name="forceBigDecimals" value="false" />
     </javaTypeResolver>
 
-    <javaModelGenerator targetPackage="com.ld.entity" targetProject="d:/dest">
+    <javaModelGenerator targetPackage="com.xa.entity" targetProject="d:/dest">
     	<property name="enableSubPackages" value="false" />
     </javaModelGenerator>
 
-    <sqlMapGenerator targetPackage="com.ld.mapper.xml"  targetProject="d:/dest">
+    <sqlMapGenerator targetPackage="com.xa.mapper.xml"  targetProject="d:/dest">
       <property name="enableSubPackages" value="false" />
     </sqlMapGenerator>
 
-    <javaClientGenerator type="XMLMAPPER" targetPackage="com.ld.mapper"  targetProject="d:/dest">
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.xa.mapper"  targetProject="d:/dest">
       <property name="enableSubPackages" value="false" />
     </javaClientGenerator>
 
-   	   <table schema="JUNCHUAN" 
+   	   <table schema="" 
     	 catalog=""
-    	 tableName="courseware" 
-    	 domainObjectName="Courseware" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	 <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="customer" 
-    	 domainObjectName="Customer" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	 <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="files" 
-    	 domainObjectName="Files" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	 <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="intoScope" 
-    	 domainObjectName="IntoScope" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	 <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="membershipGrade" 
-    	 domainObjectName="MembershipGrade" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	 <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="operationRecords" 
-    	 domainObjectName="OperationRecords" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	 <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="plate" 
-    	 domainObjectName="Plate" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	 <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="role" 
-    	 domainObjectName="Role" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	  <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="room" 
-    	 domainObjectName="Room" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	  <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="skin" 
-    	 domainObjectName="Skin" 
+    	 tableName="buy_hand" 
+    	 domainObjectName="BuyHand" 
     	 enableCountByExample="false" 
     	 enableUpdateByExample="false" 
     	 enableDeleteByExample="false" 
@@ -181,22 +55,7 @@
     	 </table>
     	 
     	 
-    	  <table schema="JUNCHUAN" 
-    	 catalog=""
-    	 tableName="tutorial" 
-    	 domainObjectName="Tutorial" 
-    	 enableCountByExample="false" 
-    	 enableUpdateByExample="false" 
-    	 enableDeleteByExample="false" 
-    	 enableSelectByExample="false" 
-    	 selectByExampleQueryId="false"    	 
-    	 delimitIdentifiers="false"
-    	 delimitAllColumns="false"
-    	 >
-    	 </table>
-    	 
-    	 
-    	  <table schema="JUNCHUAN" 
+    	 <table schema="" 
     	 catalog=""
     	 tableName="user" 
     	 domainObjectName="User" 
@@ -210,7 +69,8 @@
     	 >
     	 </table>
     	 
-    	 <table schema="JUNCHUAN" 
+    	 
+    	 <table schema="" 
     	 catalog=""
     	 tableName="menu" 
     	 domainObjectName="Menu" 
@@ -223,7 +83,448 @@
     	 delimitAllColumns="false"
     	 >
     	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="file" 
+    	 domainObjectName="File" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="goods" 
+    	 domainObjectName="Goods" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="file_type" 
+    	 domainObjectName="FileType" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="orders" 
+    	 domainObjectName="Orders" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="goods_order_release" 
+    	 domainObjectName="GoodsOrderRelease" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="customer_order" 
+    	 domainObjectName="CustomerOrder" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="buyhand_wallet" 
+    	 domainObjectName="BuyhandWallet" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="bank_card" 
+    	 domainObjectName="BankCard" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
     	
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="mobile_vercode_log" 
+    	 domainObjectName="MobileVercodeLog" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="account_transaction_records" 
+    	 domainObjectName="AccountTransactionRecords" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="consumption_type" 
+    	 domainObjectName="ConsumptionType" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="account_associated" 
+    	 domainObjectName="AccountAssociated" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="account_type" 
+    	 domainObjectName="AccountType" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="mail" 
+    	 domainObjectName="Mail" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="bank_type" 
+    	 domainObjectName="BankType" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="shopping_cart" 
+    	 domainObjectName="ShoppingCart" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="shopping_cart_goods" 
+    	 domainObjectName="ShoppingCartGoods" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="buyers" 
+    	 domainObjectName="Buyers" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="general_ledger" 
+    	 domainObjectName="GeneralLedger" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="classification" 
+    	 domainObjectName="Classification" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="brand" 
+    	 domainObjectName="Brand" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="country" 
+    	 domainObjectName="Country" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="mall" 
+    	 domainObjectName="Mall" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="mall_goods" 
+    	 domainObjectName="MallGoods" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="currency" 
+    	 domainObjectName="Currency" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="norms" 
+    	 domainObjectName="Norms" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	   <table schema="" 
+    	 catalog=""
+    	 tableName="upload_type" 
+    	 domainObjectName="UploadType" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="shopping_cart_goods" 
+    	 domainObjectName="ShoppingCartGoods" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="real_name_auth" 
+    	 domainObjectName="RealNameAuth" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="area" 
+    	 domainObjectName="Area" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="delivery_address" 
+    	 domainObjectName="DeliveryAddress" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
     	 
       <!-- 
       <generatedKey column="user_id" sqlStatement="oracle" identity="true" />

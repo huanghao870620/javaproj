@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.ld</groupId>
+    <groupId>com.xa</groupId>
     <artifactId>all-items</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
@@ -12,20 +12,7 @@
   <name>project4service</name>
   <url>http://maven.apache.org</url>
   
-  <repositories>
-          <repository>
-              <id>thirdparty</id>
-              <name>Team Nexus Repository</name>
-              <url>http://192.168.10.110:8081/nexus/content/repositories/thirdparty</url>
-          </repository>
-      </repositories>
-      <pluginRepositories>
-          <pluginRepository>
-             <id>thirdparty</id>
-             <name>Team Nexus Repository</name>
-             <url>http://192.168.10.110:8081/nexus/content/repositories/thirdparty</url>
-         </pluginRepository>
-     </pluginRepositories>
+   
   
   <dependencies>
     <dependency>
@@ -36,7 +23,7 @@
     </dependency>
     
     <dependency>
-      <groupId>com.ld</groupId>
+      <groupId>com.xa</groupId>
       <artifactId>project4dao</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -52,6 +39,13 @@
     	<artifactId>pagehelper</artifactId>
     	<version>3.2.3</version>
     </dependency>
+    
+<dependency>
+    <groupId>pinyin4j</groupId>
+    <artifactId>pinyin4j</artifactId>
+    <version>2.5.0</version>
+</dependency>
+    
   </dependencies>
   
   

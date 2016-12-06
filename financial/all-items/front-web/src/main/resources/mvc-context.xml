@@ -5,8 +5,10 @@
     xmlns:p="http://www.springframework.org/schema/p" 
     xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:aop="http://www.springframework.org/schema/aop"  
-    xmlns:context="http://www.springframework.org/schema/context"  
-    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd  
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd  
                 http://www.springframework.org/schema/aop  
                 http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
                  http://www.springframework.org/schema/tx
@@ -18,17 +20,12 @@
         
     <!-- 加载Spring的全局配置文件 -->  
     <beans:import resource="root-context.xml" />   
-      
-    <!-- SpringMVC配置 -->  
-      
-    <!-- 通过component-scan 让Spring扫描org.swinglife.controller下的所有的类，让Spring的代码注解生效 -->  
-   <!--  <context:component-scan base-package="com.ld"></context:component-scan> --> 
+    
     
       <context:annotation-config/>
 	        <aop:aspectj-autoproxy />
-           <context:component-scan base-package="com.ld"/>
+           <context:component-scan base-package="com.xa"/>
            <!-- <context:property-placeholder location="classpath:jdbc.properties"/> -->
-           
             <!-- 引入jdbc配置文件 -->    
     <beans:bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
         <beans:property name="locations"> 
@@ -60,13 +57,13 @@
 	         <beans:value>com.mysql.jdbc.Driver</beans:value>  
 	    </beans:property>  
 	     <beans:property name="url">  
-	         <beans:value>jdbc:mysql://192.168.10.14:3306/test</beans:value>  
+	         <beans:value>jdbc:mysql://192.168.1.102:3306/test</beans:value>  
 	     </beans:property>  
 	     <beans:property name="username">  
 	          <beans:value>root</beans:value>   
 	     </beans:property>  
 	     <beans:property name="password">  
-	         <beans:value>123</beans:value>  
+	         <beans:value>xa</beans:value>  
 	     </beans:property>   
  	</beans:bean>  
 
@@ -87,7 +84,7 @@
  
   <!-- DAO接口所在包名，Spring会自动查找其下的类 -->  
     <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
-        <beans:property name="basePackage" value="com.ld.mapper" />  
+        <beans:property name="basePackage" value="com.xa.mapper" />  
         <beans:property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></beans:property>  
     </beans:bean>  
   
