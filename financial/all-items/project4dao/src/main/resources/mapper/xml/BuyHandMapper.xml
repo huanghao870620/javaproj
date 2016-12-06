@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.BuyHandMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.BuyHand" >
+   <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="adm_notice" property="admNotice" jdbcType="BIGINT" />
+    <result column="passport" property="passport" jdbcType="BIGINT" />
+    <result column="sid_photo" property="sidPhoto" jdbcType="BIGINT" />
+    <result column="life_photo" property="lifePhoto" jdbcType="BIGINT" />
+    <result column="head_portrait" property="headPortrait" jdbcType="BIGINT" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="CHAR" />
+    <result column="signature" property="signature" jdbcType="VARCHAR" />
+    <result column="qr_code_links" property="qrCodeLinks" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="id_number" property="idNumber" jdbcType="VARCHAR" />
+    <result column="passport_no" property="passportNo" jdbcType="VARCHAR" />
+    <result column="input_id" property="inputId" jdbcType="VARCHAR" />
+    <result column="pay_password" property="payPassword" jdbcType="VARCHAR" />
+    <result column="intensity" property="intensity" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mobile, password, adm_notice, passport, sid_photo, life_photo, head_portrait, 
+    nickname, gender, signature, qr_code_links, email, id_number, passport_no,input_id, pay_password, intensity,add_time
+  </sql>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from buy_hand
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.BuyHand" useGeneratedKeys="true" keyProperty="id">
+    insert into buy_hand ( mobile, password, 
+      adm_notice, passport, sid_photo, 
+      life_photo, head_portrait, nickname, 
+      gender, signature, qr_code_links, 
+      email, id_number, passport_no, input_id, pay_password,intensity,
+      add_time)
+    values ( #{mobile,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{admNotice,jdbcType=BIGINT}, #{passport,jdbcType=BIGINT}, #{sidPhoto,jdbcType=BIGINT}, 
+      #{lifePhoto,jdbcType=BIGINT}, #{headPortrait,jdbcType=BIGINT}, #{nickname,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=CHAR}, #{signature,jdbcType=VARCHAR}, #{qrCodeLinks,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{idNumber,jdbcType=VARCHAR}, #{passportNo,jdbcType=VARCHAR}, 
+       #{inputId,jdbcType=VARCHAR}, #{payPassword,jdbcType=VARCHAR},#{intensity},
+      #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.BuyHand" >
+    insert into buy_hand
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="admNotice != null" >
+        adm_notice,
+      </if>
+      <if test="passport != null" >
+        passport,
+      </if>
+      <if test="sidPhoto != null" >
+        sid_photo,
+      </if>
+      <if test="lifePhoto != null" >
+        life_photo,
+      </if>
+      <if test="headPortrait != null" >
+        head_portrait,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="signature != null" >
+        signature,
+      </if>
+      <if test="qrCodeLinks != null" >
+        qr_code_links,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="idNumber != null" >
+        id_number,
+      </if>
+      <if test="passportNo != null" >
+        passport_no,
+      </if>
+      <if test="inputId != null" >
+        input_id,
+      </if>
+      <if test="payPassword != null">
+        pay_password,
+      </if>
+      
+       <if test="intensity != null">
+        intensity,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="admNotice != null" >
+        #{admNotice,jdbcType=BIGINT},
+      </if>
+      <if test="passport != null" >
+        #{passport,jdbcType=BIGINT},
+      </if>
+      <if test="sidPhoto != null" >
+        #{sidPhoto,jdbcType=BIGINT},
+      </if>
+      <if test="lifePhoto != null" >
+        #{lifePhoto,jdbcType=BIGINT},
+      </if>
+      <if test="headPortrait != null" >
+        #{headPortrait,jdbcType=BIGINT},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=CHAR},
+      </if>
+      <if test="signature != null" >
+        #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCodeLinks != null" >
+        #{qrCodeLinks,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null" >
+        #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="passportNo != null" >
+        #{passportNo,jdbcType=VARCHAR},
+      </if>
+      <if test="inputId != null" >
+        #{inputId,jdbcType=VARCHAR},
+      </if>
+      <if test="payPassword != null">
+       #{payPassword,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="intensity != null">
+       #{intensity},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.BuyHand" >
+    update buy_hand
+    <set >
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="admNotice != null" >
+        adm_notice = #{admNotice,jdbcType=BIGINT},
+      </if>
+      <if test="passport != null" >
+        passport = #{passport,jdbcType=BIGINT},
+      </if>
+      <if test="sidPhoto != null" >
+        sid_photo = #{sidPhoto,jdbcType=BIGINT},
+      </if>
+      <if test="lifePhoto != null" >
+        life_photo = #{lifePhoto,jdbcType=BIGINT},
+      </if>
+      <if test="headPortrait != null" >
+        head_portrait = #{headPortrait,jdbcType=BIGINT},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=CHAR},
+      </if>
+      <if test="signature != null" >
+        signature = #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCodeLinks != null" >
+        qr_code_links = #{qrCodeLinks,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null" >
+        id_number = #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="passportNo != null" >
+        passport_no = #{passportNo,jdbcType=VARCHAR},
+      </if>
+       <if test="inputId != null" >
+        input_id = #{inputId,jdbcType=VARCHAR},
+      </if>
+      <if test="payPassword != null">
+       pay_password = #{payPassword, jdbcType=VARCHAR},
+      </if>
+      
+      <if test="intensity != null">
+       intensity = #{intensity, jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.BuyHand" >
+    update buy_hand
+    set mobile = #{mobile,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      adm_notice = #{admNotice,jdbcType=BIGINT},
+      passport = #{passport,jdbcType=BIGINT},
+      sid_photo = #{sidPhoto,jdbcType=BIGINT},
+      life_photo = #{lifePhoto,jdbcType=BIGINT},
+      head_portrait = #{headPortrait,jdbcType=BIGINT},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=CHAR},
+      signature = #{signature,jdbcType=VARCHAR},
+      qr_code_links = #{qrCodeLinks,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      id_number = #{idNumber,jdbcType=VARCHAR},
+      passport_no = #{passportNo,jdbcType=VARCHAR},
+      input_id = #{inputId,jdbcType=VARCHAR},
+      pay_password=#{payPassword,jdbcType=VARCHAR},
+      intensity=#{intensity},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 根据用户密码查询 -->
+  <select id="selectCustomerByCustomerAndPass" resultType="com.xa.entity.BuyHand" parameterType="com.xa.entity.BuyHand" >
+  select
+     c.adm_notice as admNotice,
+     c.sid_photo as sidPhoto,
+     c.life_photo as lifePhoto, 
+     c.head_portrait as headPortrait,
+     c.input_id as inputId,
+     c.pay_password as payPassword,
+     c.* 
+     from buy_hand c where mobile=#{mobile,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR};
+  </select>
+  
+  <!-- 根据手机号查询 -->
+  <select id="selectCustomerByMobile" resultType="com.xa.entity.BuyHand" parameterType="com.xa.entity.BuyHand">
+   SELECT  c.adm_notice as admNotice,
+     c.sid_photo as sidPhoto,
+     c.life_photo as lifePhoto, 
+     c.head_portrait as headPortrait,
+     c.input_id as inputId,
+     c.pay_password as payPassword,
+     c.*  from buy_hand c where mobile=#{mobile,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据手机号获取客户id -->
+  <select id="getBuyHandIdByMobile">
+  </select>
+  
+  <select id="selectByPrimaryKey" resultType="com.xa.entity.BuyHand" parameterType="long">
+    select c.adm_notice as admNotice,
+     c.sid_photo as sidPhoto,
+     c.life_photo as lifePhoto, 
+     c.head_portrait as headPortrait,
+     c.input_id as inputId,
+     c.pay_password as payPassword,
+     c.*  from buy_hand c where c.id=#{id}
+  </select>
+  
+  <!-- 查询客户信息通过护照、邮箱、输入id -->
+  <select id="selectCustomerByEmailAndInputIdAndPassport" resultType="com.xa.entity.BuyHand" parameterType="com.xa.entity.BuyHand">
+      select c.adm_notice as admNotice,
+     c.sid_photo as sidPhoto,
+     c.life_photo as lifePhoto, 
+     c.head_portrait as headPortrait,
+     c.input_id as inputId,
+     c.pay_password as payPassword,
+     c.*  from buy_hand c where email='${email}' and input_id='${inputId}' and passport_no='${passportNo}'
+      and id=${id} and password='${password}'
+  </select>
+  
+</mapper>

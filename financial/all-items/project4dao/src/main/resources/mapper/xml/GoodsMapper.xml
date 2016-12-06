@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.GoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.Goods" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="info" property="info" jdbcType="VARCHAR" />
+    <result column="capacity" property="capacity" jdbcType="BIGINT" />
+    <result column="lowest_price" property="lowestPrice" jdbcType="BIGINT" />
+    <result column="norms_id" property="normsId" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="BIGINT" />
+    <result column="adv_pic" property="advPic" jdbcType="BIGINT" />
+    <result column="price_currency_id" property="priceCurrencyId" jdbcType="BIGINT" />
+    <result column="highest_price" property="highestPrice" jdbcType="BIGINT" />
+    <result column="brand_id" property="brandId" jdbcType="BIGINT" />
+    <result column="shelf_life" property="shelfLife" jdbcType="TIMESTAMP" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="purchasing_position" property="purchasingPosition" jdbcType="VARCHAR" />
+    <result column="date_of_production" property="dateOfProduction" jdbcType="TIMESTAMP" />
+    <result column="bar_code" property="barCode" jdbcType="VARCHAR" />
+    <result column="speed_awb" property="speedAwb" jdbcType="VARCHAR" />
+    <result column="goods_according_to_positive" property="goodsAccordingToPositive" jdbcType="BIGINT" />
+    <result column="left_photo" property="leftPhoto" jdbcType="BIGINT" />
+    <result column="right_photo" property="rightPhoto" jdbcType="BIGINT" />
+    <result column="goods_invoice" property="goodsInvoice" jdbcType="BIGINT" />
+    <result column="express_single" property="expressSingle" jdbcType="BIGINT" />
+    <result column="classid" property="classid" jdbcType="BIGINT" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+ <sql id="Base_Column_List" >
+    id, name, info, capacity, lowest_price, norms_id, price, adv_pic, price_currency_id, 
+    highest_price, brand_id, shelf_life, color, purchasing_position, date_of_production, 
+    bar_code, speed_awb, goods_according_to_positive, left_photo, right_photo, goods_invoice, 
+    express_single, classid, state, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from goods
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+ <insert id="insert" parameterType="com.xa.entity.Goods" useGeneratedKeys="true" keyProperty="id">
+    insert into goods (id, name, info, 
+      capacity, lowest_price, norms_id, 
+      price, adv_pic, price_currency_id, 
+      highest_price, brand_id, shelf_life, 
+      color, purchasing_position, date_of_production, 
+      bar_code, speed_awb, goods_according_to_positive, 
+      left_photo, right_photo, goods_invoice, 
+      express_single, classid, state, 
+      add_time)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR}, 
+      #{capacity,jdbcType=BIGINT}, #{lowestPrice,jdbcType=BIGINT}, #{normsId,jdbcType=BIGINT}, 
+      #{price,jdbcType=BIGINT}, #{advPic,jdbcType=BIGINT}, #{priceCurrencyId,jdbcType=BIGINT}, 
+      #{highestPrice,jdbcType=BIGINT}, #{brandId,jdbcType=BIGINT}, #{shelfLife,jdbcType=TIMESTAMP}, 
+      #{color,jdbcType=VARCHAR}, #{purchasingPosition,jdbcType=VARCHAR}, #{dateOfProduction,jdbcType=TIMESTAMP}, 
+      #{barCode,jdbcType=VARCHAR}, #{speedAwb,jdbcType=VARCHAR}, #{goodsAccordingToPositive,jdbcType=BIGINT}, 
+      #{leftPhoto,jdbcType=BIGINT}, #{rightPhoto,jdbcType=BIGINT}, #{goodsInvoice,jdbcType=BIGINT}, 
+      #{expressSingle,jdbcType=BIGINT}, #{classid,jdbcType=BIGINT}, #{state,jdbcType=INTEGER}, 
+      #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.Goods" >
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="info != null" >
+        info,
+      </if>
+      <if test="capacity != null" >
+        capacity,
+      </if>
+      <if test="lowestPrice != null" >
+        lowest_price,
+      </if>
+      <if test="highestPrice != null" >
+        highest_price,
+      </if>
+      <if test="purchasingPosition != null" >
+        purchasing_position,
+      </if>
+      <if test="dateOfProduction != null" >
+        date_of_production,
+      </if>
+      
+      <if test="barCode != null" >
+        bar_code,
+      </if>
+      <if test="goodsAccordingToPositive != null" >
+        goods_according_to_positive,
+      </if>
+      <if test="backGoodsAccordingTo != null" >
+        back_goods_according_to,
+      </if>
+      <if test="productProfile != null" >
+        product_profile,
+      </if>
+      <if test="goodsInvoice != null" >
+        goods_invoice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null" >
+        #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=BIGINT},
+      </if>
+      <if test="lowestPrice != null" >
+        #{lowestPrice,jdbcType=BIGINT},
+      </if>
+      <if test="highestPrice != null" >
+        #{highestPrice,jdbcType=BIGINT},
+      </if>
+      <if test="purchasingPosition != null" >
+        #{purchasingPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="dateOfProduction != null" >
+        #{dateOfProduction,jdbcType=TIMESTAMP},
+      </if>
+      
+      <if test="barCode != null" >
+        #{barCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsAccordingToPositive != null" >
+        #{goodsAccordingToPositive,jdbcType=BIGINT},
+      </if>
+      <if test="backGoodsAccordingTo != null" >
+        #{backGoodsAccordingTo,jdbcType=BIGINT},
+      </if>
+      <if test="productProfile != null" >
+        #{productProfile,jdbcType=BIGINT},
+      </if>
+      <if test="goodsInvoice != null" >
+        #{goodsInvoice,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.Goods" >
+    update goods
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null" >
+        info = #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null" >
+        capacity = #{capacity,jdbcType=BIGINT},
+      </if>
+      <if test="lowestPrice != null" >
+        lowest_price = #{lowestPrice,jdbcType=BIGINT},
+      </if>
+      <if test="highestPrice != null" >
+        highest_price = #{highestPrice,jdbcType=BIGINT},
+      </if>
+      <if test="purchasingPosition != null" >
+        purchasing_position = #{purchasingPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="dateOfProduction != null" >
+        date_of_production = #{dateOfProduction,jdbcType=TIMESTAMP},
+      </if>
+      
+      <if test="barCode != null" >
+        bar_code = #{barCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsAccordingToPositive != null" >
+        goods_according_to_positive = #{goodsAccordingToPositive,jdbcType=BIGINT},
+      </if>
+      <if test="backGoodsAccordingTo != null" >
+        back_goods_according_to = #{backGoodsAccordingTo,jdbcType=BIGINT},
+      </if>
+      <if test="productProfile != null" >
+        product_profile = #{productProfile,jdbcType=BIGINT},
+      </if>
+      <if test="goodsInvoice != null" >
+        goods_invoice = #{goodsInvoice,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.Goods" >
+    update goods
+    set name = #{name,jdbcType=VARCHAR},
+      info = #{info,jdbcType=VARCHAR},
+      capacity = #{capacity,jdbcType=BIGINT},
+      lowest_price = #{lowestPrice,jdbcType=BIGINT},
+      highest_price = #{highestPrice,jdbcType=BIGINT},
+      purchasing_position = #{purchasingPosition,jdbcType=VARCHAR},
+      date_of_production = #{dateOfProduction,jdbcType=TIMESTAMP},
+     
+      bar_code = #{barCode,jdbcType=VARCHAR},
+      goods_according_to_positive = #{goodsAccordingToPositive,jdbcType=BIGINT},
+      back_goods_according_to = #{backGoodsAccordingTo,jdbcType=BIGINT},
+      product_profile = #{productProfile,jdbcType=BIGINT},
+      goods_invoice = #{goodsInvoice,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+  
+  <!-- 获取商品 -->
+  <select id="selectTopTen" resultType="com.xa.entity.Goods">
+    select 
+    g.lowest_price as lowestPrice,
+ g.highest_price as highestPrice,
+ g.purchasing_position as purchasingPosition,
+ g.date_of_production as dateOfProduction,
+ g.bar_code as barCode,
+ g.speed_awb as speedAwb,
+ g.goods_according_to_positive as goodsAccordingToPositive,
+ g.back_goods_according_to as backGoodsAccordingTo,
+ g.product_profile as productProfile,
+ g.goods_invoice as goodsInvoice,
+ g.express_single as expressSingle,
+    g.* from goods g
+  </select>
+  
+  <!-- 获取商品根据分类id -->
+  <select id="getGoodsByClassId" resultType="com.xa.entity.Goods" parameterType="long">
+   SELECT * from goods WHERE classid in (select id from classification where pid=#{pid} union select #{pid})
+  </select>
+  
+  
+</mapper>

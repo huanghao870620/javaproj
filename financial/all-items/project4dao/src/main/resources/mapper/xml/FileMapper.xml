@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.FileMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.File" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="uri_path" property="uriPath" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, path, uri_path, type_id
+  </sql>
+ 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from file
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.File"  useGeneratedKeys="true" keyProperty="id">
+    insert into file ( name, path, 
+      uri_path, type_id)
+    values ( #{name,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+      #{uriPath,jdbcType=VARCHAR}, #{typeId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.File" >
+    insert into file
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="path != null" >
+        path,
+      </if>
+      <if test="uriPath != null" >
+        uri_path,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="uriPath != null" >
+        #{uriPath,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.File" >
+    update file
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="uriPath != null" >
+        uri_path = #{uriPath,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.File" >
+    update file
+    set name = #{name,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      uri_path = #{uriPath,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectByPrimaryKey" resultType="com.xa.entity.File">
+      select
+      f.uri_path as uriPath,
+      f.type_id as typeId, 
+      f.* from file f where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 获取文件根据类型和商品id -->
+  <select id="getFileByGoodIdAndTypeId" parameterType="java.util.Map" resultType="com.xa.entity.File">
+  <!-- 
+   select f.uri_path as uriPath,f.type_id as typeId from ( SELECT file_id from good_file WHERE good_id=${goodId}) t
+  left join (select * from file where type_id=${typeId}) f on t.file_id=f.id
+   -->
+  
+  
+select t2.id,t2.uriPath from (
+select f.uri_path as uriPath,f.type_id as typeId,f.id,t.file_id as fileId from ( SELECT file_id from good_file WHERE good_id=${goodId}) t
+  left join (select * from file where type_id=${typeId}) f on t.file_id=f.id ) t2 where t2.id is not null
+  </select>
+  
+</mapper>

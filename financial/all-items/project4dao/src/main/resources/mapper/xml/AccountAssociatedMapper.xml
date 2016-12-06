@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.AccountAssociatedMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.AccountAssociated" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="union_id" property="unionId" jdbcType="BIGINT" />
+    <result column="account_type_id" property="accountTypeId" jdbcType="BIGINT" />
+    <result column="buyhand_id" property="buyHandId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, union_id, account_type_id, buyhand_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from account_associated
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from account_associated
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.AccountAssociated" useGeneratedKeys="true" keyProperty="id">
+    insert into account_associated ( union_id, account_type_id, 
+      buyhand_id)
+    values ( #{unionId,jdbcType=BIGINT}, #{accountTypeId,jdbcType=BIGINT}, 
+      #{buyHandId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.AccountAssociated" >
+    insert into account_associated
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="unionId != null" >
+        union_id,
+      </if>
+      <if test="accountTypeId != null" >
+        account_type_id,
+      </if>
+      <if test="buyHandId != null" >
+        buyhand_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="unionId != null" >
+        #{unionId,jdbcType=BIGINT},
+      </if>
+      <if test="accountTypeId != null" >
+        #{accountTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="buyHandId != null" >
+        #{buyHandId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.AccountAssociated" >
+    update account_associated
+    <set >
+      <if test="unionId != null" >
+        union_id = #{unionId,jdbcType=BIGINT},
+      </if>
+      <if test="accountTypeId != null" >
+        account_type_id = #{accountTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="buyHandId != null" >
+        buyhand_id = #{buyHandId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.AccountAssociated" >
+    update account_associated
+    set union_id = #{unionId,jdbcType=BIGINT},
+      account_type_id = #{accountTypeId,jdbcType=BIGINT},
+      buyhand_id = #{buyHandId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 获取关联信息通过第三方id -->
+  <select id="selectAccountAssociatedByUnionId" resultType="com.xa.entity.AccountAssociated" parameterType="java.lang.String">
+    SELECT 
+     aa.union_id as unionId,
+     aa.account_type_id accountTypeId,
+     aa.buyhand_id buyHandId,
+    aa.* from account_associated aa where union_id=#{unionId};
+  </select>
+  
+  <!-- 解除关联 -->
+  <delete id="dissociated" parameterType="java.lang.String">
+  DELETE FROM account_associated where union_id=#{unionId}
+  </delete>
+  
+  <!-- 获取第三方绑定信息通过客户id和第三方id -->
+  <select id="selectAssociatedByBuyHandIdAndUnionId" parameterType="com.xa.entity.AccountAssociated" resultType="com.xa.entity.AccountAssociated">
+  SELECT
+	t.union_id AS unionId,
+	account_type_id AS accountTypeId,
+	buyhand_id AS buyHandId,
+	t.*
+FROM
+	account_associated t
+WHERE
+	union_id = ${unionId}
+AND buyhand_id = ${buyHandId}
+  </select>
+</mapper>

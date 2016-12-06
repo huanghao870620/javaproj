@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.GoodsOrderReleaseMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.GoodsOrderRelease" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="goods_id" property="goodsId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, goods_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods_order_release
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from goods_order_release
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.GoodsOrderRelease" useGeneratedKeys="true" keyProperty="id">
+    insert into goods_order_release ( order_id, goods_id
+      )
+    values ( #{orderId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.GoodsOrderRelease" >
+    insert into goods_order_release
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.GoodsOrderRelease" >
+    update goods_order_release
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.GoodsOrderRelease" >
+    update goods_order_release
+    set order_id = #{orderId,jdbcType=BIGINT},
+      goods_id = #{goodsId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!--  -->
+  <select id="getGoodsByOrderId" resultType="com.xa.entity.Goods" parameterType="long">
+ SELECT 
+ g.lowest_price as lowestPrice,
+ g.highest_price as highestPrice,
+ g.purchasing_position as purchasingPosition,
+ g.date_of_production as dateOfProduction,
+ g.bar_code as barCode,
+ g.speed_awb as speedAwb,
+ g.goods_according_to_positive as goodsAccordingToPositive,
+ g.back_goods_according_to as backGoodsAccordingTo,
+ g.product_profile as productProfile,
+ g.goods_invoice as goodsInvoice,
+ g.express_single as expressSingle,
+ g.* from (
+ SELECT     
+   * from goods_order_release  where order_id=1
+  ) gor left join goods g on gor.goods_id = g.id
+  
+  </select>
+</mapper>

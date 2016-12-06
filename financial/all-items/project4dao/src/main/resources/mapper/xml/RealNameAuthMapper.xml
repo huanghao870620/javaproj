@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.RealNameAuthMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.RealNameAuth" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="cart_no" property="cartNo" jdbcType="VARCHAR" />
+    <result column="front_cart_photo" property="frontCartPhoto" jdbcType="BIGINT" />
+    <result column="back_cart_photo" property="backCartPhoto" jdbcType="BIGINT" />
+    <result column="buyer_id" property="buyerId" jdbcType="BIGINT" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, cart_no, front_cart_photo, back_cart_photo, buyer_id, add_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from real_name_auth
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from real_name_auth
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.RealNameAuth" >
+    insert into real_name_auth (id, name, cart_no, 
+      front_cart_photo, back_cart_photo, buyer_id, 
+      add_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{cartNo,jdbcType=VARCHAR}, 
+      #{frontCartPhoto,jdbcType=BIGINT}, #{backCartPhoto,jdbcType=BIGINT}, #{buyerId,jdbcType=BIGINT}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.RealNameAuth" >
+    insert into real_name_auth
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="cartNo != null" >
+        cart_no,
+      </if>
+      <if test="frontCartPhoto != null" >
+        front_cart_photo,
+      </if>
+      <if test="backCartPhoto != null" >
+        back_cart_photo,
+      </if>
+      <if test="buyerId != null" >
+        buyer_id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cartNo != null" >
+        #{cartNo,jdbcType=VARCHAR},
+      </if>
+      <if test="frontCartPhoto != null" >
+        #{frontCartPhoto,jdbcType=BIGINT},
+      </if>
+      <if test="backCartPhoto != null" >
+        #{backCartPhoto,jdbcType=BIGINT},
+      </if>
+      <if test="buyerId != null" >
+        #{buyerId,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.RealNameAuth" >
+    update real_name_auth
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cartNo != null" >
+        cart_no = #{cartNo,jdbcType=VARCHAR},
+      </if>
+      <if test="frontCartPhoto != null" >
+        front_cart_photo = #{frontCartPhoto,jdbcType=BIGINT},
+      </if>
+      <if test="backCartPhoto != null" >
+        back_cart_photo = #{backCartPhoto,jdbcType=BIGINT},
+      </if>
+      <if test="buyerId != null" >
+        buyer_id = #{buyerId,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.RealNameAuth" >
+    update real_name_auth
+    set name = #{name,jdbcType=VARCHAR},
+      cart_no = #{cartNo,jdbcType=VARCHAR},
+      front_cart_photo = #{frontCartPhoto,jdbcType=BIGINT},
+      back_cart_photo = #{backCartPhoto,jdbcType=BIGINT},
+      buyer_id = #{buyerId,jdbcType=BIGINT},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

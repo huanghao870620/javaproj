@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.BuyhandWalletMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.BuyhandWallet" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="buyhand_id" property="buyHandId" jdbcType="BIGINT" />
+    <result column="balance" property="balance" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, buyhand_id, balance
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from buyhand_wallet
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from buyhand_wallet
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.BuyhandWallet" useGeneratedKeys="true" keyProperty="id">
+    insert into buyhand_wallet ( buyhand_id, balance
+      )
+    values ( #{buyHandId,jdbcType=BIGINT}, #{balance,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.BuyhandWallet" >
+    insert into buyhand_wallet
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="buyHandId != null" >
+        buyhand_id,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="buyHandId != null" >
+        #{buyHandId,jdbcType=BIGINT},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.BuyhandWallet" >
+    update buyhand_wallet
+    <set >
+      <if test="buyHandId != null" >
+        buyhand_id = #{buyHandId,jdbcType=BIGINT},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.BuyhandWallet" >
+    update buyhand_wallet
+    set buyhand_id = #{buyHandId,jdbcType=BIGINT},
+      balance = #{balance,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 获取客户钱包--> 
+  <select id="getWalletByBuyHandId" resultType="com.xa.entity.BuyhandWallet" parameterType="long">
+    SELECT 
+    w.buyhand_id as buyHandId,
+    w.* from buyhand_wallet w where buyhand_id=#{buyHandId};
+  </select>
+</mapper>

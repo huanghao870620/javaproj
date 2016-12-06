@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.MobileVercodeLogMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.MobileVercodeLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="vercode" property="vercode" jdbcType="VARCHAR" />
+    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mobile, vercode, send_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from mobile_vercode_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from mobile_vercode_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.MobileVercodeLog" useGeneratedKeys="true" keyProperty="id">
+    insert into mobile_vercode_log ( mobile, vercode, 
+      send_time)
+    values ( #{mobile,jdbcType=BIGINT}, #{vercode,jdbcType=VARCHAR}, 
+      #{sendTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.MobileVercodeLog" >
+    insert into mobile_vercode_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="vercode != null" >
+        vercode,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=BIGINT},
+      </if>
+      <if test="vercode != null" >
+        #{vercode,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.MobileVercodeLog" >
+    update mobile_vercode_log
+    <set >
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=BIGINT},
+      </if>
+      <if test="vercode != null" >
+        vercode = #{vercode,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.MobileVercodeLog" >
+    update mobile_vercode_log
+    set mobile = #{mobile,jdbcType=BIGINT},
+      vercode = #{vercode,jdbcType=VARCHAR},
+      send_time = #{sendTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!--  -->
+  <select id="getVercodeByMobile" parameterType="com.xa.entity.MobileVercodeLog" resultType="com.xa.entity.MobileVercodeLog">
+    SELECT
+	t.*
+FROM
+	(
+		SELECT
+			(
+				UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(send_time)
+			) AS timeDiff,
+			mobile
+		FROM
+			mobile_vercode_log
+		WHERE
+			mobile = ${mobile}
+			 and vercode = ${vercode}
+	) t
+WHERE
+	t.timeDiff &lt; 300
+  </select>
+</mapper>
