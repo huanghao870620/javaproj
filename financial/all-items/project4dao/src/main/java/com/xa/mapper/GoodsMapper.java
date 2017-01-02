@@ -14,4 +14,12 @@ public interface GoodsMapper extends BaseMapper<Goods>{
 	 * @return
 	 */
 	List<Goods> getGoodsByClassId(Long classid);
+	
+	
+	/**
+	 * 获取商品根据品牌id
+	 * @param brandId
+	 * @return
+	 */
+	List<Goods> getGoodsByBrandId(Long brandId);
 }

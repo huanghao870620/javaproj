@@ -1,5 +1,8 @@
 package com.xa.junit4;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +36,11 @@ public class ShoppingCartTest {
 	}
 	
 	
+	@Test
+	public void test0(){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String timeStr= sdf.format(new Date());
+		System.out.println(timeStr);
+	}
 	
 }

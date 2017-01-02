@@ -41,10 +41,18 @@ public class BuyHand {
 
     private Date addTime;
     
-    
+    private Long countryId;
     
 
-    public Integer getIntensity() {
+    public Long getCountryId() {
+		return countryId;
+	}
+
+	public void setCountryId(Long countryId) {
+		this.countryId = countryId;
+	}
+
+	public Integer getIntensity() {
 		return intensity;
 	}
 

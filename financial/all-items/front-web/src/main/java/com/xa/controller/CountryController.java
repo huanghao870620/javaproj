@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.xa.entity.Country;
 import com.xa.service.CountryService;
 
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
 @Controller
 @RequestMapping("/country")
 public class CountryController extends BaseController {
@@ -26,6 +28,20 @@ public class CountryController extends BaseController {
 		try {
 			this.sendAjaxMsg(this.countryService.getAllCountry(random, sign));
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 获取国家排序
+	 */
+	@RequestMapping("getAllCountryBySort")
+	public void getAllCountryBySort(String random,String sign){
+		try {
+			this.sendAjaxMsg(this.countryService.getAllCountryBySort(random, sign));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (BadHanyuPinyinOutputFormatCombination e) {
 			e.printStackTrace();
 		}
 	}

@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.xa.convert.DatePropertyEditor;
+import com.xa.entity.File;
 import com.xa.entity.Goods;
+import com.xa.service.FileService;
 import com.xa.service.GoodsService;
 /**
  * 
@@ -27,6 +29,8 @@ public class GoodsController extends BaseController {
 
 	@Autowired
 	private GoodsService<Goods> goodsService;
+	
+	private FileService<File> fileService;
 	
 	/**
 	 * pageNum 页数  
@@ -83,7 +87,9 @@ public class GoodsController extends BaseController {
 					mallAddress,
 					brandName, 
 					uploadTypeId,
-					sign));
+					sign,
+					fileService
+					));
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

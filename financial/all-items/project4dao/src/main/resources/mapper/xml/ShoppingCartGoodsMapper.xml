@@ -2,13 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xa.mapper.ShoppingCartGoodsMapper" >
   <resultMap id="BaseResultMap" type="com.xa.entity.ShoppingCartGoods" >
-    <id column="id" jdbcType="BIGINT" property="id" />
+  <id column="id" jdbcType="BIGINT" property="id" />
     <result column="goods_id" jdbcType="BIGINT" property="goodsId" />
+    <result column="state" jdbcType="INTEGER" property="state" />
     <result column="shopping_cart_id" jdbcType="BIGINT" property="shoppingCartId" />
     <result column="count" jdbcType="BIGINT" property="count" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, goods_id, shopping_cart_id, count
+    id, goods_id, state, shopping_cart_id, count
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -21,10 +22,10 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xa.entity.ShoppingCartGoods" useGeneratedKeys="true"  keyProperty="id">
-    insert into shopping_cart_goods (id, goods_id, shopping_cart_id, 
-      count)
-    values (#{id,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, #{shoppingCartId,jdbcType=BIGINT}, 
-      #{count,jdbcType=BIGINT})
+  insert into shopping_cart_goods ( goods_id, state, 
+      shopping_cart_id, count)
+    values ( #{goodsId,jdbcType=BIGINT}, #{state,jdbcType=INTEGER}, 
+      #{shoppingCartId,jdbcType=BIGINT}, #{count,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.ShoppingCartGoods" >
     insert into shopping_cart_goods
@@ -52,13 +53,19 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.ShoppingCartGoods" >
-    update shopping_cart_goods
-    <set >
-      <if test="goodsId != null" >
+   update shopping_cart_goods
+    <set>
+      <if test="goodsId != null">
         goods_id = #{goodsId,jdbcType=BIGINT},
       </if>
-      <if test="shoppingCartId != null" >
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="shoppingCartId != null">
         shopping_cart_id = #{shoppingCartId,jdbcType=BIGINT},
+      </if>
+      <if test="count != null">
+        count = #{count,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -83,18 +90,64 @@
   
   <!-- 获取购物车中的信息 -->
   <select id="getSCGByCartId" parameterType="long" resultType="com.xa.entity.ShoppingCartGoods">
-    select 
+
+select * from (
+SELECT t.* from (
+select 
     t.goods_id as goodsId,
     t.shopping_cart_id as shoppingCartId,
-    t.* from shopping_cart_goods t where shopping_cart_id=#{cartId}
+    t.* from shopping_cart_goods t where shopping_cart_id=#{cartId} ) t where t.state=0
+    
+    <!-- 
+    t.id  not in (
+select t.scgId from (
+  select sor.scg_id as scgId from ( select id from  orders where buyer_id=(SELECT buyer_id from shopping_cart where id=#{cartId})) o left join scg_order_release sor on o.id=sor.order_id ) t where t.scgId is not null
+)  -->
+
+ ) t where t.id is not null
+    
   </select>
   
   <!-- 通过商品id获取购物车中的信息 -->
   <select id="getSCGByCartIdAndGoodId" resultType="com.xa.entity.ShoppingCartGoods" parameterType="java.util.Map">
-   select 
+  select * from (
+  select 
     t.goods_id as goodsId,
     t.shopping_cart_id as shoppingCartId,
-    t.* from shopping_cart_goods t where shopping_cart_id=#{cartId} and goods_id=#{goodId}
+    t.* from shopping_cart_goods t where shopping_cart_id=#{cartId} and goods_id=#{goodId} ) t where t.state=0
+    
+    <!-- 
+     t.id not in  (
+ 	SELECT
+					t.scgId
+				FROM
+					(
+						SELECT
+							sor.scg_id AS scgId
+						FROM
+							(
+								SELECT
+									id
+								FROM
+									orders
+								WHERE
+									buyer_id = (
+										SELECT
+											buyer_id
+										FROM
+											shopping_cart
+										WHERE
+											id = #{cartId}
+									)
+							) o
+						LEFT JOIN scg_order_release sor ON o.id = sor.order_id
+					) t
+				WHERE
+					t.scgId IS NOT NULL
+)
+     -->
+    
+    
   </select>
   
 </mapper>

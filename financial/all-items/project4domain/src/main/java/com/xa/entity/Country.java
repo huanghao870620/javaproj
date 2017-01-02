@@ -6,6 +6,8 @@ public class Country {
     private String name;
 
     private Long imgId;
+    
+    private String countryCode;
 
     public Long getId() {
         return id;
@@ -30,4 +32,14 @@ public class Country {
     public void setImgId(Long imgId) {
         this.imgId = imgId;
     }
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+    
+    
 }

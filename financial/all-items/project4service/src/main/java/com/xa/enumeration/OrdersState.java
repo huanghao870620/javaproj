@@ -6,10 +6,13 @@ package com.xa.enumeration;
  */
 public enum OrdersState {
 	
-	HAVE_ORDER(1),  //已接單
-	HAS_BEEN_SHIPPED(2), // 已發貨 
-	HAS_BEEN_COMPLETED(3), // 已完成
-	HAS_BEEN_CANCELLED(4)// 已取消
+	FOR_PAYMENT(1),//待付款
+	WAIT_ORDER(2), //待接单
+	WAIT_PURCHASING(3),  //待采购
+	WAIT_DELIVERY(4), // 待发货
+	WAIT_RECEIVING(5), // 待收货
+	COMPLETE(6), //完成订单
+	HAS_BEEN_CANCELLED(7)// 已取消
 	;
 	
 	private int value;

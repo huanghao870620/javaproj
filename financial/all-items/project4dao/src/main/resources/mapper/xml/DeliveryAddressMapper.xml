@@ -5,12 +5,17 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="card_id_back_file" property="cardIdBackFile" jdbcType="BIGINT" />
+    <result column="card_id_front_file" property="cardIdFrontFile" jdbcType="BIGINT" />
+    <result column="buyer_id" property="buyerId" jdbcType="BIGINT" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
     <result column="area_id" property="areaId" jdbcType="BIGINT" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="is_default" property="isDefault" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, mobile, area_id, address, is_default
+    id, name, mobile, card_id_back_file, card_id_front_file, buyer_id, idcard, area_id, 
+    address, is_default
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -22,13 +27,15 @@
     delete from delivery_address
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.xa.entity.DeliveryAddress" >
+  <insert id="insert" parameterType="com.xa.entity.DeliveryAddress" useGeneratedKeys="true" keyProperty="id">
     insert into delivery_address (id, name, mobile, 
-      area_id, address, is_default
-      )
+      card_id_back_file, card_id_front_file, buyer_id, 
+      idcard, area_id, address, 
+      is_default)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{areaId,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, #{isDefault,jdbcType=INTEGER}
-      )
+      #{cardIdBackFile,jdbcType=BIGINT}, #{cardIdFrontFile,jdbcType=BIGINT}, #{buyerId,jdbcType=BIGINT}, 
+      #{idcard,jdbcType=VARCHAR}, #{areaId,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, 
+      #{isDefault,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.DeliveryAddress" >
     insert into delivery_address
@@ -41,6 +48,18 @@
       </if>
       <if test="mobile != null" >
         mobile,
+      </if>
+      <if test="cardIdBackFile != null" >
+        card_id_back_file,
+      </if>
+      <if test="cardIdFrontFile != null" >
+        card_id_front_file,
+      </if>
+      <if test="buyerId != null" >
+        buyer_id,
+      </if>
+      <if test="idcard != null" >
+        idcard,
       </if>
       <if test="areaId != null" >
         area_id,
@@ -62,6 +81,18 @@
       <if test="mobile != null" >
         #{mobile,jdbcType=VARCHAR},
       </if>
+      <if test="cardIdBackFile != null" >
+        #{cardIdBackFile,jdbcType=BIGINT},
+      </if>
+      <if test="cardIdFrontFile != null" >
+        #{cardIdFrontFile,jdbcType=BIGINT},
+      </if>
+      <if test="buyerId != null" >
+        #{buyerId,jdbcType=BIGINT},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
       <if test="areaId != null" >
         #{areaId,jdbcType=BIGINT},
       </if>
@@ -82,6 +113,18 @@
       <if test="mobile != null" >
         mobile = #{mobile,jdbcType=VARCHAR},
       </if>
+      <if test="cardIdBackFile != null" >
+        card_id_back_file = #{cardIdBackFile,jdbcType=BIGINT},
+      </if>
+      <if test="cardIdFrontFile != null" >
+        card_id_front_file = #{cardIdFrontFile,jdbcType=BIGINT},
+      </if>
+      <if test="buyerId != null" >
+        buyer_id = #{buyerId,jdbcType=BIGINT},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
       <if test="areaId != null" >
         area_id = #{areaId,jdbcType=BIGINT},
       </if>
@@ -98,9 +141,41 @@
     update delivery_address
     set name = #{name,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
+      card_id_back_file = #{cardIdBackFile,jdbcType=BIGINT},
+      card_id_front_file = #{cardIdFrontFile,jdbcType=BIGINT},
+      buyer_id = #{buyerId,jdbcType=BIGINT},
+      idcard = #{idcard,jdbcType=VARCHAR},
       area_id = #{areaId,jdbcType=BIGINT},
       address = #{address,jdbcType=VARCHAR},
       is_default = #{isDefault,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!-- 获取所有地址根据买家id -->
+  <select id="getAddressByBuyerId" resultType="com.xa.entity.DeliveryAddress" parameterType="long">
+    select
+    t.card_id_back_file as cardIdBackFile,
+    t.card_id_front_file as cardIdFrontFile,
+    t.buyer_id as buyerId,
+    t.is_default as isDefault,
+    t.area_id as areaId,
+    t.* from  delivery_address t where buyer_id=#{buyerId}
+  </select>
+  
+  <!-- 设置所有地址为非默认 -->
+  <update id="updateAddressIsNotDefault" parameterType="long">
+  update delivery_address set is_default=0 where buyer_id=#{buyerId}
+  </update>
+   
+   <!-- 获取用户默认地址 -->
+   <select id="getDefaultAddressByBuyerId" resultType="com.xa.entity.DeliveryAddress" parameterType="long">
+     select 
+      t.card_id_back_file as cardIdBackFile,
+    t.card_id_front_file as cardIdFrontFile,
+    t.buyer_id as buyerId,
+    t.is_default as isDefault,
+    t.area_id as areaId,
+     t.* from delivery_address t where buyer_id=#{buyerId} and is_default=1
+   </select>
+   
 </mapper>

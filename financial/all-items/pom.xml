@@ -213,6 +213,156 @@
       <artifactId>commons-logging</artifactId>
       <version>1.1.1</version>
     </dependency>
+    
+<!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+<dependency>
+    <groupId>dom4j</groupId>
+    <artifactId>dom4j</artifactId>
+    <version>1.6.1</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/xml-apis/xml-apis -->
+<dependency>
+    <groupId>xml-apis</groupId>
+    <artifactId>xml-apis</artifactId>
+    <version>1.3.04</version>
+</dependency>
+
+
+<!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->
+<dependency>
+    <groupId>htmlunit</groupId>
+    <artifactId>htmlunit</artifactId>
+    <version>2.8</version>
+</dependency>
+
+<dependency>
+    <groupId>httpmime</groupId>
+    <artifactId>httpmime</artifactId>
+    <version>4.0.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>apache-mime4j</groupId>
+    <artifactId>apache-mime4j</artifactId>
+    <version>0.6</version>
+</dependency>
+
+
+
+
+
+<dependency>
+    <groupId>commons-codec</groupId>
+    <artifactId>commons-codec</artifactId>
+    <version>1.4</version>
+</dependency>
+
+
+<dependency>
+    <groupId>commons-collections</groupId>
+    <artifactId>commons-collections</artifactId>
+    <version>3.2.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>1.4</version>
+</dependency>
+
+
+<dependency>
+    <groupId>commons-lang</groupId>
+    <artifactId>commons-lang</artifactId>
+    <version>2.4</version>
+</dependency>
+
+
+<dependency>
+    <groupId>commons-logging</groupId>
+    <artifactId>commons-logging</artifactId>
+    <version>1.1.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>cssparser</groupId>
+    <artifactId>cssparser</artifactId>
+    <version>0.9.5</version>
+</dependency>
+
+
+
+
+
+
+<dependency>
+    <groupId>nekohtml</groupId>
+    <artifactId>nekohtml</artifactId>
+    <version>1.9.14</version>
+</dependency>
+
+
+<dependency>
+    <groupId>serializer</groupId>
+    <artifactId>serializer</artifactId>
+    <version>2.7.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>xalan</groupId>
+    <artifactId>xalan</artifactId>
+    <version>2.7.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>xercesImpl</groupId>
+    <artifactId>xercesImpl</artifactId>
+    <version>2.9.1</version>
+</dependency>
+
+<dependency>
+    <groupId>htmlunit-core-js</groupId>
+    <artifactId>htmlunit-core-js</artifactId>
+    <version>2.8</version>
+</dependency>
+
+<dependency>
+    <groupId>sac</groupId>
+    <artifactId>sac</artifactId>
+    <version>1.3</version>
+</dependency>
+
+
+<dependency>
+    <groupId>poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>3.8</version>
+</dependency>
+
+<dependency>
+    <groupId>poi-ooxml</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>3.8</version>
+</dependency>
+<dependency>
+    <groupId>poi-ooxml-schemas</groupId>
+    <artifactId>poi-ooxml-schemas</artifactId>
+    <version>3.8</version>
+</dependency>
+
+<dependency>
+    <groupId>xmlbeans</groupId>
+    <artifactId>xmlbeans</artifactId>
+    <version>2.3.0</version>
+</dependency>
+
+
   </dependencies>
   <modules>
     <module>project4domain</module>
@@ -220,6 +370,7 @@
     <module>project4service</module>
     <module>front-web</module>
     <module>admin-web</module>
+    <module>xa-admin</module>
   </modules>
   
   <build>

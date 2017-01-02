@@ -21,10 +21,11 @@
     <result column="pay_password" property="payPassword" jdbcType="VARCHAR" />
     <result column="intensity" property="intensity" jdbcType="INTEGER" />
     <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="country_id" property="countryId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, mobile, password, adm_notice, passport, sid_photo, life_photo, head_portrait, 
-    nickname, gender, signature, qr_code_links, email, id_number, passport_no,input_id, pay_password, intensity,add_time
+    nickname, gender, signature, qr_code_links, email, id_number, passport_no,input_id, pay_password, intensity,add_time,country_id
   </sql>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
@@ -37,14 +38,14 @@
       life_photo, head_portrait, nickname, 
       gender, signature, qr_code_links, 
       email, id_number, passport_no, input_id, pay_password,intensity,
-      add_time)
+      add_time,country_id)
     values ( #{mobile,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{admNotice,jdbcType=BIGINT}, #{passport,jdbcType=BIGINT}, #{sidPhoto,jdbcType=BIGINT}, 
       #{lifePhoto,jdbcType=BIGINT}, #{headPortrait,jdbcType=BIGINT}, #{nickname,jdbcType=VARCHAR}, 
       #{gender,jdbcType=CHAR}, #{signature,jdbcType=VARCHAR}, #{qrCodeLinks,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{idNumber,jdbcType=VARCHAR}, #{passportNo,jdbcType=VARCHAR}, 
        #{inputId,jdbcType=VARCHAR}, #{payPassword,jdbcType=VARCHAR},#{intensity},
-      #{addTime,jdbcType=TIMESTAMP})
+      #{addTime,jdbcType=TIMESTAMP},#{countryId})
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.BuyHand" >
     insert into buy_hand
@@ -262,6 +263,7 @@
      c.head_portrait as headPortrait,
      c.input_id as inputId,
      c.pay_password as payPassword,
+     c.country_id as countryId,
      c.* 
      from buy_hand c where mobile=#{mobile,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR};
   </select>
@@ -274,6 +276,7 @@
      c.head_portrait as headPortrait,
      c.input_id as inputId,
      c.pay_password as payPassword,
+     c.country_id as countryId,
      c.*  from buy_hand c where mobile=#{mobile,jdbcType=VARCHAR}
   </select>
   
@@ -288,6 +291,7 @@
      c.head_portrait as headPortrait,
      c.input_id as inputId,
      c.pay_password as payPassword,
+     c.country_id as countryId,
      c.*  from buy_hand c where c.id=#{id}
   </select>
   
@@ -299,6 +303,7 @@
      c.head_portrait as headPortrait,
      c.input_id as inputId,
      c.pay_password as payPassword,
+     c.country_id as countryId,
      c.*  from buy_hand c where email='${email}' and input_id='${inputId}' and passport_no='${passportNo}'
       and id=${id} and password='${password}'
   </select>

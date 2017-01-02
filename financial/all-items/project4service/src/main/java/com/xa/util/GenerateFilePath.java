@@ -25,6 +25,9 @@ public class GenerateFilePath {
 	private String uri;
 	
 	public GenerateFilePath(Long typeId, String suffix){
+		if(suffix.indexOf(".") == -1){
+			suffix =  suffix + ".jpg";
+		}
 		 this.typeId = typeId;
 		 this.suffix = suffix;
 		 

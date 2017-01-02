@@ -1,8 +1,8 @@
 package com.xa.service.impl;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.pagehelper.Page;
@@ -11,6 +11,8 @@ import com.xa.service.BaseServiceInte;
 
 public class BaseServiceImpl<T, M extends BaseMapper<T>> implements
 		BaseServiceInte<T> {
+	
+	protected org.apache.log4j.Logger logger = Logger.getLogger(this.getClass());
 
 	@Autowired
 	public M m;

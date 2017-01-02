@@ -2,16 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xa.mapper.GoodsMapper" >
   <resultMap id="BaseResultMap" type="com.xa.entity.Goods" >
-    <id column="id" property="id" jdbcType="BIGINT" />
+     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="info" property="info" jdbcType="VARCHAR" />
     <result column="capacity" property="capacity" jdbcType="BIGINT" />
-    <result column="lowest_price" property="lowestPrice" jdbcType="BIGINT" />
+    <result column="lowest_price" property="lowestPrice" jdbcType="REAL" />
+    <result column="upload_type_id" property="uploadTypeId" jdbcType="BIGINT" />
     <result column="norms_id" property="normsId" jdbcType="BIGINT" />
-    <result column="price" property="price" jdbcType="BIGINT" />
+    <result column="is_recommended" property="isRecommended" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="REAL" />
     <result column="adv_pic" property="advPic" jdbcType="BIGINT" />
     <result column="price_currency_id" property="priceCurrencyId" jdbcType="BIGINT" />
-    <result column="highest_price" property="highestPrice" jdbcType="BIGINT" />
+    <result column="highest_price" property="highestPrice" jdbcType="REAL" />
     <result column="brand_id" property="brandId" jdbcType="BIGINT" />
     <result column="shelf_life" property="shelfLife" jdbcType="TIMESTAMP" />
     <result column="color" property="color" jdbcType="VARCHAR" />
@@ -29,10 +31,10 @@
     <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
   </resultMap>
  <sql id="Base_Column_List" >
-    id, name, info, capacity, lowest_price, norms_id, price, adv_pic, price_currency_id, 
-    highest_price, brand_id, shelf_life, color, purchasing_position, date_of_production, 
-    bar_code, speed_awb, goods_according_to_positive, left_photo, right_photo, goods_invoice, 
-    express_single, classid, state, add_time
+    id, name, info, capacity, lowest_price, upload_type_id, norms_id, is_recommended, 
+    price, adv_pic, price_currency_id, highest_price, brand_id, shelf_life, color, purchasing_position, 
+    date_of_production, bar_code, speed_awb, goods_according_to_positive, left_photo, 
+    right_photo, goods_invoice, express_single, classid, state, add_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -46,19 +48,21 @@
   </delete>
  <insert id="insert" parameterType="com.xa.entity.Goods" useGeneratedKeys="true" keyProperty="id">
     insert into goods (id, name, info, 
-      capacity, lowest_price, norms_id, 
-      price, adv_pic, price_currency_id, 
-      highest_price, brand_id, shelf_life, 
-      color, purchasing_position, date_of_production, 
+      capacity, lowest_price, upload_type_id, 
+      norms_id, is_recommended, price, 
+      adv_pic, price_currency_id, highest_price, 
+      brand_id, shelf_life, color, 
+      purchasing_position, date_of_production, 
       bar_code, speed_awb, goods_according_to_positive, 
       left_photo, right_photo, goods_invoice, 
       express_single, classid, state, 
       add_time)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR}, 
-      #{capacity,jdbcType=BIGINT}, #{lowestPrice,jdbcType=BIGINT}, #{normsId,jdbcType=BIGINT}, 
-      #{price,jdbcType=BIGINT}, #{advPic,jdbcType=BIGINT}, #{priceCurrencyId,jdbcType=BIGINT}, 
-      #{highestPrice,jdbcType=BIGINT}, #{brandId,jdbcType=BIGINT}, #{shelfLife,jdbcType=TIMESTAMP}, 
-      #{color,jdbcType=VARCHAR}, #{purchasingPosition,jdbcType=VARCHAR}, #{dateOfProduction,jdbcType=TIMESTAMP}, 
+      #{capacity,jdbcType=BIGINT}, #{lowestPrice,jdbcType=REAL}, #{uploadTypeId,jdbcType=BIGINT}, 
+      #{normsId,jdbcType=BIGINT}, #{isRecommended,jdbcType=INTEGER}, #{price,jdbcType=REAL}, 
+      #{advPic,jdbcType=BIGINT}, #{priceCurrencyId,jdbcType=BIGINT}, #{highestPrice,jdbcType=REAL}, 
+      #{brandId,jdbcType=BIGINT}, #{shelfLife,jdbcType=TIMESTAMP}, #{color,jdbcType=VARCHAR}, 
+      #{purchasingPosition,jdbcType=VARCHAR}, #{dateOfProduction,jdbcType=TIMESTAMP}, 
       #{barCode,jdbcType=VARCHAR}, #{speedAwb,jdbcType=VARCHAR}, #{goodsAccordingToPositive,jdbcType=BIGINT}, 
       #{leftPhoto,jdbcType=BIGINT}, #{rightPhoto,jdbcType=BIGINT}, #{goodsInvoice,jdbcType=BIGINT}, 
       #{expressSingle,jdbcType=BIGINT}, #{classid,jdbcType=BIGINT}, #{state,jdbcType=INTEGER}, 
@@ -233,8 +237,12 @@
   
   <!-- 获取商品根据分类id -->
   <select id="getGoodsByClassId" resultType="com.xa.entity.Goods" parameterType="long">
-   SELECT * from goods WHERE classid in (select id from classification where pid=#{pid} union select #{pid})
+   select * from ( SELECT * from goods WHERE classid in (select id from classification where pid=#{pid} union select #{pid}) ) t order by t.id desc
   </select>
   
+  <!-- 获取 -->
+  <select id="getGoodsByBrandId" resultType="com.xa.entity.Goods" parameterType="long">
+    select * from goods where brand_id=#{brandId}
+  </select>
   
 </mapper>

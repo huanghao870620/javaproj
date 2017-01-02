@@ -526,6 +526,94 @@
     	 </table>
     	 
     	 
+    	 
+    	   <table schema="" 
+    	 catalog=""
+    	 tableName="scg_order_release" 
+    	 domainObjectName="ScgOrderRelease" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="order_recv" 
+    	 domainObjectName="OrderRecv" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	   <table schema="" 
+    	 catalog=""
+    	 tableName="order_good" 
+    	 domainObjectName="OrderGood" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="coupons" 
+    	 domainObjectName="Coupons" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="coupons_buyer" 
+    	 domainObjectName="CouponsBuyer" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	   <table schema="" 
+    	 catalog=""
+    	 tableName="good_file" 
+    	 domainObjectName="GoodFile" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
       <!-- 
       <generatedKey column="user_id" sqlStatement="oracle" identity="true" />
       <columnOverride column="DATE_FIELD" property="startDate" />

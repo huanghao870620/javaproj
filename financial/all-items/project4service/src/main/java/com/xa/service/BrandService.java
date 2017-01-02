@@ -9,4 +9,12 @@ public interface BrandService<T> extends BaseServiceInte<T> {
 	 * @return
 	 */
 	public String getBrands(String random,String sign);
+	
+	/**
+	 * 根据品牌id获取商品
+	 * @param brandId
+	 * @param sign
+	 * @return
+	 */
+	public String getGoodsByBrandId(Long brandId, String sign);
 }

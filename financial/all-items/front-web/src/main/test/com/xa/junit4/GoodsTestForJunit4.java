@@ -40,10 +40,10 @@ public class GoodsTestForJunit4 {
 		good.setClassid(31L);
 		good.setColor("红色");
 		good.setDateOfProduction(new Date());
-		good.setPrice(30L);
-		String mallName="aaa";
-		String mallAddress="bbb";
-		String text = "";
+//		good.setPrice(30L);
+//		String mallName="aaa";
+//		String mallAddress="bbb";
+//		String text = "";
 //		try {
 //			text = this.goodsService.addGood(null, null, null,  null, good , mallName, mallAddress, "");
 //			System.out.println(text);

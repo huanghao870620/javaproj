@@ -15,9 +15,11 @@ import com.xa.entity.Orders;
 import com.xa.entity.ShoppingCartGoods;
 import com.xa.enumeration.OrdersState;
 import com.xa.enumeration.PhotoType;
+import com.xa.enumeration.ScgState;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodsMapper;
 import com.xa.mapper.OrdersMapper;
+import com.xa.mapper.ScgOrderReleaseMapper;
 import com.xa.mapper.ShoppingCartGoodsMapper;
 import com.xa.service.ShoppingCartGoodsService;
 import com.xa.util.Constants;
@@ -44,6 +46,9 @@ public class ShoppingCartGoodsServiceImpl extends BaseServiceImpl<ShoppingCartGo
 	@Autowired
 	private FileMapper fileMapper;
 	
+	@Autowired
+	private ScgOrderReleaseMapper scgOrderReleaseMapper;
+	
 	/**
 	 * 添加商品到购物车
 	 */
@@ -58,6 +63,7 @@ public class ShoppingCartGoodsServiceImpl extends BaseServiceImpl<ShoppingCartGo
 		
 		if(scg.getId() == null){
 			//添加
+			scg.setState(ScgState.NOT_IN_ORDER.getValue()); //不在订单中
 			this.m.insert(scg);
 		}else {
 			//修改
@@ -80,7 +86,7 @@ public class ShoppingCartGoodsServiceImpl extends BaseServiceImpl<ShoppingCartGo
 		JSONObject object = new JSONObject();
 		
 		Orders orders = new Orders();
-		orders.setState(OrdersState.HAS_BEEN_SHIPPED.getValue()); // 已发货
+//		orders.setState(OrdersState.HAS_BEEN_SHIPPED.getValue()); // 已发货
 		this.ordersMapper.insert(orders);
 		object.accumulate(Constants.SUCCESS, true);
 		return object.toString();
@@ -118,7 +124,7 @@ public class ShoppingCartGoodsServiceImpl extends BaseServiceImpl<ShoppingCartGo
 				
 				Goods good= this.goodsMapper.selectByPrimaryKey(goodId);
 				String goodName= good.getName();
-				Long price = good.getPrice();
+				Float price = good.getPrice();
 				scgObj
 				
 				.accumulate("count", count)
@@ -132,7 +138,7 @@ public class ShoppingCartGoodsServiceImpl extends BaseServiceImpl<ShoppingCartGo
 			}
 			object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
 		}else {
-			object.accumulate(Constants.SUCCESS, false);
+			object.accumulate(Constants.SUCCESS, true);
 			object.accumulate(Constants.MSG, "购物车中暂无商品!");
 		}
 			

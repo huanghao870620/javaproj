@@ -11,7 +11,7 @@ public class Goods {
 
     private Long capacity;
 
-    private Long lowestPrice;
+    private Float lowestPrice;
 
     private Long uploadTypeId;
 
@@ -19,13 +19,13 @@ public class Goods {
 
     private Integer isRecommended;
 
-    private Long price;
+    private Float price;
 
     private Long advPic;
 
     private Long priceCurrencyId;
 
-    private Long highestPrice;
+    private Float highestPrice;
 
     private Long brandId;
 
@@ -89,11 +89,11 @@ public class Goods {
         this.capacity = capacity;
     }
 
-    public Long getLowestPrice() {
+    public Float getLowestPrice() {
         return lowestPrice;
     }
 
-    public void setLowestPrice(Long lowestPrice) {
+    public void setLowestPrice(Float lowestPrice) {
         this.lowestPrice = lowestPrice;
     }
 
@@ -121,11 +121,11 @@ public class Goods {
         this.isRecommended = isRecommended;
     }
 
-    public Long getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
@@ -145,11 +145,11 @@ public class Goods {
         this.priceCurrencyId = priceCurrencyId;
     }
 
-    public Long getHighestPrice() {
+    public Float getHighestPrice() {
         return highestPrice;
     }
 
-    public void setHighestPrice(Long highestPrice) {
+    public void setHighestPrice(Float highestPrice) {
         this.highestPrice = highestPrice;
     }
 

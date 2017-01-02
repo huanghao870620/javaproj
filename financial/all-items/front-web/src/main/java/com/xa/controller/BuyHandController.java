@@ -46,6 +46,7 @@ public class BuyHandController extends BaseController{
 			 BuyHand customer,
 			 String unionId,
 			 Long accountTypeId,
+			 String countryCode,
 			 String sign){
 		 try {
 			this.sendAjaxMsg(this.buyHandService.register(customer, 
@@ -57,6 +58,7 @@ public class BuyHandController extends BaseController{
 					this.request,
 					unionId,
 					accountTypeId,
+					countryCode,
 					sign));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -80,9 +82,9 @@ public class BuyHandController extends BaseController{
 	  * 获取验证码
 	  */
 	 @RequestMapping("getVercode")
-	 public void getVercode(BuyHand customer,String sign){
+	 public void getVercode(BuyHand customer,String countryCode,String sign){
 		 try {
-			this.sendAjaxMsg(this.buyHandService.getVercode(customer,sign));
+			this.sendAjaxMsg(this.buyHandService.getVercode(customer,countryCode,sign));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -95,11 +97,11 @@ public class BuyHandController extends BaseController{
 	  */
 	 @RequestMapping("getOrderByBuyHandId")
 	 public void getOrderByBuyHandId(Long buyHandId, String sign){
-		  try {
-			this.sendAjaxMsg(this.customerOrderService.getOrdersByBuyHandId(buyHandId,sign));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		  try {
+//			this.sendAjaxMsg(this.customerOrderService.getOrdersByBuyHandId(buyHandId,sign));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	 }
 	 
 	 /**

@@ -9,8 +9,18 @@ public class ShoppingCartGoods {
     
     private Long count;
     
+    private int state;
+    
 
-    public Long getCount() {
+    public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
+	public Long getCount() {
 		return count;
 	}
 

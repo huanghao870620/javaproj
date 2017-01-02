@@ -20,10 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.xa.entity.AccountAssociated;
 import com.xa.entity.BuyHand;
+import com.xa.entity.Country;
 import com.xa.entity.MobileVercodeLog;
 import com.xa.enumeration.PhotoType;
 import com.xa.mapper.AccountAssociatedMapper;
 import com.xa.mapper.BuyHandMapper;
+import com.xa.mapper.CountryMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.MobileVercodeLogMapper;
 import com.xa.msg.ChuanglanSMS;
@@ -57,6 +59,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 
 	@Autowired
 	private AccountAssociatedMapper accountAssociatedMapper;
+	
+	@Autowired
+	private CountryMapper countryMapper;
 
 	/**
 	 * 注册
@@ -70,12 +75,17 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 			MultipartFile admNoticeFile, // 录取通知书
 			MultipartFile passportFile, // 护照
 			MultipartFile lifePhotoFile, // 生活照
-			HttpSession session, HttpServletRequest request, String unionId, Long accountTypeId, String sign) throws IllegalStateException, IOException {
+			HttpSession session,
+			HttpServletRequest request, 
+			String unionId,
+			Long accountTypeId,
+			String countryCode,
+			String sign) throws IllegalStateException, IOException {
 		boolean success = false;
 		JSONObject object = new JSONObject();
 		String localSign = Security.getSign(new String[] { "mobile", "password", "gender", "sidPhotoFile",
 				"admNoticeFile", "passportFile", "lifePhotoFile","email","idNumber","passportNo","inputId",
-				"unionId","accountTypeId"});
+				"unionId","accountTypeId","countryCode"});
 		if (!localSign.equals(sign)) {
 			object.accumulate(Constants.SUCCESS, success).accumulate(Constants.MSG, Msg.NOT_PERMISSION);
 			return object.toString();
@@ -170,6 +180,10 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		customer.setAddTime(new Date());
 		
 		customer.setIntensity(intensity);
+		
+		// 添加国家代码
+		Country country= this.countryMapper.findCountryByCode(countryCode);
+		customer.setCountryId(country.getId());
 		this.buyHandMapper.insert(customer);
 		
 		//第三方标识不为空
@@ -215,6 +229,7 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 			Long passportFileId = resultCustomer.getPassport(); // 护照
 			Long sidPhotoFileId = resultCustomer.getSidPhoto(); // 学生照
 			Long headPortraitFileId = resultCustomer.getHeadPortrait(); //头像
+			Long countryId= resultCustomer.getCountryId();//国家id
 			com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 			com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 			com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -224,27 +239,53 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 			if(null != headPortraitFile){
 				headPortraitFileUriPath = headPortraitFile.getUriPath();
 			}
-			object.accumulate(Constants.SUCCESS, true).accumulate("buyHandId", resultCustomer.getId())
-					.accumulate("intensity", intensity)
-					.accumulate("mobile", resultCustomer.getMobile() == null ? "" : resultCustomer.getMobile())
-					.accumulate("nickname", resultCustomer.getNickname() == null ? "" : resultCustomer.getNickname())
-					.accumulate("gender", resultCustomer.getGender() == null ? "" : resultCustomer.getGender())
-					.accumulate("signature", resultCustomer.getSignature() == null ? "" : resultCustomer.getSignature())
-					.accumulate("headPortrait",
-							headPortraitFileUriPath == null ? "" : headPortraitFileUriPath)
-					.accumulate("admNoticeFilePath",
-							admNoticeFile.getUriPath() == null ? "" : admNoticeFile.getUriPath())
-					.accumulate("sidPhotoFilePath", sidPhotoFile.getUriPath() == null ? "" : sidPhotoFile.getUriPath())
-					.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
-					.accumulate("lifePhotoFilePath",
-							lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-					.accumulate("inputId", resultCustomer.getInputId());
-
+			Country country= this.countryMapper.selectByPrimaryKey(countryId);
+			this.fillRetJSONObject(object,
+					resultCustomer,
+					intensity,
+					headPortraitFileUriPath,
+					admNoticeFile, 
+					sidPhotoFile,
+					passportFile, 
+					lifePhotoFile, 
+					country);
 		} else {
 			object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "不存在此用户!");
 			return object.toString();
 		}
 		return object.toString();
+	}
+	
+	/**
+	 * 获取买家信息
+	 * @return
+	 */
+	private void fillRetJSONObject(JSONObject object,
+			BuyHand buyHand,
+			int intensity,
+			String headPortraitFileUriPath,
+			com.xa.entity.File admNoticeFile,
+			com.xa.entity.File sidPhotoFile,
+			com.xa.entity.File passportFile,
+			com.xa.entity.File lifePhotoFile,
+			Country country){
+		object.accumulate(Constants.SUCCESS, true).accumulate("buyHandId", buyHand.getId())
+		.accumulate("intensity", intensity)
+		.accumulate("mobile", buyHand.getMobile() == null ? "" : buyHand.getMobile())
+		.accumulate("nickname", buyHand.getNickname() == null ? "" : buyHand.getNickname())
+		.accumulate("gender", buyHand.getGender() == null ? "" : buyHand.getGender())
+		.accumulate("signature", buyHand.getSignature() == null ? "" : buyHand.getSignature())
+		.accumulate("headPortrait",
+				headPortraitFileUriPath == null ? "" : headPortraitFileUriPath)
+		.accumulate("admNoticeFilePath",
+				admNoticeFile.getUriPath() == null ? "" : admNoticeFile.getUriPath())
+		.accumulate("sidPhotoFilePath", sidPhotoFile.getUriPath() == null ? "" : sidPhotoFile.getUriPath())
+		.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
+		.accumulate("lifePhotoFilePath",
+				lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
+		.accumulate("inputId", buyHand.getInputId())
+		.accumulate("countryCode", country.getCountryCode())
+		;
 	}
 
 	/**
@@ -328,14 +369,16 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public String getVercode(BuyHand customer, String sign) throws ParseException, IOException {
+	public String getVercode(BuyHand customer,String countryCode, String sign) throws ParseException, IOException {
 		JSONObject object = new JSONObject();
-		if (!sign.equals(Security.getSign(new String[] { "mobile" }))) {
+		if (!sign.equals(Security.getSign(new String[] { 
+				"mobile","countryCode" 
+				}))) {
 			object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION);
 			return object.toString();
 		}
 		ChuanglanSMS client = new ChuanglanSMS("I9179561", "pKFeRloiIL7d4b");
-		String mobile = "001" + customer.getMobile();
+		String mobile = countryCode + customer.getMobile();
 		CloseableHttpResponse response = null;
 		String vercode = this.generateVerCode();
 		MobileVercodeLog mvl = new MobileVercodeLog();
@@ -399,11 +442,13 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		Long passportFileId = resultCustomer.getPassport(); // 护照
 		Long sidPhotoFileId = resultCustomer.getSidPhoto(); // 学生照
 		Long headPortraitFileId = resultCustomer.getHeadPortrait();//头像
+		Long countryId= resultCustomer.getCountryId();//国家id
 		com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 		com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 		com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
 		com.xa.entity.File lifePhotoFile = this.fileMapper.selectByPrimaryKey(lifePhotoFileId);
 		com.xa.entity.File headPortraitFileTarget = this.fileMapper.selectByPrimaryKey(headPortraitFileId);
+		Country country= this.countryMapper.selectByPrimaryKey(countryId);
 		String headPortraitFileUriPath = null;
 		if(null != headPortraitFileTarget){
 			headPortraitFileUriPath = headPortraitFileTarget.getUriPath();
@@ -418,6 +463,7 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 				.accumulate("sidPhotoFilePath", sidPhotoFile.getUriPath() == null ? "" : sidPhotoFile.getUriPath())
 				.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 				.accumulate("lifePhotoFilePath", lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
+				.accumulate("countryCode", country.getCountryCode())
 				.accumulate("inputId", resultCustomer.getInputId());
 		return object.toString();
 	}
@@ -444,6 +490,8 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		Long passportFileId = resultCustomer.getPassport(); // 护照
 		Long sidPhotoFileId = resultCustomer.getSidPhoto(); // 学生照
 		Long headPortraitFileId = resultCustomer.getHeadPortrait();//头像
+		Long countryId= resultCustomer.getCountryId();
+		Country country= this.countryMapper.selectByPrimaryKey(countryId);
 		com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 		com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 		com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -463,7 +511,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 				.accumulate("sidPhotoFilePath", sidPhotoFile.getUriPath() == null ? "" : sidPhotoFile.getUriPath())
 				.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 				.accumulate("lifePhotoFilePath", lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-				.accumulate("inputId", resultCustomer.getInputId());
+				.accumulate("inputId", resultCustomer.getInputId())
+				.accumulate("countryCode", country.getCountryCode())
+				;
 		 return object.toString();
 	}
 	
@@ -489,6 +539,7 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		Long passportFileId = resultCustomer.getPassport(); // 护照
 		Long sidPhotoFileId = resultCustomer.getSidPhoto(); // 学生照
 		Long headPortraitFileId = resultCustomer.getHeadPortrait();//头像
+		Long countryId= resultCustomer.getCountryId();
 		com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 		com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 		com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -498,6 +549,7 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		if(null != headPortraitFileTarget){
 			headPortraitFileUriPath = headPortraitFileTarget.getUriPath();
 		}
+		Country country= this.countryMapper.selectByPrimaryKey(countryId);
 		object.accumulate(Constants.SUCCESS, true).accumulate("buyHandId", resultCustomer.getId())
 		.accumulate("signature", resultCustomer.getSignature() == null ? "" : resultCustomer.getSignature())
 				.accumulate("mobile", resultCustomer.getMobile() == null ? "" : resultCustomer.getMobile())
@@ -508,7 +560,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 				.accumulate("sidPhotoFilePath", sidPhotoFile.getUriPath() == null ? "" : sidPhotoFile.getUriPath())
 				.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 				.accumulate("lifePhotoFilePath", lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-				.accumulate("inputId", resultCustomer.getInputId());
+				.accumulate("inputId", resultCustomer.getInputId())
+				.accumulate("countryCode", country.getCountryCode())
+				;
 		 return object.toString();
 	
 	}
@@ -527,8 +581,6 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		}))){
 			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
-		
-		
 		
 		
 		String path = request.getSession().getServletContext().getRealPath("upload");
@@ -561,6 +613,8 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		Long passportFileId = customer.getPassport(); // 护照
 		Long sidPhotoFileId = customer.getSidPhoto(); // 学生照
 		Long headPortraitFileId = customer.getHeadPortrait();//头像
+		Long countryId=customer.getCountryId();
+		Country country= this.countryMapper.selectByPrimaryKey(countryId);
 		com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 		com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 		com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -575,7 +629,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		.accumulate("sidPhotoFilePath", sidPhotoFile.getUriPath() == null ? "" : sidPhotoFile.getUriPath())
 		.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 		.accumulate("lifePhotoFilePath", lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-		.accumulate("inputId", customer.getInputId());
+		.accumulate("inputId", customer.getInputId())
+		.accumulate("countryCode", country.getCountryCode())
+		;
 		return object.toString();
 	}
 
@@ -600,6 +656,8 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 			Long passportFileId = customer.getPassport(); // 护照
 			Long sidPhotoFileId = customer.getSidPhoto(); // 学生照
 			Long headPortraitFileId = customer.getHeadPortrait();
+			Long countryId= customer.getCountryId();
+			Country country= this.countryMapper.selectByPrimaryKey(countryId);
 			com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 			com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 			com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -621,7 +679,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 					.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 					.accumulate("lifePhotoFilePath",
 							lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-					.accumulate("inputId", customer.getInputId());
+					.accumulate("inputId", customer.getInputId())
+					.accumulate("countryCode", country.getCountryCode())
+					;
 		} else {
 			object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "此账号未注册!");
 			return object.toString();
@@ -685,6 +745,8 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		Long passportFileId = dbCustomer.getPassport(); // 护照
 		Long sidPhotoFileId = dbCustomer.getSidPhoto(); // 学生照
 		Long headPortraitFileId = dbCustomer.getHeadPortrait();
+		Long countryId= dbCustomer.getCountryId();
+		Country country= this.countryMapper.selectByPrimaryKey(countryId);
 		com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 		com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 		com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -707,7 +769,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 		.accumulate("lifePhotoFilePath",
 				lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-		.accumulate("inputId", dbCustomer.getInputId());
+		.accumulate("inputId", dbCustomer.getInputId())
+		.accumulate("countryCode", country.getCountryCode())
+		;
 		return object.toString();
 	}
 
@@ -741,6 +805,8 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 					Long passportFileId = customer.getPassport(); // 护照
 					Long sidPhotoFileId = customer.getSidPhoto(); // 学生照
 					Long headPortraitFileId = customer.getHeadPortrait(); //头像
+					Long countryId= customer.getCountryId();
+					Country country = this.countryMapper.selectByPrimaryKey(countryId);
 					com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 					com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 					com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -764,7 +830,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 					.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 					.accumulate("lifePhotoFilePath",
 							lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-					.accumulate("inputId", customer.getInputId());
+					.accumulate("inputId", customer.getInputId())
+					.accumulate("countryCode", country.getCountryCode())
+					;
 					return object.toString();
 			 }else{
 				 return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "不存在此手机号!").toString();
@@ -812,6 +880,8 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 			Long passportFileId = customer.getPassport(); // 护照
 			Long sidPhotoFileId = customer.getSidPhoto(); // 学生照
 			Long headPortraitFileId = customer.getHeadPortrait(); //头像
+			Long countryId= customer.getCountryId();
+			Country country= this.countryMapper.selectByPrimaryKey(countryId);
 			com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 			com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 			com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -835,7 +905,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 			.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 			.accumulate("lifePhotoFilePath",
 					lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-			.accumulate("inputId", customer.getInputId());
+			.accumulate("inputId", customer.getInputId())
+			.accumulate("countryCode", country.getCountryCode())
+			;
 			
 			return object.toString();
 		}else {
@@ -896,6 +968,8 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 					Long passportFileId = resultCustomer.getPassport(); // 护照
 					Long sidPhotoFileId = resultCustomer.getSidPhoto(); // 学生照
 					Long headPortraitFileId = resultCustomer.getHeadPortrait(); //头像
+					Long countryId= resultCustomer.getCountryId();
+					Country country= this.countryMapper.selectByPrimaryKey(countryId);
 					com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 					com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 					com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -919,7 +993,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 					.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 					.accumulate("lifePhotoFilePath",
 							lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-					.accumulate("inputId", resultCustomer.getInputId());
+					.accumulate("inputId", resultCustomer.getInputId())
+					.accumulate("countryCode", country.getCountryCode())
+					;
 				 return object.toString();
 			 }else {
 				return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "此手机号不存在!").toString();
@@ -971,6 +1047,8 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 				Long passportFileId = resultCustomer.getPassport(); // 护照
 				Long sidPhotoFileId = resultCustomer.getSidPhoto(); // 学生照
 				Long headPortraitFileId = resultCustomer.getHeadPortrait(); //头像
+				Long countryId= resultCustomer.getCountryId();
+				Country country= this.countryMapper.selectByPrimaryKey(countryId);				
 				com.xa.entity.File admNoticeFile = this.fileMapper.selectByPrimaryKey(admNoticeFileId);
 				com.xa.entity.File sidPhotoFile = this.fileMapper.selectByPrimaryKey(sidPhotoFileId);
 				com.xa.entity.File passportFile = this.fileMapper.selectByPrimaryKey(passportFileId);
@@ -995,7 +1073,9 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 				.accumulate("passportFilePath", passportFile.getUriPath() == null ? "" : passportFile.getUriPath())
 				.accumulate("lifePhotoFilePath",
 						lifePhotoFile.getUriPath() == null ? "" : lifePhotoFile.getUriPath())
-				.accumulate("inputId", resultCustomer.getInputId());
+				.accumulate("inputId", resultCustomer.getInputId())
+				.accumulate("countryCode", country.getCountryCode())
+				;
 			 return object.toString();
 		}else {
 			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "不存在此用户！").toString();

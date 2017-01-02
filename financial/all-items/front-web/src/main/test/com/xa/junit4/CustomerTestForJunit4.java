@@ -33,7 +33,7 @@ public class CustomerTestForJunit4 {
 	public void testGetVercode() throws ParseException, IOException{
 		 BuyHand customer = new BuyHand();
 		 customer.setMobile("18217742115");
-		 this.buyHandService.getVercode(customer,"");
+		 this.buyHandService.getVercode(customer,"001","");
 	}
 	
 	/**

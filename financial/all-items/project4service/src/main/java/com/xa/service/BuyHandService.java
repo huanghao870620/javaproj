@@ -14,7 +14,7 @@ public interface BuyHandService<T> extends BaseServiceInte<T> {
 
 
 	/**
-	 * 客户注册
+	 * 买手注册
 	 * @return
 	 */
 	 public String register(BuyHand buyHand,
@@ -23,7 +23,7 @@ public interface BuyHandService<T> extends BaseServiceInte<T> {
 				MultipartFile passportFile,
 				MultipartFile lifePhotoFile,
 				HttpSession session,
-				HttpServletRequest request,String unionId,Long accountTypeId,String sign) throws IllegalStateException, IOException;
+				HttpServletRequest request,String unionId,Long accountTypeId,String countryCode,String sign) throws IllegalStateException, IOException;
 	 
 	 
 	 /**
@@ -39,7 +39,7 @@ public interface BuyHandService<T> extends BaseServiceInte<T> {
 	  * @throws ParseException
 	  * @throws IOException
 	  */
-	 public String getVercode(BuyHand buyHand, String sign) throws ParseException, IOException;
+	 public String getVercode(BuyHand buyHand,String countryCode, String sign) throws ParseException, IOException;
 	 
 	 /**
 	  * 

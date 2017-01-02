@@ -14,5 +14,5 @@ public interface CustomerOrderService<T> extends BaseServiceInte<T> {
 	 * @param buyHandId
 	 * @return
 	 */
-	public String getOrdersByBuyHandId(Long buyHandId, String sign);
+//	public String getOrdersByBuyHandId(Long buyHandId, String sign);
 }

@@ -28,4 +28,18 @@ public class ClassificationController extends BaseController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 根据父id获取子分类
+	 * @param sign
+	 * @param pid
+	 */
+	@RequestMapping("getChildByClassId")
+	public void getChildByClassId(String sign,Long pid){
+		try {
+			this.sendAjaxMsg(this.classificationService.getChildByClassId(sign, pid));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

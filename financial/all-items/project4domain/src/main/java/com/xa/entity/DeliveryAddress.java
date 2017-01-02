@@ -7,6 +7,14 @@ public class DeliveryAddress {
 
     private String mobile;
 
+    private Long cardIdBackFile;
+
+    private Long cardIdFrontFile;
+
+    private Long buyerId;
+
+    private String idcard;
+
     private Long areaId;
 
     private String address;
@@ -35,6 +43,38 @@ public class DeliveryAddress {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public Long getCardIdBackFile() {
+        return cardIdBackFile;
+    }
+
+    public void setCardIdBackFile(Long cardIdBackFile) {
+        this.cardIdBackFile = cardIdBackFile;
+    }
+
+    public Long getCardIdFrontFile() {
+        return cardIdFrontFile;
+    }
+
+    public void setCardIdFrontFile(Long cardIdFrontFile) {
+        this.cardIdFrontFile = cardIdFrontFile;
+    }
+
+    public Long getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(Long buyerId) {
+        this.buyerId = buyerId;
+    }
+
+    public String getIdcard() {
+        return idcard;
+    }
+
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
     }
 
     public Long getAreaId() {

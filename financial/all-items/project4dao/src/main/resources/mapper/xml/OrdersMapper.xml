@@ -3,11 +3,23 @@
 <mapper namespace="com.xa.mapper.OrdersMapper" >
   <resultMap id="BaseResultMap" type="com.xa.entity.Orders" >
    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="sum_price" property="sumPrice" jdbcType="REAL" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="buyer_id" property="buyerId" jdbcType="BIGINT" />
     <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="rece_way" property="receWay" jdbcType="INTEGER"/>
+    <result column="address_id" property="addressId" jdbcType="BIGINT" />
     <result column="generate_time" property="generateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-   id, state, generate_time
+   id,
+    sum_price, 
+    order_no, 
+    buyer_id, 
+    state, 
+    rece_way,
+    address_id,
+    generate_time
   </sql>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
@@ -15,9 +27,22 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xa.entity.Orders" useGeneratedKeys="true" keyProperty="id">
-    insert into orders ( state,generate_time)
-    values ( #{state,jdbcType=INTEGER},#{generateTime,jdbcType=TIMESTAMP})
+    insert into orders (id, sum_price, order_no, 
+      buyer_id,
+       state,
+        rece_way,
+        address_id,
+        generate_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{sumPrice,jdbcType=REAL}, #{orderNo,jdbcType=VARCHAR}, 
+      #{buyerId,jdbcType=BIGINT},
+       #{state,jdbcType=INTEGER},
+       #{receWay}, 
+       #{addressId},
+       #{generateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
+  
   <insert id="insertSelective" parameterType="com.xa.entity.Orders" >
     insert into orders
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -37,11 +62,34 @@
       </if>
     </trim>
   </insert>
+  
   <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.Orders" >
-    update orders
+   update orders
     <set >
+      <if test="sumPrice != null" >
+        sum_price = #{sumPrice,jdbcType=REAL},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerId != null" >
+        buyer_id = #{buyerId,jdbcType=BIGINT},
+      </if>
       <if test="state != null" >
         state = #{state,jdbcType=INTEGER},
+      </if>
+      
+      <if test="receWay != null">
+         rece_way = #{receWay},
+      </if>
+      
+      <if test="addressId != null">
+         address_id=#{addressId},
+      </if>
+      
+      
+      <if test="generateTime != null" >
+        generate_time = #{generateTime,jdbcType=TIMESTAMP}
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -52,11 +100,35 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
+  
   <select id="selectByPrimaryKey" resultType="com.xa.entity.Orders" parameterType="java.lang.Long">
     select 
     o.generate_time as generateTime,
+    o.rece_way as receWay,
+    o.address_id as addressId,
     o.* from orders o where id=#{id,jdbcType=BIGINT}
   </select>
   
+  <select id="getOrdersByState" resultType="com.xa.entity.Orders" parameterType="java.util.Map">
+   SELECT 
+   t.sum_price as sumPrice,
+   t.order_no as orderNo,
+   t.buyer_id as buyerId,
+   t.generate_time as generateTime,
+   t.rece_way as receWay,
+   o.address_id as addressId,
+   t.* from orders t where buyer_id=#{buyerId} and  state=#{state}
+  </select>
+  
+  <select id="findOrderByOrderNo" parameterType="java.lang.String" resultType="com.xa.entity.Orders">
+      select 
+       t.sum_price as sumPrice,
+   t.order_no as orderNo,
+   t.buyer_id as buyerId,
+   t.generate_time as generateTime,
+   t.rece_way as receWay,
+   o.address_id as addressId,
+      t.* from orders  t where order_no=#{orderNo}
+  </select>
   
 </mapper>

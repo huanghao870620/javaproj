@@ -6,11 +6,15 @@ import org.apache.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.xa.entity.BuyHand;
 import com.xa.entity.Buyers;
+import com.xa.entity.File;
 import com.xa.service.BuyHandService;
 import com.xa.service.BuyersService;
+import com.xa.service.FileService;
 
 @Controller
 @RequestMapping("/buyers")
@@ -21,6 +25,9 @@ public class BuyersController extends BaseController {
 	
 	@Autowired
 	private BuyHandService<BuyHand> buyHandService;
+	
+	@Autowired
+	private FileService<File> fileService;
 
 	/**
 	 * 买家注册
@@ -79,4 +86,61 @@ public class BuyersController extends BaseController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 编辑买家头像
+	 * @param buyerId
+	 * @param headPortialFile
+	 * @param sign
+	 * @param fileService
+	 * @param request
+	 */
+	@RequestMapping("updateHeadPortial")
+	public void updateHeadPortial(
+			Long buyerId,
+			@RequestParam(value="headPortialFile",required=false) MultipartFile headPortialFile,
+			String sign
+			) {
+		try {
+			this.sendAjaxMsg(this.buyersService.updateHeadPortial(buyerId, headPortialFile, sign, fileService));
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+
+	/**
+	 * 修改手机号
+	 * @param buyerId
+	 * @param newMobile
+	 * @param vercode
+	 * @param sign
+	 */
+	@RequestMapping("updateMobile")
+	public void updateMobile(Long buyerId, String newMobile,String vercode, String sign){
+		try {
+			this.sendAjaxMsg(this.buyersService.updateMobile(buyerId, newMobile, vercode, sign));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param buyer
+	 * @param sign
+	 * @return
+	 */
+	@RequestMapping("updateBuyer")
+	public void updateBuyer(Buyers buyer, String sign){
+		 try {
+			this.sendAjaxMsg(this.buyersService.updateBuyer(buyer, sign));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
+

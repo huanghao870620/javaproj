@@ -18,7 +18,6 @@ import com.xa.mapper.ConsumptionTypeMapper;
 import com.xa.mapper.CustomerOrderMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodsMapper;
-import com.xa.mapper.GoodsOrderReleaseMapper;
 import com.xa.mapper.MenuMapper;
 import com.xa.mapper.MobileVercodeLogMapper;
 import com.xa.mapper.OrdersMapper;
@@ -59,8 +58,8 @@ public class InitContextServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapp
 	@Autowired
 	private GoodsMapper goodsMapper;
 	
-	@Autowired
-	private GoodsOrderReleaseMapper goodsOrderReleaseMapper;
+//	@Autowired
+//	private GoodsOrderReleaseMapper goodsOrderReleaseMapper;
 	
 	@Autowired
 	private MenuMapper menuMapper;

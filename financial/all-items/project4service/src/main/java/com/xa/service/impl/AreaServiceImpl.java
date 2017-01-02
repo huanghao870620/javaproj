@@ -1,5 +1,6 @@
 package com.xa.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -68,5 +69,29 @@ public class AreaServiceImpl extends BaseServiceImpl<Area, AreaMapper> implement
 			object.accumulate("childs", array);
 		}
 	}
-	
+
+	/**
+	 * 获取完整区域
+	 * @return
+	 */
+	public String getFullArea(Long areaId){
+		JSONArray array = new JSONArray();
+		List<Area> list = new ArrayList<Area>();
+		Area area = this.m.selectByPrimaryKey(areaId);
+		list.add(area);
+		
+		while (area.getPid()!=-1) {
+			 area = this.m.selectByPrimaryKey(area.getPid());
+			 list.add(area);
+		}
+		
+		for(int i=list.size()-1;i>=0;i--){
+			Area  area2= list.get(i);
+			 JSONObject object = new JSONObject();
+			 object.accumulate("name", area2.getName()).accumulate("id", area2.getId());
+			 array.add(object);
+		}
+		
+		return array.toString();
+	}
 }

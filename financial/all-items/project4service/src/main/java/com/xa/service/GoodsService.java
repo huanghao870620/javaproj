@@ -3,15 +3,11 @@ package com.xa.service;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.xa.entity.Brand;
+import com.xa.entity.File;
 import com.xa.entity.Goods;
-import com.xa.entity.Mall;
-import com.xa.enumeration.PhotoType;
 
 public interface GoodsService<T> extends BaseServiceInte<T> {
 
@@ -34,7 +30,8 @@ public interface GoodsService<T> extends BaseServiceInte<T> {
 			String mallAddress,
 			String brandName,
 			Long uploadTypeId,
-			String sign) throws IllegalStateException, IOException ;
+			String sign,
+			FileService<com.xa.entity.File> fileService) throws IllegalStateException, IOException ;
 	
 	
 	/**
@@ -66,7 +63,7 @@ public interface GoodsService<T> extends BaseServiceInte<T> {
 	 * @param sign
 	 * @return
 	 */
-	public String getGoodsByClassifi(Long classid, String sign);
+	public String getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign);
 	
 	/**
 	 * 获取商品详情
@@ -76,14 +73,26 @@ public interface GoodsService<T> extends BaseServiceInte<T> {
 	 */
 	public String getGoodsDetailById(Long id,Long cartId, String sign);
 	
+	
 	/**
-	 * 上传文件
-	 * @param request
-	 * @param multipartFile
-	 * @param type
-	 * @param file
+	 * 获取商品详情通过商品id
+	 * @param goodId
+	 * @param sign
+	 * @return
+	 */
+	public String getGoodDetailById(Long goodId,String sign);
+	
+	
+	/**
+	 *  添加商品
+	 * @param good
+	 * @param bigFile
+	 * @param smallFile
+	 * @param fileService
+	 * @return
 	 * @throws IllegalStateException
 	 * @throws IOException
 	 */
-	public void uploadFile(HttpServletRequest request,MultipartFile multipartFile,PhotoType type,com.xa.entity.File file) throws IllegalStateException, IOException;
+	public String addGood(Goods good,MultipartFile bigFile,MultipartFile smallFile,FileService<File> fileService) 
+			throws IllegalStateException, IOException;
 }

@@ -118,7 +118,9 @@
   
   <!-- 获取用户根据手机和密码 -->
   <select id="findBuyerByMobileAndPass" parameterType="com.xa.entity.Buyers" resultType="com.xa.entity.Buyers">
-   SELECT * from buyers where mobile=#{mobile} and password=#{password}
+   SELECT
+   t.head_portrait as headPortrait, 
+   t.* from buyers t where mobile=#{mobile} and password=#{password}
   </select>
   
   

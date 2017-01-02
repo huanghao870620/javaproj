@@ -9,4 +9,11 @@ public interface AreaService<T> extends BaseServiceInte<T> {
 	 * @return
 	 */
 	public String getAllArea(String random,String sign);
+	
+	/**
+	 * 获取完整区域
+	 * @param areaId
+	 * @return
+	 */
+	public String getFullArea(Long areaId);
 }

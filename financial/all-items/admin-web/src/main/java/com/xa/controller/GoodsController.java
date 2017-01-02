@@ -8,13 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.xa.convert.DatePropertyEditor;
+import com.xa.entity.File;
 import com.xa.entity.Goods;
+import com.xa.service.FileService;
 import com.xa.service.GoodsService;
 
 @Controller
@@ -23,6 +28,9 @@ public class GoodsController extends BaseController {
 
 	@Autowired
 	private GoodsService<Goods> goodsService;
+	
+	@Autowired
+	private FileService<File> fileService;
 	
 	/**
 	 * @return
@@ -92,9 +100,9 @@ public class GoodsController extends BaseController {
 	     * @param sign
 	     */
 	    @RequestMapping("getGoodsByClassifi")
-	    public void getGoodsByClassifi(Long classid, String sign){
+	    public void getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign){
 	    	try {
-				this.sendAjaxMsg(this.goodsService.getGoodsByClassifi(classid, sign));
+				this.sendAjaxMsg(this.goodsService.getGoodsByClassifi(classid,pageNum,pageSize, sign));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -113,4 +121,45 @@ public class GoodsController extends BaseController {
 				e.printStackTrace();
 			}
 	    }
+	    
+	    /**
+	     * 获取商品详情通过id
+	     * @param goodId
+	     * @param sign
+	     */
+	    @RequestMapping("getGoodDetailById")
+	    public void getGoodDetailById(Long goodId,String sign){
+	    	try {
+				this.sendAjaxMsg(this.goodsService.getGoodDetailById(goodId, sign));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }
+	    
+	    /**
+	     * 添加商品 - 内部测试
+	     */
+	    @RequestMapping("addGood4Inner")
+	    public void addGood(
+	    		Goods good,
+	    		@RequestParam(value="bigFile",required=false) MultipartFile bigFile,
+	    		@RequestParam(value="smallFile",required=false) MultipartFile smallFile
+	    		){
+	    	try {
+				this.sendAjaxMsg(this.goodsService.addGood(good, bigFile, smallFile, fileService));
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    	
+	    }
+	    
+		@InitBinder
+		 protected void initBinder(HttpServletRequest request,
+		   ServletRequestDataBinder binder) throws Exception {
+//		  binder.registerCustomEditor(Date.class, new DatePropertyEditor(yourDateformat));
+		binder.registerCustomEditor(Date.class, new DatePropertyEditor("yyyy/MM/dd"));
+//			System.out.println("1");
+		 }
 }

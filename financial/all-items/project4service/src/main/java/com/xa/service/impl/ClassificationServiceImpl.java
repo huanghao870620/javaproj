@@ -50,7 +50,7 @@ public class ClassificationServiceImpl extends BaseServiceImpl<Classification, C
 			 this.appendChild(child, childObj);
 			 array.add(childObj);
 		}
-		object.accumulate(Constants.SUCCESS, true).accumulate("data", array);
+		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
 		return object.toString();
 	}
 	

@@ -27,4 +27,19 @@ public class OrdersController extends BaseController {
 			e.printStackTrace();
 		}
 	}
+	
+
+	/**
+	 * 根据状态获取订单信息
+	 * @param state
+	 * @param sign
+	 */
+//	@RequestMapping("getOrdersByState")
+//	public void getOrdersByState(Integer state, String sign){
+//		 try {
+//			this.sendAjaxMsg(this.ordersService.getOrdersByState(state, sign));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

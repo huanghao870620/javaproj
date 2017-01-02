@@ -1,6 +1,5 @@
 package com.xa.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.github.pagehelper.PageHelper;
 import com.xa.entity.Brand;
+import com.xa.entity.File;
+import com.xa.entity.GoodFile;
 import com.xa.entity.Goods;
 import com.xa.entity.Mall;
 import com.xa.entity.MallGoods;
@@ -21,13 +23,14 @@ import com.xa.entity.ShoppingCartGoods;
 import com.xa.enumeration.PhotoType;
 import com.xa.mapper.BrandMapper;
 import com.xa.mapper.FileMapper;
+import com.xa.mapper.GoodFileMapper;
 import com.xa.mapper.GoodsMapper;
 import com.xa.mapper.MallGoodsMapper;
 import com.xa.mapper.MallMapper;
 import com.xa.mapper.ShoppingCartGoodsMapper;
+import com.xa.service.FileService;
 import com.xa.service.GoodsService;
 import com.xa.util.Constants;
-import com.xa.util.GenerateFilePath;
 import com.xa.util.Msg;
 import com.xa.util.Security;
 
@@ -60,6 +63,9 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 	
 	@Autowired
 	private ShoppingCartGoodsMapper shoppingCartGoodsMapper;
+	
+	@Autowired
+	private GoodFileMapper goodFileMapper;
 
 	/**
 	 * 添加商品
@@ -85,7 +91,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 			String mallAddress, 
 			String brandName,
 			Long uploadTypeId,
-			String sign) throws IllegalStateException, IOException {
+			String sign,
+			FileService<com.xa.entity.File> fileService) throws IllegalStateException, IOException {
 
 		JSONObject object = new JSONObject();
 		
@@ -111,13 +118,13 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		}
 		
 		com.xa.entity.File gatpFile = new com.xa.entity.File();
-		this.uploadFile(request, gatpPhotoFile, PhotoType.GOODS_ACCORDING_TO_POSITIVE_TYPE,gatpFile); //商品正面视图
+		fileService.uploadFile( gatpPhotoFile, PhotoType.GOODS_ACCORDING_TO_POSITIVE_TYPE,gatpFile); //商品正面视图
 		
 		com.xa.entity.File leftFile = new com.xa.entity.File();
-		this.uploadFile(request, leftPhotoFile, PhotoType.LEFT_PHOTO, leftFile);//左侧视图
+		fileService.uploadFile(leftPhotoFile, PhotoType.LEFT_PHOTO, leftFile);//左侧视图
 		
 		com.xa.entity.File rightFile = new com.xa.entity.File();
-		this.uploadFile(request, rightPhotoFile, PhotoType.RIGHT_PHOTO, rightFile);//右侧视图
+		fileService.uploadFile(rightPhotoFile, PhotoType.RIGHT_PHOTO, rightFile);//右侧视图
 		
 		/*商场*/
 		Mall mall = new Mall();
@@ -144,6 +151,34 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		mallGood.setGoodId(goods.getId());
 		mallGood.setMallId(mall.getId());
 		this.mallGoodsMapper.insert(mallGood);
+		
+		object.accumulate(Constants.SUCCESS, true);
+		return object.toString();
+	}
+	
+	/**
+	 * 添加商品
+	 * @return
+	 * @throws IOException 
+	 * @throws IllegalStateException 
+	 */
+	public String addGood(Goods good,MultipartFile bigFile,MultipartFile smallFile,FileService<File> fileService) 
+			throws IllegalStateException, IOException{
+		JSONObject object = new JSONObject();
+		
+		com.xa.entity.File big = new com.xa.entity.File();
+		fileService.uploadFileTest(bigFile, PhotoType.GOOD_ADV_PHOTO, big);
+		
+		com.xa.entity.File small = new com.xa.entity.File();
+		fileService.uploadFileTest(smallFile, PhotoType.COMMODITY_THUMBNAIL, small);
+		
+		good.setAdvPic(big.getId());
+		this.m.insert(good);
+		
+		GoodFile goodFile = new GoodFile();
+		goodFile.setGoodId(good.getId());
+		goodFile.setFileId(small.getId());
+		this.goodFileMapper.insert(goodFile);
 		
 		object.accumulate(Constants.SUCCESS, true);
 		return object.toString();
@@ -328,14 +363,15 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 	 * 获取商品根据class id
 	 * @return
 	 */
-	public String getGoodsByClassifi(Long classid, String sign){
+	public String getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign){
 		JSONObject object = new JSONObject();
 		if(!sign.equals(Security.getSign(new String[]{
-			"classid"	
+			"classid","pageNum","pageSize"	
 		}))){
 			 return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
 		
+		PageHelper.startPage(pageNum, pageSize, true);
 		List<Goods> goodsList = this.m.getGoodsByClassId(classid);
 		JSONArray array = new JSONArray();
 		for(int i=0;i<goodsList.size();i++){
@@ -343,6 +379,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 			Goods good = goodsList.get(i);
 			String name = good.getName();
 			String info = good.getInfo();
+			float price = good.getPrice();
 			Map<String, Object> map = new HashMap<String,Object>();
 			map.put("goodId", good.getId());
 			map.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
@@ -357,6 +394,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 				fileArray.add(fileObj);
 			}
 			goodObj.accumulate("name", name).accumulate("fileList",fileArray)
+			.accumulate("price", price)
 			.accumulate("id", good.getId());
 			array.add(goodObj);
 		}
@@ -380,7 +418,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		
 		
 		Goods good = this.m.selectByPrimaryKey(id);
-		Long price = good.getPrice();
+		Float price = good.getPrice();
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("goodId", good.getId());
@@ -400,6 +438,91 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(mapPic);
 		com.xa.entity.File thumbFile=fileList.get(0);
 		
+		Long advPicId =  good.getAdvPic();
+		com.xa.entity.File  advFile=this.fileMapper.selectByPrimaryKey(advPicId);
+		
+		
+		
+		Map<String, Object> mapBigPic = new HashMap<String,Object>();
+		mapBigPic.put("goodId", good.getId());
+		mapBigPic.put("typeId", PhotoType.GOOD_BIG_PHOTO.getValue());/*商品大图*/
+		
+		List<com.xa.entity.File> bigPicList = this.fileMapper.getFileByGoodIdAndTypeId(mapBigPic);
+		JSONArray bigPicArray = new JSONArray();
+		for(int i=0;i<bigPicList.size();i++){
+			JSONObject bigPicObj = new JSONObject();
+			com.xa.entity.File bigPic = bigPicList.get(i);
+			String bigPicUriPath = bigPic.getUriPath();
+			bigPicObj.accumulate("bigPicUriPath", bigPicUriPath);
+			bigPicArray.add(bigPicObj);
+		}
+		
+		
+		List<ShoppingCartGoods> scgs=this.shoppingCartGoodsMapper.getSCGByCartId(cartId);
+		long countSum = 0;
+		for(int i=0;i<scgs.size();i++){
+			 countSum+=scgs.get(i).getCount();
+		}
+		
+		object.accumulate(Constants.SUCCESS, true)
+		.accumulate("name", good.getName())
+		.accumulate("info", good.getInfo())
+		.accumulate("capacity", good.getCapacity())
+		.accumulate("lowestPrice", good.getLowestPrice())
+		.accumulate("highestPrice", good.getHighestPrice())
+		.accumulate("id", good.getId())
+		.accumulate("countSum", countSum)
+		.accumulate("filePath", advFile.getUriPath())
+		.accumulate("price", price)
+		.accumulate(Constants.DATA, bigPicArray)
+		;
+		
+		return object.toString();	
+	}
+	
+	/**
+	 * 获取商品详情通过id
+	 * @return
+	 */
+	public String getGoodDetailById(Long goodId,String sign){
+		JSONObject object = new JSONObject();
+		if(!sign.equals(Security.getSign(new String[]{
+				"goodId"
+		}))){
+			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
+		}
+		
+		Goods good= this.m.selectByPrimaryKey(goodId);
+		float price = good.getPrice();
+		
+		
+		
+		Long advPicId =  good.getAdvPic();
+		com.xa.entity.File  advFile=this.fileMapper.selectByPrimaryKey(advPicId);
+		
+		
+		
+		Map<String, Object> mapPic = new HashMap<String,Object>();
+		mapPic.put("goodId", good.getId());
+		mapPic.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
+		
+		List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(mapPic);
+		com.xa.entity.File thumbFile=fileList.get(0);
+		
+		
+		Map<String, Object> mapBigPic = new HashMap<String,Object>();
+		mapBigPic.put("goodId", good.getId());
+		mapBigPic.put("typeId", PhotoType.GOOD_BIG_PHOTO.getValue());/*商品大图*/
+		List<com.xa.entity.File> bigPicList = this.fileMapper.getFileByGoodIdAndTypeId(mapBigPic);
+		JSONArray bigPicArray = new JSONArray();
+		for(int i=0;i<bigPicList.size();i++){
+			JSONObject bigPicObj = new JSONObject();
+			com.xa.entity.File bigPic = bigPicList.get(i);
+			String bigPicUriPath = bigPic.getUriPath();
+			bigPicObj.accumulate("bigPicUriPath", bigPicUriPath);
+			bigPicArray.add(bigPicObj);
+		}
+		
 		object.accumulate(Constants.SUCCESS, true)
 		.accumulate("name", good.getName())
 		.accumulate("info", good.getInfo())
@@ -408,12 +531,11 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		.accumulate("highestPrice", good.getHighestPrice())
 		.accumulate("id", good.getId())
 		
-		.accumulate("filePath", thumbFile.getUriPath())
+		.accumulate("filePath", advFile.getUriPath())
 		.accumulate("price", price)
-		
+		.accumulate(Constants.DATA, bigPicArray)
 		;
-		
-		return object.toString();	
+		return object.toString();
 	}
 	
 	/**
@@ -447,28 +569,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		return null;
 	}
 
+
 	
-	/**
-	 * 上传文件
-	 * @throws IOException 
-	 * @throws IllegalStateException 
-	 */
-	public  void uploadFile(HttpServletRequest request,MultipartFile multipartFile,PhotoType type,com.xa.entity.File file) throws IllegalStateException, IOException{
-		String path = request.getSession().getServletContext().getRealPath("upload");
-		String sidPhotoFileName = multipartFile.getOriginalFilename();
-		GenerateFilePath sidPhotoGenerateFilePath = new GenerateFilePath(type.getValue(), sidPhotoFileName);
-		String contextPath = request.getContextPath();
-		String sidPhotoFileUrl = contextPath + "/upload/" + sidPhotoGenerateFilePath.getUri() ;
-		file.setName(sidPhotoFileName);
-		file.setPath(path);
-		file.setTypeId(type.getValue());
-		file.setUriPath(sidPhotoFileUrl);
-		this.fileMapper.insert(file);
-		File sidPhotoTargetFile = new File(path, sidPhotoFileName);
-		if (!sidPhotoTargetFile.exists()) {
-			sidPhotoTargetFile.mkdirs();
-		}
-		multipartFile.transferTo(sidPhotoTargetFile);
-	}
-	
+
 }
