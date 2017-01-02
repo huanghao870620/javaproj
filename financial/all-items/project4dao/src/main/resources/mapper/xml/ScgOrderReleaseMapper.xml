@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.ScgOrderReleaseMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.ScgOrderRelease" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="scg_id" property="scgId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, scg_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from scg_order_release
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from scg_order_release
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.ScgOrderRelease" >
+    insert into scg_order_release (id, order_id, scg_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{scgId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.ScgOrderRelease" >
+    insert into scg_order_release
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="scgId != null" >
+        scg_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="scgId != null" >
+        #{scgId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.ScgOrderRelease" >
+    update scg_order_release
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="scgId != null" >
+        scg_id = #{scgId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.ScgOrderRelease" >
+    update scg_order_release
+    set order_id = #{orderId,jdbcType=BIGINT},
+      scg_id = #{scgId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getSCGByOrderId" parameterType="long" resultType="com.xa.entity.ScgOrderRelease">
+    select 
+    t.order_id as orderId,
+    t.scg_id as scgId,
+    t.* from scg_order_release t where order_id=#{orderId}
+  </select>
+  
+  <!-- 删除订单中的 -->
+  <delete id="deleteSORBySCGID" parameterType="long">
+    delete from scg_order_release where scg_id=#{scgId}
+  </delete>
+</mapper>

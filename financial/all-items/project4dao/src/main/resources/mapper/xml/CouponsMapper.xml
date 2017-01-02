@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.CouponsMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.Coupons" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="REAL" />
+    <result column="sill" property="sill" jdbcType="REAL" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="limit_start" property="limitStart" jdbcType="TIMESTAMP" />
+    <result column="limit_end" property="limitEnd" jdbcType="TIMESTAMP" />
+    <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="brand_id" property="brandId" jdbcType="BIGINT" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, price, sill, state, limit_start, limit_end, class_id, brand_id, note
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from coupons
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from coupons
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.Coupons" >
+    insert into coupons (id, price, sill, state, 
+      limit_start, limit_end, class_id, 
+      brand_id, note)
+    values (#{id,jdbcType=BIGINT}, #{price,jdbcType=REAL}, #{sill,jdbcType=REAL}, #{state,jdbcType=INTEGER}, 
+      #{limitStart,jdbcType=TIMESTAMP}, #{limitEnd,jdbcType=TIMESTAMP}, #{classId,jdbcType=BIGINT}, 
+      #{brandId,jdbcType=BIGINT}, #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.Coupons" >
+    insert into coupons
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="sill != null" >
+        sill,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="limitStart != null" >
+        limit_start,
+      </if>
+      <if test="limitEnd != null" >
+        limit_end,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="brandId != null" >
+        brand_id,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=REAL},
+      </if>
+      <if test="sill != null" >
+        #{sill,jdbcType=REAL},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="limitStart != null" >
+        #{limitStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="limitEnd != null" >
+        #{limitEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="brandId != null" >
+        #{brandId,jdbcType=BIGINT},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.Coupons" >
+    update coupons
+    <set >
+      <if test="price != null" >
+        price = #{price,jdbcType=REAL},
+      </if>
+      <if test="sill != null" >
+        sill = #{sill,jdbcType=REAL},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="limitStart != null" >
+        limit_start = #{limitStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="limitEnd != null" >
+        limit_end = #{limitEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="brandId != null" >
+        brand_id = #{brandId,jdbcType=BIGINT},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.Coupons" >
+    update coupons
+    set price = #{price,jdbcType=REAL},
+      sill = #{sill,jdbcType=REAL},
+      state = #{state,jdbcType=INTEGER},
+      limit_start = #{limitStart,jdbcType=TIMESTAMP},
+      limit_end = #{limitEnd,jdbcType=TIMESTAMP},
+      class_id = #{classId,jdbcType=BIGINT},
+      brand_id = #{brandId,jdbcType=BIGINT},
+      note = #{note,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
