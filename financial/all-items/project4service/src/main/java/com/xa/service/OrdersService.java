@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.dom4j.DocumentException;
 
 import com.alipay.api.AlipayApiException;
+import com.xa.service.BaseServiceInte;
 
 /**
  * 
@@ -95,4 +96,13 @@ public interface OrdersService<T> extends BaseServiceInte<T> {
 	 * @return
 	 */
 	public String addTakeAddress(Long orderId, Long addressId, String sign);
+	
+	/**
+	 * 修改订单价格
+	 * @param cbId
+	 * @param orderId
+	 * @param sign
+	 * @return
+	 */
+	public String updateOrderPrice(Long cbId, Long orderId, String sign);
 }

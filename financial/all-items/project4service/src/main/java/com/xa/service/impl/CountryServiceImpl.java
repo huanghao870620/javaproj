@@ -12,14 +12,21 @@ import javax.swing.ListModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.github.pagehelper.PageHelper;
 import com.meterware.httpunit.javascript.JavaScript.Image;
 import com.xa.compare.CompareCountry;
 import com.xa.entity.Country;
 import com.xa.entity.File;
+import com.xa.entity.Goods;
+import com.xa.enumeration.PhotoType;
 import com.xa.mapper.CountryMapper;
 import com.xa.mapper.FileMapper;
+import com.xa.mapper.GoodsMapper;
 import com.xa.service.CountryService;
+import com.xa.service.GoodsOrderReleaseService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.GetPinyin;
 import com.xa.util.Msg;
@@ -35,6 +42,9 @@ public class CountryServiceImpl extends BaseServiceImpl<Country, CountryMapper> 
 	
 	@Autowired
 	private FileMapper fileMapper;
+	
+	@Autowired
+	private GoodsMapper goodsMapper;
 
 	/**
 	 * 获取所有国家
@@ -148,5 +158,51 @@ public class CountryServiceImpl extends BaseServiceImpl<Country, CountryMapper> 
 		;
 		return object.toString();
 	}
+	
+	/**
+	 * 根据国家获取商品
+	 * @param countryId
+	 * @param sign
+	 * @return
+	 */
+	public String getGoodsByCountry(Long countryId,Integer pageNum,Integer pageSize, String sign){
+		JSONObject object = new JSONObject();
+		if(!sign.equals(Security.getSign(new String[]{
+			"countryId","pageNum","pageSize"
+		}))){
+			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
+		}
+
+		PageHelper.startPage(pageNum, pageSize, true);
+		List<Goods> goodList= this.goodsMapper.getGoodsByCountryId(countryId);
+		JSONArray array = new JSONArray();
+		for(int i=0; i<goodList.size(); i++){
+			 Goods good = goodList.get(i);
+			 JSONObject countryObj = new JSONObject();
+			 
+			 Map<String, Object> mapPic = new HashMap<String,Object>();
+			 mapPic.put("goodId", good.getId());
+			 mapPic.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
+			
+			 List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(mapPic);
+			 com.xa.entity.File thumbFile = fileList.get(0);
+			 
+			 String name= good.getName();
+			 String uriPath= thumbFile.getUriPath();
+			 Long goodId= good.getId();
+			 float price= good.getPrice();
+			 
+			 countryObj.accumulate("name", name)
+			 .accumulate("uriPath", uriPath)
+			 .accumulate("price", price)
+			 .accumulate("goodId", goodId);
+			 array.add(countryObj);
+		}
+		
+		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
+	    return object.toString();	
+	}
+	
+	
 	
 }

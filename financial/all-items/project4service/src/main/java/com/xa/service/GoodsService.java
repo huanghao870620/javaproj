@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.xa.entity.File;
 import com.xa.entity.Goods;
+import com.xa.service.BaseServiceInte;
+import com.xa.service.FileService;
 
 public interface GoodsService<T> extends BaseServiceInte<T> {
 

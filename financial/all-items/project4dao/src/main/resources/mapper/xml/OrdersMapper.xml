@@ -106,6 +106,7 @@
     o.generate_time as generateTime,
     o.rece_way as receWay,
     o.address_id as addressId,
+    o.sum_price as sumPrice,
     o.* from orders o where id=#{id,jdbcType=BIGINT}
   </select>
   
@@ -116,7 +117,7 @@
    t.buyer_id as buyerId,
    t.generate_time as generateTime,
    t.rece_way as receWay,
-   o.address_id as addressId,
+   t.address_id as addressId,
    t.* from orders t where buyer_id=#{buyerId} and  state=#{state}
   </select>
   
@@ -127,8 +128,60 @@
    t.buyer_id as buyerId,
    t.generate_time as generateTime,
    t.rece_way as receWay,
-   o.address_id as addressId,
+   t.address_id as addressId,
       t.* from orders  t where order_no=#{orderNo}
+  </select>
+  
+  
+  <select id="getOrderCountByGoodId" resultType="long" parameterType="java.util.Map">
+  
+  <!-- 
+  select count(1) from (
+  select o.*, og.id as og_id, og.good_id from ( select id from orders where buyer_id=#{buyerId} and state != 7  ) o left join order_good og on o.id=og.order_id ) t where t.good_id=#{goodId}
+   -->
+  
+SELECT sum(t.count) as sum from (
+
+SELECT t.count from (
+SELECT
+	scg.goods_id AS goodId,
+  scg.count
+FROM
+	(
+		SELECT
+			id AS cartId
+		FROM
+			shopping_cart
+		WHERE
+			buyer_id = #{buyerId}
+	) sc
+LEFT JOIN (select * from shopping_cart_goods where state=1) scg ON sc.cartId = scg.shopping_cart_id
+ ) t where t.goodId=#{goodId}
+
+ UNION
+SELECT
+	count(1) as count
+FROM
+	(
+		SELECT
+			o.*, og.id AS og_id,
+			og.good_id
+		FROM
+			(
+				SELECT
+					id
+				FROM
+					orders
+				WHERE
+					buyer_id = #{buyerId}
+				AND state != 7
+			) o
+		LEFT JOIN order_good og ON o.id = og.order_id
+	) t
+WHERE
+	t.good_id = #{goodId}
+ ) t 
+  
   </select>
   
 </mapper>

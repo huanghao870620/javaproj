@@ -14,6 +14,18 @@
         <dependent-module archiveName="project4domain-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/project4domain/project4domain">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="sharedService-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sharedService/sharedService">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="base_service-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/base_service/base_service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="enumeration-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/enumeration/enumeration">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="util-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/util/util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="front-web"/>
         <property name="java-output-path" value="/front-web/target/classes"/>
     </wb-module>

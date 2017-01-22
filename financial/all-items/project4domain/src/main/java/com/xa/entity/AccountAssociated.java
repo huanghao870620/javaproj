@@ -7,7 +7,7 @@ public class AccountAssociated {
 
     private Long accountTypeId;
 
-    private Long buyHandId;
+    private Long buyhandId;
 
     public Long getId() {
         return id;
@@ -17,17 +17,15 @@ public class AccountAssociated {
         this.id = id;
     }
 
-    
-
     public String getUnionId() {
-		return unionId;
-	}
+        return unionId;
+    }
 
-	public void setUnionId(String unionId) {
-		this.unionId = unionId;
-	}
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
+    }
 
-	public Long getAccountTypeId() {
+    public Long getAccountTypeId() {
         return accountTypeId;
     }
 
@@ -35,11 +33,11 @@ public class AccountAssociated {
         this.accountTypeId = accountTypeId;
     }
 
-    public Long getBuyHandId() {
-        return buyHandId;
+    public Long getBuyhandId() {
+        return buyhandId;
     }
 
-    public void setBuyHandId(Long buyHandId) {
-        this.buyHandId = buyHandId;
+    public void setBuyhandId(Long buyhandId) {
+        this.buyhandId = buyhandId;
     }
 }

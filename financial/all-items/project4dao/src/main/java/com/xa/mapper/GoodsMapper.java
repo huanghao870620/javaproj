@@ -1,6 +1,7 @@
 package com.xa.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.xa.entity.Goods;
 
@@ -22,4 +23,18 @@ public interface GoodsMapper extends BaseMapper<Goods>{
 	 * @return
 	 */
 	List<Goods> getGoodsByBrandId(Long brandId);
+	
+	/**
+	 * 根据国家获取商品
+	 * @param countryId
+	 * @return
+	 */
+	List<Goods> getGoodsByCountryId(Long countryId);
+	
+	/**
+	 * 搜索商品
+	 * @param map
+	 * @return
+	 */
+	List<Goods> searchGoods(Map<String, Object> map);
 }

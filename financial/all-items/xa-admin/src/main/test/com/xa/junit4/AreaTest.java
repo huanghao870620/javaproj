@@ -26,7 +26,7 @@ public class AreaTest {
 		String sign = Security.getSign(new String[]{
 				"random"
 		});
-		String text=this.areaService.getAllArea("d", sign);
-		System.out.println(text);
+//		String text=this.areaService.getAllArea("d", sign);
+//		System.out.println(text);
 	}
 }

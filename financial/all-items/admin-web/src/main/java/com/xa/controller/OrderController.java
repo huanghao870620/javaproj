@@ -152,4 +152,19 @@ public class OrderController extends BaseController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 修改订单价格
+	 * @param cbId
+	 * @param orderId
+	 * @param sign
+	 */
+	@RequestMapping("updateOrderPrice")
+	public void updateOrderPrice(Long cbId, Long orderId, String sign){
+		try {
+			this.sendAjaxMsg(this.ordersService.updateOrderPrice(cbId, orderId, sign));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

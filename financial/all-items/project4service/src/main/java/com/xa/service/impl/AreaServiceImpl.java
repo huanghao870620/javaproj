@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xa.entity.Area;
 import com.xa.mapper.AreaMapper;
 import com.xa.service.AreaService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;

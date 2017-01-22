@@ -2,7 +2,7 @@ package com.xa.service.impl;
 
 
 import java.util.List;
-
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +12,7 @@ import com.xa.entity.BuyHand;
 import com.xa.mapper.AccountAssociatedMapper;
 import com.xa.mapper.BuyHandMapper;
 import com.xa.service.AccountAssociatedService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
@@ -56,7 +57,7 @@ public class AccountAssociatedServiceImpl extends BaseServiceImpl<AccountAssocia
 		BuyHand customer = this.customerMapper.selectCustomerByMobile(customerParam).get(0);
 		AccountAssociated aa = new AccountAssociated();
 		aa.setUnionId(unionId);
-		aa.setBuyHandId(customer.getId());
+		aa.setBuyhandId(customer.getId());
 		aa.setAccountTypeId(accountType);
 		this.accountAssociatedMapper.insert(aa);
 		return object.accumulate("success", true).toString();

@@ -1,14 +1,20 @@
 package com.xa.controller;
 
 import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xa.convert.DatePropertyEditor;
 import com.xa.entity.BuyHand;
 import com.xa.entity.Buyers;
 import com.xa.entity.File;
@@ -138,6 +144,30 @@ public class BuyersController extends BaseController {
 	public void updateBuyer(Buyers buyer, String sign){
 		 try {
 			this.sendAjaxMsg(this.buyersService.updateBuyer(buyer, sign));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@InitBinder
+	 protected void initBinder(HttpServletRequest request,
+	   ServletRequestDataBinder binder) throws Exception {
+		binder.registerCustomEditor(Date.class, new DatePropertyEditor("yyyy/MM/dd"));
+	 }
+	
+
+	/**
+	 * 修改买家密码
+	 * @param vercode
+	 * @param mobile
+	 * @param password
+	 * @param sign
+	 */
+	@RequestMapping("updateBuyerPass")
+	public void updateBuyerPass(String vercode, String mobile, String password, String sign){
+		try {
+			this.sendAjaxMsg(this.buyersService.updateBuyerPass(vercode, mobile, password, sign));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

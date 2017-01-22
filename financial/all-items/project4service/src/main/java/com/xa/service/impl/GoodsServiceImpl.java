@@ -30,6 +30,7 @@ import com.xa.mapper.MallMapper;
 import com.xa.mapper.ShoppingCartGoodsMapper;
 import com.xa.service.FileService;
 import com.xa.service.GoodsService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
@@ -167,10 +168,10 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		JSONObject object = new JSONObject();
 		
 		com.xa.entity.File big = new com.xa.entity.File();
-		fileService.uploadFileTest(bigFile, PhotoType.GOOD_ADV_PHOTO, big);
+		fileService.uploadFile(bigFile, PhotoType.GOOD_ADV_PHOTO, big);
 		
 		com.xa.entity.File small = new com.xa.entity.File();
-		fileService.uploadFileTest(smallFile, PhotoType.COMMODITY_THUMBNAIL, small);
+		fileService.uploadFile(smallFile, PhotoType.COMMODITY_THUMBNAIL, small);
 		
 		good.setAdvPic(big.getId());
 		this.m.insert(good);

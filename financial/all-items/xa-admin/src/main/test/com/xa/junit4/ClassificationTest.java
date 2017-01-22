@@ -28,7 +28,7 @@ public class ClassificationTest {
 		String sign = Security.getSign(new String[]{
 				"random"
 		});
-		String text = this.classificationService.getAllClassification(random,sign);
-		System.out.println(text);
+//		String text = this.classificationService.getAllClassification(random,sign);
+//		System.out.println(text);
 	}
 }

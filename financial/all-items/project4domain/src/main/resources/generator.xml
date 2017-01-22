@@ -613,6 +613,82 @@
     	 >
     	 </table>
     	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="alloc_coupons" 
+    	 domainObjectName="AllocCoupons" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="alloc_type" 
+    	 domainObjectName="AllocType" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="activity" 
+    	 domainObjectName="Activity" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="activity_file" 
+    	 domainObjectName="ActivityFile" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	 
+    	   <table schema="" 
+    	 catalog=""
+    	 tableName="activity_associated" 
+    	 domainObjectName="ActivityAssociated" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	 
+    	 
+    	 
     	 
       <!-- 
       <generatedKey column="user_id" sqlStatement="oracle" identity="true" />

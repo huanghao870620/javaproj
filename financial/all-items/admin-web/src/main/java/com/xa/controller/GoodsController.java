@@ -58,8 +58,9 @@ public class GoodsController extends BaseController {
 			@ModelAttribute Goods good,
 			ModelMap model){
 		ModelAndView mav = new ModelAndView("");
+//		
 //		try {
-////			this.goodsService.addGood(session, file, model,this.request,good);
+//			this.goodsService.addGood(session, file, model,this.request,good);
 //		} catch (IllegalStateException e) {
 //			e.printStackTrace();
 //		} catch (IOException e) {

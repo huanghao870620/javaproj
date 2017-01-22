@@ -68,4 +68,12 @@
       file_id = #{fileId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!-- 获取商品和文件关系 -->
+  <select id="selectGoodFileByGoodId" resultType="com.xa.entity.GoodFile" parameterType="long">
+      select 
+      t.good_id as goodId,
+      t.file_id as fileId,
+      t.* from good_file t where good_id=#{goodId}
+  </select>
 </mapper>

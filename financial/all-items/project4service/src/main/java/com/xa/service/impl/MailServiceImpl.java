@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xa.entity.Mail;
 import com.xa.mapper.MailMapper;
 import com.xa.service.MailService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;

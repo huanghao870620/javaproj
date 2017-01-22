@@ -52,12 +52,53 @@ public class Goods {
     private Long expressSingle;
 
     private Long classid;
+    
+    private Long countryId;
+    
+    private Integer limitCount; // 限购次数
+    
+    private Long inventory; // 库存
 
     private Integer state;
+    
+    private Integer shelves; //是否上架
 
     private Date addTime;
+    
 
-    public Long getId() {
+    public Long getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Long inventory) {
+		this.inventory = inventory;
+	}
+
+	public Integer getLimitCount() {
+		return limitCount;
+	}
+
+	public void setLimitCount(Integer limitCount) {
+		this.limitCount = limitCount;
+	}
+
+	public Integer getShelves() {
+		return shelves;
+	}
+
+	public void setShelves(Integer shelves) {
+		this.shelves = shelves;
+	}
+
+	public Long getCountryId() {
+		return countryId;
+	}
+
+	public void setCountryId(Long countryId) {
+		this.countryId = countryId;
+	}
+
+	public Long getId() {
         return id;
     }
 

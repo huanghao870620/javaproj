@@ -30,6 +30,7 @@ import com.xa.mapper.FileMapper;
 import com.xa.mapper.MobileVercodeLogMapper;
 import com.xa.msg.ChuanglanSMS;
 import com.xa.service.BuyHandService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.EncryptionTool;
 import com.xa.util.GenerateFilePath;
@@ -190,7 +191,7 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		if(!StringUtils.isEmpty(unionId)){
 			 AccountAssociated record = new AccountAssociated();
 			 record.setAccountTypeId(accountTypeId);
-			 record.setBuyHandId(customer.getId());
+			 record.setBuyhandId(customer.getId());
 			 record.setUnionId(unionId);
 			this.accountAssociatedMapper.insert(record );
 		}
@@ -649,7 +650,7 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		}
 		List<AccountAssociated> accountList = this.accountAssociatedMapper.selectAccountAssociatedByUnionId(unionId);
 		if (accountList.size() > 0) {
-			BuyHand customer = this.buyHandMapper.selectByPrimaryKey(accountList.get(0).getBuyHandId());
+			BuyHand customer = this.buyHandMapper.selectByPrimaryKey(accountList.get(0).getBuyhandId());
 			int intensity = this.getIntensityOfPassword(customer.getPassword());
 			Long admNoticeFileId = customer.getAdmNotice(); // 录取通知书
 			Long lifePhotoFileId = customer.getLifePhoto(); // 生活照
@@ -929,7 +930,7 @@ public class BuyHandServiceImpl extends BaseServiceImpl<BuyHand, BuyHandMapper>
 		}
 		AccountAssociated param = new AccountAssociated();
 		param.setUnionId(unionId);
-		param.setBuyHandId(buyHandId);
+		param.setBuyhandId(buyHandId);
 		List<AccountAssociated> acList = this.accountAssociatedMapper.selectAssociatedByBuyHandIdAndUnionId(param );
 		if(acList.size() > 0){
 			return object.accumulate(Constants.SUCCESS, true).toString();

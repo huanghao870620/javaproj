@@ -9,6 +9,7 @@ import org.apache.http.ParseException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.xa.entity.BuyHand;
+import com.xa.service.BaseServiceInte;
 
 public interface BuyHandService<T> extends BaseServiceInte<T> {
 

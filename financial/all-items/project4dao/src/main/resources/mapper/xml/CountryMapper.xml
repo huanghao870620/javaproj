@@ -21,9 +21,9 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xa.entity.Country" >
-    insert into country (id, name, img_id
+    insert into country (id, name, img_id, country_code
       )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{imgId,jdbcType=BIGINT}
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{imgId,jdbcType=BIGINT}, #{countryCode}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.Country" >

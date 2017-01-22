@@ -96,7 +96,6 @@ public class DeliveryAddressController extends BaseController {
 			e.printStackTrace();
 		}
 	}
-	
 
 	/**
 	 * 修改地址信息
@@ -104,9 +103,17 @@ public class DeliveryAddressController extends BaseController {
 	 * @param sign
 	 */
 	@RequestMapping("updateAddress")
-	public void updateAddress(DeliveryAddress address,String sign){
+	public void updateAddress(DeliveryAddress address,
+			@RequestParam(value="idCardFrontFile",required=false) MultipartFile idCardFrontFile, 
+			@RequestParam(value="idCardBackFile",required=false) MultipartFile idCardBackFile,
+			String sign){
 	    try {
-			this.sendAjaxMsg(this.deliveryAddressService.updateAddress(address, sign));
+			this.sendAjaxMsg(this.deliveryAddressService.updateAddress(
+					address,
+					idCardFrontFile,
+					idCardBackFile,
+					fileService, 
+					sign));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

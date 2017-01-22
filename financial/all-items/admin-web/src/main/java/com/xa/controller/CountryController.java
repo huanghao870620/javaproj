@@ -29,4 +29,19 @@ public class CountryController extends BaseController {
 			e.printStackTrace();
 		}
 	}
+	
+
+	/**
+	 * 根据国家获取商品
+	 * @param countryId
+	 * @param sign
+	 */
+	@RequestMapping("getGoodsByCountry")
+	public void getGoodsByCountry(Long countryId,  Integer pageNum,Integer pageSize,String sign){
+		try {
+			this.sendAjaxMsg(this.countryService.getGoodsByCountry(countryId,pageNum,pageSize, sign));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

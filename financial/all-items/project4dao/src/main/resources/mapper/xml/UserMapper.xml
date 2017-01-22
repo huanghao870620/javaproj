@@ -74,4 +74,8 @@
    select * from menu where pid=-1
   </select>
   
+  <select id="selectUserByUserPass" resultType="com.xa.entity.User" parameterType="com.xa.entity.User">
+    select * from user where account=#{account} and password=#{password}
+  </select>
+  
 </mapper>

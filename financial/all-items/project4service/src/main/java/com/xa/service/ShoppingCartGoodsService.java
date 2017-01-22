@@ -1,6 +1,7 @@
 package com.xa.service;
 
 import com.xa.entity.ShoppingCartGoods;
+import com.xa.service.BaseServiceInte;
 
 public interface ShoppingCartGoodsService<T> extends BaseServiceInte<T> {
 

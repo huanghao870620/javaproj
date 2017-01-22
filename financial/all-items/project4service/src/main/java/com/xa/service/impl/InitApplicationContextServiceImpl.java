@@ -30,6 +30,7 @@ import com.xa.mapper.GeneralLedgerMapper;
 import com.xa.mapper.NormsMapper;
 import com.xa.mapper.UploadTypeMapper;
 import com.xa.service.InitApplicationContextService;
+import com.xa.service.impl.BaseServiceImpl;
 
 @Service
 @Transactional

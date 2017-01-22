@@ -12,10 +12,11 @@
     <result column="area_id" property="areaId" jdbcType="BIGINT" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="is_default" property="isDefault" jdbcType="INTEGER" />
+    <result column="used" property="used" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, mobile, card_id_back_file, card_id_front_file, buyer_id, idcard, area_id, 
-    address, is_default
+    address, is_default,used
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -31,11 +32,11 @@
     insert into delivery_address (id, name, mobile, 
       card_id_back_file, card_id_front_file, buyer_id, 
       idcard, area_id, address, 
-      is_default)
+      is_default,used)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{cardIdBackFile,jdbcType=BIGINT}, #{cardIdFrontFile,jdbcType=BIGINT}, #{buyerId,jdbcType=BIGINT}, 
       #{idcard,jdbcType=VARCHAR}, #{areaId,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, 
-      #{isDefault,jdbcType=INTEGER})
+      #{isDefault,jdbcType=INTEGER},#{used})
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.DeliveryAddress" >
     insert into delivery_address
@@ -100,7 +101,7 @@
         #{address,jdbcType=VARCHAR},
       </if>
       <if test="isDefault != null" >
-        #{isDefault,jdbcType=INTEGER},
+        #{isDefault,jdbcType=INTEGER}
       </if>
     </trim>
   </insert>
@@ -134,6 +135,9 @@
       <if test="isDefault != null" >
         is_default = #{isDefault,jdbcType=INTEGER},
       </if>
+      <if test="used != null">
+         used = #{used}
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -159,7 +163,7 @@
     t.buyer_id as buyerId,
     t.is_default as isDefault,
     t.area_id as areaId,
-    t.* from  delivery_address t where buyer_id=#{buyerId}
+    t.* from  delivery_address t where buyer_id=#{buyerId} and used=1
   </select>
   
   <!-- 设置所有地址为非默认 -->

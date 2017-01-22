@@ -7,7 +7,6 @@ public class Buyers {
 
     private String mobile;
 
-
     private String password;
 
     private Long headPortrait;
@@ -17,10 +16,22 @@ public class Buyers {
     private String gender;
 
     private Date birthday;
+    
+    private Integer buyerType;
 
     private String signature;
+    
+    
 
-    public Long getId() {
+    public Integer getBuyerType() {
+		return buyerType;
+	}
+
+	public void setBuyerType(Integer buyerType) {
+		this.buyerType = buyerType;
+	}
+
+	public Long getId() {
         return id;
     }
 

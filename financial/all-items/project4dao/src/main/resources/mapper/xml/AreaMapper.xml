@@ -19,7 +19,7 @@
     delete from area
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.xa.entity.Area" >
+  <insert id="insert" parameterType="com.xa.entity.Area" keyProperty="id" useGeneratedKeys="true">
     insert into area (id, name, pid)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{pid,jdbcType=BIGINT})
   </insert>

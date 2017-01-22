@@ -106,4 +106,5 @@ select f.uri_path as uriPath,f.type_id as typeId,f.id,t.file_id as fileId from (
   left join (select * from file where type_id=${typeId}) f on t.file_id=f.id ) t2 where t2.id is not null
   </select>
   
+  
 </mapper>

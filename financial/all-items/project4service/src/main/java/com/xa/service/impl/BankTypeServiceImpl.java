@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xa.entity.BankType;
 import com.xa.mapper.BankTypeMapper;
 import com.xa.service.BankTypeService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;

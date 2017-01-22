@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xa.entity.Menu;
 import com.xa.mapper.MenuMapper;
 import com.xa.service.MenuService;
+import com.xa.service.impl.BaseServiceImpl;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

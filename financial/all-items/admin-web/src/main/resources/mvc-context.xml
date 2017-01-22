@@ -61,7 +61,9 @@
 	    </beans:property>  
 	    
 	     <beans:property name="url">  
-	          <!-- <beans:value>jdbc:mysql://47.88.105.195:3306/test</beans:value> -->   
+	     <!-- 
+	           <beans:value>jdbc:mysql://47.88.105.195:3306/test</beans:value>    
+	      -->
 	        <beans:value>jdbc:mysql://192.168.1.102:3306/test</beans:value> 
 	     </beans:property>  
 	     <beans:property name="username">  

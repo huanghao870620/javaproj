@@ -16,6 +16,7 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.net.nntp.NewGroupsOrNewsQuery;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -26,6 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.xa.entity.Coupons;
+import com.xa.entity.CouponsBuyer;
 import com.xa.entity.DeliveryAddress;
 import com.xa.entity.File;
 import com.xa.entity.Goods;
@@ -33,9 +38,12 @@ import com.xa.entity.OrderGood;
 import com.xa.entity.Orders;
 import com.xa.entity.ScgOrderRelease;
 import com.xa.entity.ShoppingCartGoods;
+import com.xa.enumeration.CouponsState;
 import com.xa.enumeration.OrdersState;
 import com.xa.enumeration.PhotoType;
 import com.xa.enumeration.ScgState;
+import com.xa.mapper.CouponsBuyerMapper;
+import com.xa.mapper.CouponsMapper;
 import com.xa.mapper.DeliveryAddressMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodsMapper;
@@ -44,6 +52,7 @@ import com.xa.mapper.OrdersMapper;
 import com.xa.mapper.ScgOrderReleaseMapper;
 import com.xa.mapper.ShoppingCartGoodsMapper;
 import com.xa.service.OrdersService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.PayCommonUtil;
@@ -78,6 +87,12 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 	
 	@Autowired
 	private OrderGoodMapper orderGoodMapper;
+	
+	@Autowired
+	private CouponsMapper couponsMapper;
+	
+	@Autowired
+	private CouponsBuyerMapper couponsBuyerMapper;
 
 	/**
 	 * 获取订单
@@ -108,6 +123,14 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		}))){
 			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
+
+		Map<String, Object> couMap = new HashMap<String,Object>();
+		couMap.put("buyerId", buyerId);
+		couMap.put("state", CouponsState.NOT_USE.getValue());
+		
+		PageHelper.startPage(1, 10000,true);
+		Page<CouponsBuyer> cbPage=(Page<CouponsBuyer>) this.couponsBuyerMapper.findCouponsByState(couMap);
+		this.logger.debug("buyerId : " + buyerId + " , 优惠券总数 : " + cbPage.getTotal());
 		
 		String scgidArr[]= scgids.split(",");
 		List<Long> scgIds = new ArrayList<Long>();
@@ -120,7 +143,18 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 			this.shoppingCartGoodsMapper.updateByPrimaryKeySelective(scg);
 			Long goodId= scg.getGoodsId();
 			Long count= scg.getCount();
-			Goods good = this.goodsMapper.selectByPrimaryKey(goodId);
+			
+			Map<String, Object> map = new HashMap<String,Object>();
+			map.put("buyerId", buyerId);
+			map.put("goodId", goodId);
+			Long countSum4GoodId= this.m.getOrderCountByGoodId(map );
+			Goods good= this.goodsMapper.selectByPrimaryKey(goodId);
+			String goodName = good.getName();
+			if(countSum4GoodId >= good.getLimitCount()){
+				return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, goodName+"已经超过了限购次数!").toString();
+			}
+			
+			
 			float price = good.getPrice();
 			sum+=price*count;
 		}
@@ -151,8 +185,46 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		object.accumulate(Constants.SUCCESS, true)
 		.accumulate("id", order.getId())
 		.accumulate("orderNo", order.getOrderNo())
+		.accumulate("couponsCount", cbPage.getTotal())
 		;
 		return object.toString();
+	}
+	
+	/**
+	 * 修改订单价格
+	 *  使用优惠券
+	 * @param cbId
+	 * @param orderId
+	 * @param sign
+	 * @return
+	 */
+	public String updateOrderPrice(Long cbId, Long orderId, String sign){
+		 JSONObject object = new JSONObject();
+		 if(!sign.equals(Security.getSign(new String[]{
+				 "cbId","orderId"
+		 }))){
+			 return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
+		 }
+		 Orders order= this.m.selectByPrimaryKey(orderId);
+		 CouponsBuyer cBuyer= this.couponsBuyerMapper.selectByPrimaryKey(cbId);
+		 if(cBuyer.getState() == CouponsState.USED.getValue()){
+			  return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "此优惠券已经使用过!").toString();
+		 }
+		 
+		 Coupons coupon= this.couponsMapper.selectByPrimaryKey(cBuyer.getCouponsId());
+		 float price= coupon.getPrice();
+		 if(order.getSumPrice()<coupon.getSill()){
+			  return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "此订单未达到使用门槛，无法使用!").toString();
+		 }
+		 
+		 order.setSumPrice(order.getSumPrice()-price);
+		 cBuyer.setState(CouponsState.USED.getValue());
+		 this.couponsBuyerMapper.updateByPrimaryKeySelective(cBuyer);
+		 this.m.updateByPrimaryKeySelective(order);
+		 object.accumulate(Constants.SUCCESS, true)
+		 .accumulate("sumPrice", order.getSumPrice())
+		 ;
+		 return object.toString();
 	}
 	
 	
@@ -171,8 +243,25 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		}))){
 			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
-
+		
+		
+		Map<String, Object> couMap = new HashMap<String,Object>();
+		couMap.put("buyerId", buyerId);
+		couMap.put("state", CouponsState.NOT_USE.getValue());
+		
+		PageHelper.startPage(1, 10000,true);
+		Page<CouponsBuyer> cbPage=(Page<CouponsBuyer>) this.couponsBuyerMapper.findCouponsByState(couMap);
+		this.logger.debug("buyerId : " + buyerId + " , 优惠券总数 : " + cbPage.getTotal());
+		
+		
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("buyerId", buyerId);
+		map.put("goodId", goodId);
+		Long count= this.m.getOrderCountByGoodId(map );
 		Goods good= this.goodsMapper.selectByPrimaryKey(goodId);
+		if(count >= good.getLimitCount()){
+			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "您已经超过了限购次数!").toString();
+		}
 		
 		Orders order = new Orders();
 		order.setState(OrdersState.FOR_PAYMENT.getValue());
@@ -198,6 +287,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		object.accumulate(Constants.SUCCESS, true)
 		.accumulate("id", order.getId())
 		.accumulate("orderNo", order.getOrderNo())
+		.accumulate("couponsCount", cbPage.getTotal())
 		;
 		return object.toString();
 	}
@@ -312,6 +402,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 	 * 微信支付完成回调
 	 */
 	public String wxNotify(HttpServletRequest request) throws IOException, DocumentException{
+		 this.logger.debug("=================微信回调=========================");
 		 String out_trade_no= request.getParameter("out_trade_no");
 		 System.out.println("out_trade_no : " + out_trade_no);
 		 this.logger.debug(out_trade_no);
@@ -339,6 +430,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 //		String nonceStr= rootEle.element("nonce_str").getText(); //随机字符串
 //		String openid= rootEle.element("openid").getText();  //用户标识
 		String outTradeNo=rootEle.element("out_trade_no").getText();  //商户订单号
+		this.logger.debug("================订单号: " + outTradeNo + "===========================");
 		System.out.println("========"+outTradeNo+"==============");
 //		String resultCode= rootEle.element("result_code").getText(); //返回状态码
 //		String sign= rootEle.element("sign").getText();  //签名
@@ -353,7 +445,9 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 //		if (checkSign(xmlDoc)) {
 			Orders order=this.m.findOrderByOrderNo(outTradeNo);
 			order.setState(OrdersState.WAIT_ORDER.getValue()); //待接单
+			this.logger.debug("=======================修改订单状态完成=================================");
 			this.m.updateByPrimaryKeySelective(order);
+			this.logger.debug("=====================微信回调完成=================================");
 			return Constants.SUCCESS;
 //		}else {
 //			return Constants.FAIL;
@@ -368,10 +462,12 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 	 * @throws AlipayApiException 
 	 */
 	public String alipayNotify(HttpServletRequest request) throws AlipayApiException{
+		this.logger.debug("=================支付宝回调开始================================");
 		String out_trade_no2 = request.getParameter("out_trade_no");// 商户订单号
-    	this.logger.error("==============支付宝回调2=====================");
-    	this.logger.error("out_trade_no2 : " + out_trade_no2);
-    	System.out.println("out_trade_no2 : " + out_trade_no2);
+		this.logger.debug("========订单号: " +   out_trade_no2 +"===========================================");
+//    	this.logger.error("==============支付宝回调2=====================");
+//    	this.logger.error("out_trade_no2 : " + out_trade_no2);
+//    	System.out.println("out_trade_no2 : " + out_trade_no2);
 		Map<String, String> params = new HashMap<String, String>();  
         Map<?,?> requestParams = request.getParameterMap();  
         for (Iterator<?> iter = requestParams.keySet().iterator(); iter.hasNext();) {  
@@ -396,6 +492,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 				Orders order=this.m.findOrderByOrderNo(out_trade_no);
 				order.setState(OrdersState.WAIT_ORDER.getValue()); //待接单
 				this.m.updateByPrimaryKeySelective(order);
+				this.logger.debug("=====================支付宝回调完成================================");
 				return Constants.SUCCESS;
 //			}else{
 //			    // TODO 验签失败则记录异常日志，并在response中返回failure.
@@ -495,14 +592,19 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 						Long capacity= good.getCapacity();
 						String info= good.getInfo();
 						Float hp= good.getHighestPrice();
-						float lp= good.getLowestPrice();
+						Float lp= good.getLowestPrice();
 						
 						Map<String, Object> mapPic = new HashMap<String,Object>();
 						mapPic.put("goodId", good.getId());
 						mapPic.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
 						
 						List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(mapPic);
-						com.xa.entity.File thumbFile=fileList.get(0);
+						com.xa.entity.File thumbFile = null;
+						String uriPath= null;
+						if(null != fileList && fileList.size() > 0){
+							thumbFile=fileList.get(0);
+							uriPath=thumbFile.getUriPath();
+						}
 						
 						DeliveryAddress address= this.deliveryAddressMapper.getDefaultAddressByBuyerId(buyerId);
 						
@@ -514,7 +616,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 						.accumulate("hp", hp)
 						.accumulate("lp", lp)
 						.accumulate("address",null == address ? "": address.getAddress())
-						.accumulate("filePath", thumbFile.getUriPath())
+						.accumulate("filePath", uriPath==null ? "" : uriPath)
 						;
 						
 						goodArray.add(goodObj);
@@ -533,7 +635,10 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 					mapChild.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
 					
 					List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(mapChild);
-					File thumbFile= fileList.get(0);
+					File thumbFile = null;
+					if(null != fileList && fileList.size() > 0){
+						thumbFile = fileList.get(0);
+					}
 //					goodObj.accumulate("goodId", good.getId()).accumulate("goodName", good.getName()).accumulate("price", good.getPrice())
 //					.accumulate("count", 1).accumulate("thumbPath", thumbFile.getUriPath()).accumulate("capacity", good.getCapacity());
 					DeliveryAddress address= this.deliveryAddressMapper.getDefaultAddressByBuyerId(buyerId);
@@ -546,7 +651,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 					.accumulate("hp", good.getHighestPrice())
 					.accumulate("lp", good.getLowestPrice())
 					.accumulate("address",null == address ? "": address.getAddress())
-					.accumulate("filePath", thumbFile.getUriPath())
+					.accumulate("filePath", null == thumbFile ? "" : thumbFile.getUriPath())
 					;
 					
 					goodArray.add(goodObj);
@@ -566,12 +671,6 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		
 		return object.toString();
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 	/**

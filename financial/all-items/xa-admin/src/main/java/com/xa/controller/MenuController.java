@@ -23,7 +23,7 @@ public class MenuController extends BaseController {
 	@RequestMapping("getMenu")
 	public void getMenu(){
 		 try {
-			this.sendAjaxMsg(this.menuService.getMenuForStr());
+			this.sendAjaxMsg(this.menuService.getMenuForStr(this.request));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

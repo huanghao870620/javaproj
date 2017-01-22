@@ -6,8 +6,20 @@ public class CouponsBuyer {
     private Long couponsId;
 
     private Long buyerId;
+    
+    private Integer state;
+    
+    
 
-    public Long getId() {
+    public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public Long getId() {
         return id;
     }
 

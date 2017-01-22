@@ -1,6 +1,7 @@
 package com.xa.service;
 
 import com.xa.entity.Mail;
+import com.xa.service.BaseServiceInte;
 
 public interface MailService<T> extends BaseServiceInte<T> {
 

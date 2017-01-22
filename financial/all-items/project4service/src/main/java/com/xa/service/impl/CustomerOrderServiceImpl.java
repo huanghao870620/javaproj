@@ -9,6 +9,7 @@ import com.xa.mapper.CustomerOrderMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.OrdersMapper;
 import com.xa.service.CustomerOrderService;
+import com.xa.service.impl.BaseServiceImpl;
 
 @Service
 @Transactional

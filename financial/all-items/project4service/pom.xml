@@ -27,6 +27,13 @@
       <artifactId>project4dao</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+     <dependency>
+      <groupId>com.xa</groupId>
+      <artifactId>sharedService</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
     <dependency>
     	<groupId>org.springframework</groupId>
     	<artifactId>spring-tx</artifactId>

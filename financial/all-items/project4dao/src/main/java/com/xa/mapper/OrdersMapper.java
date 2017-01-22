@@ -10,4 +10,6 @@ public interface OrdersMapper extends BaseMapper<Orders>{
 	List<Orders> getOrdersByState(Map<String, Object> map);
 	
 	Orders findOrderByOrderNo(String orderNo);
+	
+	Long getOrderCountByGoodId(Map<String, Object> map);
 }

@@ -6,12 +6,33 @@ public class Brand {
     private String name;
 
     private Long imgId;
+    
+    private Long detailPic;
 
     private Integer isRecommended;
 
     private Long uploadTypeId;
+    
+    private String info;
+    
 
-    public Long getId() {
+    public Long getDetailPic() {
+		return detailPic;
+	}
+
+	public void setDetailPic(Long detailPic) {
+		this.detailPic = detailPic;
+	}
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
+
+	public Long getId() {
         return id;
     }
 

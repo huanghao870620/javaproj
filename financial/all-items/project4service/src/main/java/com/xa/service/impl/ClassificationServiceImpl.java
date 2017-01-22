@@ -11,6 +11,7 @@ import com.xa.entity.File;
 import com.xa.mapper.ClassificationMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.service.ClassificationService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
@@ -99,7 +100,11 @@ public class ClassificationServiceImpl extends BaseServiceImpl<Classification, C
 			Long imgId= child.getImgId();
 			String name= child.getName();
 			File img= this.fileMapper.selectByPrimaryKey(imgId);
-			childObj.accumulate("name", name).accumulate("imgPath", img.getUriPath())
+			String uriPath = null;
+			if(img != null){
+				uriPath = img.getUriPath();
+			}
+			childObj.accumulate("name", name).accumulate("imgPath",uriPath==null ? "" : uriPath )
 			.accumulate("id", child.getId());
 			array.add(childObj);
 		}

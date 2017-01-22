@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xa.entity.Coupons;
 import com.xa.mapper.CouponsMapper;
 import com.xa.service.CouponsService;
+import com.xa.service.impl.BaseServiceImpl;
 
 @Service
 @Transactional

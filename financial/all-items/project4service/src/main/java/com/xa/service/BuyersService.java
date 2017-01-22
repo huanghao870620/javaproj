@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.xa.entity.BuyHand;
 import com.xa.entity.Buyers;
 import com.xa.entity.File;
+import com.xa.service.BaseServiceInte;
+import com.xa.service.FileService;
 
 public interface BuyersService<T> extends BaseServiceInte<T> {
 
@@ -80,4 +82,14 @@ public interface BuyersService<T> extends BaseServiceInte<T> {
 	 * @return
 	 */
 	public String updateBuyer(Buyers buyer, String sign);
+	
+	/**
+	 * 修改买家密码
+	 * @param vercode
+	 * @param mobile
+	 * @param password
+	 * @param sign
+	 * @return
+	 */
+	public String updateBuyerPass(String vercode, String mobile, String password, String sign);
 }

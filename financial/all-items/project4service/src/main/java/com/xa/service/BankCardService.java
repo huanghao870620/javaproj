@@ -1,6 +1,7 @@
 package com.xa.service;
 
 import com.xa.entity.BankCard;
+import com.xa.service.BaseServiceInte;
 
 public interface BankCardService<T> extends BaseServiceInte<T> {
 

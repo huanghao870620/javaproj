@@ -12,6 +12,7 @@ import com.github.pagehelper.PageHelper;
 import com.xa.entity.AccountTransactionRecords;
 import com.xa.mapper.AccountTransactionRecordsMapper;
 import com.xa.service.AccountTransactionRecordsService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;

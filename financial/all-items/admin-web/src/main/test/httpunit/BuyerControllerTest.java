@@ -47,7 +47,7 @@ public class BuyerControllerTest {
 	 */
 	@Test
 	public void  testUpdateHeadPortial() throws IOException, SAXException{
-		PostMethodWebRequest req = new PostMethodWebRequest("http://192.168.1.110:8080/buyers/updateHeadPortial.htm",true);
+		PostMethodWebRequest req = new PostMethodWebRequest("http://192.168.48.216/buyers/updateHeadPortial.htm",true);
 		req.setParameter("buyerId", "20");
 		
 		String sign = Security.getSign(new String[]{

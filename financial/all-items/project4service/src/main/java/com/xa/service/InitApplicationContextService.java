@@ -1,5 +1,7 @@
 package com.xa.service;
 
+import com.xa.service.BaseServiceInte;
+
 public interface InitApplicationContextService<T> extends BaseServiceInte<T> {
 
 	/**

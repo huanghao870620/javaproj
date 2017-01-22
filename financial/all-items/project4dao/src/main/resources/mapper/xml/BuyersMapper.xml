@@ -9,10 +9,11 @@
     <result column="nickname" property="nickname" jdbcType="VARCHAR" />
     <result column="gender" property="gender" jdbcType="CHAR" />
     <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="buyer_type" property="buyerType" jdbcType="INTEGER"/>
     <result column="signature" property="signature" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, mobile, password, head_portrait, nickname, gender, birthday, signature
+    id, mobile, password, head_portrait, nickname, gender, birthday,buyer_type, signature
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -27,10 +28,10 @@
   <insert id="insert" parameterType="com.xa.entity.Buyers" useGeneratedKeys="true" keyProperty="id">
     insert into buyers ( mobile, password, 
       head_portrait, nickname, gender, 
-      birthday, signature)
+      birthday,buyer_type, signature)
     values ( #{mobile,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{headPortrait,jdbcType=BIGINT}, #{nickname,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, 
-      #{birthday,jdbcType=DATE}, #{signature,jdbcType=VARCHAR})
+      #{birthday,jdbcType=DATE},#{buyerType},  #{signature,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.Buyers" >
     insert into buyers
@@ -99,8 +100,17 @@
       <if test="birthday != null" >
         birthday = #{birthday,jdbcType=DATE},
       </if>
+      
+      <if test="buyerType != null">
+        buyer_type=#{buyerType},
+      </if>
+      
+      <if test="password != null">
+        password=#{password},
+      </if>
+      
       <if test="signature != null" >
-        signature = #{signature,jdbcType=VARCHAR},
+        signature = #{signature,jdbcType=VARCHAR}
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -127,6 +137,10 @@
   <!-- 获取买家通过手机号 -->
   <select id="findBuyerByMobile" resultType="com.xa.entity.Buyers" parameterType="java.lang.String">
     select * from buyers where mobile=#{mobile}
+  </select>
+  
+  <select id="findAll" resultType="com.xa.entity.Buyers">
+    select * from buyers
   </select>
   
 </mapper>

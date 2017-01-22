@@ -1,5 +1,7 @@
 package com.xa.service;
 
+import com.xa.service.BaseServiceInte;
+
 public interface CustomerOrderService<T> extends BaseServiceInte<T> {
 
 	/**

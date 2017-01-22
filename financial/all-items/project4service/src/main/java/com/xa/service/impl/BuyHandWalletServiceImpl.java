@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xa.entity.BuyhandWallet;
 import com.xa.mapper.BuyhandWalletMapper;
 import com.xa.service.BuyhandWalletService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;

@@ -3,17 +3,20 @@
 <mapper namespace="com.xa.mapper.CouponsMapper" >
   <resultMap id="BaseResultMap" type="com.xa.entity.Coupons" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <id column="name" property="name" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="REAL" />
     <result column="sill" property="sill" jdbcType="REAL" />
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="limit_start" property="limitStart" jdbcType="TIMESTAMP" />
     <result column="limit_end" property="limitEnd" jdbcType="TIMESTAMP" />
     <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="country_id" property="countryId" jdbcType="BIGINT" />
+    <result column="alloc_type_id" property="allocTypeId" jdbcType="BIGINT" />
     <result column="brand_id" property="brandId" jdbcType="BIGINT" />
     <result column="note" property="note" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, price, sill, state, limit_start, limit_end, class_id, brand_id, note
+    id,name, price, sill, state, limit_start, limit_end, class_id,country_id, alloc_type_id,brand_id, note
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -26,11 +29,12 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xa.entity.Coupons" >
-    insert into coupons (id, price, sill, state, 
-      limit_start, limit_end, class_id, 
+    insert into coupons (id,name, price, sill, state, 
+      limit_start, limit_end, class_id, country_id,alloc_type_id,
       brand_id, note)
-    values (#{id,jdbcType=BIGINT}, #{price,jdbcType=REAL}, #{sill,jdbcType=REAL}, #{state,jdbcType=INTEGER}, 
-      #{limitStart,jdbcType=TIMESTAMP}, #{limitEnd,jdbcType=TIMESTAMP}, #{classId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{name},#{price,jdbcType=REAL}, #{sill,jdbcType=REAL}, #{state,jdbcType=INTEGER}, 
+      #{limitStart,jdbcType=TIMESTAMP}, #{limitEnd,jdbcType=TIMESTAMP}, #{classId,jdbcType=BIGINT}, #{countryId},
+      #{allocTypeId},
       #{brandId,jdbcType=BIGINT}, #{note,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.Coupons" >
@@ -97,6 +101,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.Coupons" >
     update coupons
     <set >
+     <if test="name != null">
+       name = #{name},
+     </if>
       <if test="price != null" >
         price = #{price,jdbcType=REAL},
       </if>
@@ -115,6 +122,14 @@
       <if test="classId != null" >
         class_id = #{classId,jdbcType=BIGINT},
       </if>
+      <if test="countryId != null">
+       country_id = #{countryId},
+      </if>
+      
+      <if test="allocTypeId != null">
+        alloc_type_id = #{allocTypeId},
+      </if>
+      
       <if test="brandId != null" >
         brand_id = #{brandId,jdbcType=BIGINT},
       </if>
@@ -136,4 +151,26 @@
       note = #{note,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="findAll" resultType="com.xa.entity.Coupons">
+    select 
+     t.limit_start as limitStart,
+     t.limit_end as limitEnd,
+     t.class_id as classId,
+     t.country_id as countryId,
+     t.brand_id as brandId,
+     t.alloc_type_id as allocTypeId,
+    t.* from coupons t
+  </select>
+  <!-- 获取优惠券通过分配类型 -->
+  <select id="findByAllocType" resultType="com.xa.entity.Coupons" parameterType="long">
+    select 
+     t.limit_start as limitStart,
+     t.limit_end as limitEnd,
+     t.class_id as classId,
+     t.country_id as countryId,
+     t.brand_id as brandId,
+     t.alloc_type_id as allocTypeId,
+    t.* from coupons t where alloc_type_id=#{allocTypeId}
+  </select>
 </mapper>

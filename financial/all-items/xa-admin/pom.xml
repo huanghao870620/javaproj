@@ -15,7 +15,7 @@
     
     <dependency>
      <groupId>com.xa</groupId>
-     <artifactId>project4service</artifactId>
+     <artifactId>xaAdminService</artifactId>
      <version>${project.version}</version>
     </dependency>
     

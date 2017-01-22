@@ -5,9 +5,10 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="coupons_id" property="couponsId" jdbcType="BIGINT" />
     <result column="buyer_id" property="buyerId" jdbcType="BIGINT" />
+    <result column="state" property="state" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, coupons_id, buyer_id
+    id, coupons_id, buyer_id, state
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -20,9 +21,9 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xa.entity.CouponsBuyer" >
-    insert into coupons_buyer (id, coupons_id, buyer_id
+    insert into coupons_buyer (id, coupons_id, buyer_id, state
       )
-    values (#{id,jdbcType=BIGINT}, #{couponsId,jdbcType=BIGINT}, #{buyerId,jdbcType=BIGINT}
+    values (#{id,jdbcType=BIGINT}, #{couponsId,jdbcType=BIGINT}, #{buyerId,jdbcType=BIGINT},#{state}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.CouponsBuyer" >
@@ -59,6 +60,9 @@
       <if test="buyerId != null" >
         buyer_id = #{buyerId,jdbcType=BIGINT},
       </if>
+      <if test="state!=null">
+        state = #{state}
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -68,4 +72,13 @@
       buyer_id = #{buyerId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <!-- 获取优惠券通过状态 -->
+  <select id="findCouponsByState" parameterType="java.util.Map" resultType="com.xa.entity.CouponsBuyer">
+     select 
+     t.coupons_id as couponsId,
+     t.buyer_id as buyerId,
+     t.* from coupons_buyer t where buyer_id=#{buyerId} and state=#{state}
+  </select>
+  
 </mapper>

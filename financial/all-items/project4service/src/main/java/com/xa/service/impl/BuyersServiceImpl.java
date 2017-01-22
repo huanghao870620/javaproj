@@ -8,6 +8,8 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -16,15 +18,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xa.entity.AllocType;
 import com.xa.entity.BuyHand;
 import com.xa.entity.Buyers;
 import com.xa.entity.Country;
+import com.xa.entity.Coupons;
+import com.xa.entity.CouponsBuyer;
 import com.xa.entity.File;
 import com.xa.entity.Goods;
 import com.xa.entity.MobileVercodeLog;
 import com.xa.entity.ShoppingCart;
+import com.xa.enumeration.AllocCouponType;
+import com.xa.enumeration.CouponsState;
 import com.xa.enumeration.PhotoType;
 import com.xa.mapper.BuyersMapper;
+import com.xa.mapper.CouponsBuyerMapper;
+import com.xa.mapper.CouponsMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.MobileVercodeLogMapper;
 import com.xa.mapper.ShoppingCartMapper;
@@ -33,6 +42,7 @@ import com.xa.service.BuyHandService;
 import com.xa.service.BuyersService;
 import com.xa.service.FileService;
 import com.xa.service.GoodsService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.EncryptionTool;
 import com.xa.util.Msg;
@@ -54,6 +64,12 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 	@Autowired
 	private FileMapper fileMapper;
 	
+	@Autowired
+	private CouponsMapper couponsMapper;
+	
+	@Autowired
+	private CouponsBuyerMapper couponsBuyerMapper;
+	
 	
 	/**
 	 * 登录
@@ -72,10 +88,9 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 		Buyers existBuyer = this.m.findBuyerByMobileAndPass(buyers);
 		if(null != existBuyer){
 			Date birthDay = existBuyer.getBirthday();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String dateStr = null;
+			String birthday = null;
 			if(null != birthDay){
-				dateStr = sdf.format(birthDay);
+				birthday = DateFormatUtils.format(birthDay, "yyyy/MM/dd");
 			}
 			String gender = existBuyer.getGender();
 			Long hp = existBuyer.getHeadPortrait();
@@ -92,7 +107,7 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 			ShoppingCart cart = this.shoppingCartMapper.getCartByBuyerId(id);
 			
 			object.accumulate(Constants.SUCCESS, true)
-			.accumulate("birthDay", dateStr == null ? "":dateStr)
+			.accumulate("birthDay", birthday == null ? "":birthday)
 			.accumulate("gender", gender == null ? "":gender)
 			.accumulate("headPortrait", hpUriPath ==null ? "" : hpUriPath)
 			.accumulate("mobil", mobile == null ? "" : mobile)
@@ -102,7 +117,7 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 			.accumulate("cartId", cart.getId())
 			;
 		}else {
-			object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "用户不存在!");
+			object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "用户或密码错误!");
 		}
 		return object.toString();
 	}
@@ -141,6 +156,19 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 		ShoppingCart cart = new ShoppingCart();
 		cart.setBuyerId(buyer.getId());
 		this.shoppingCartMapper.insert(cart );
+		
+		
+		List<Coupons> coupons= this.couponsMapper.findByAllocType(Long.valueOf(AllocCouponType.REG.getValue()));
+		
+		for(int i=0;i<coupons.size();i++){
+			 Coupons c = coupons.get(i);
+			 Long couponsId= c.getId();
+			 CouponsBuyer cb = new CouponsBuyer();
+			 cb.setBuyerId(buyer.getId());
+			 cb.setCouponsId(couponsId);
+			 cb.setState(CouponsState.NOT_USE.getValue());
+			 this.couponsBuyerMapper.insert(cb);
+		}
 		
 		Date birthDay = buyer.getBirthday();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -267,10 +295,10 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 		
 		com.xa.entity.File headPortraitFile = new com.xa.entity.File();
 		if(null == buyer.getHeadPortrait()){// 添加
-			fileService.uploadFile(headPortialFile, PhotoType.GOODS_ACCORDING_TO_POSITIVE_TYPE,headPortraitFile);
+			fileService.uploadFile(headPortialFile, PhotoType.BUYER_HEAD_PORTIAL,headPortraitFile);
 		}else{ // 修改
 			headPortraitFile.setId(buyer.getHeadPortrait());
-			fileService.editFile( headPortialFile, PhotoType.GOODS_ACCORDING_TO_POSITIVE_TYPE,headPortraitFile); //商品正面视图
+			fileService.editFile( headPortialFile, PhotoType.BUYER_HEAD_PORTIAL,headPortraitFile); //商品正面视图
 		}
 		buyer.setHeadPortrait(headPortraitFile.getId());
 		this.m.updateByPrimaryKey(buyer);
@@ -293,7 +321,30 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 		}
 		
 		this.m.updateByPrimaryKeySelective(buyer);
-		object.accumulate(Constants.SUCCESS, true);
+		Date day= buyer.getBirthday();
+		String birthday = null;
+		if(null != day){
+			birthday = DateFormatUtils.format(day, "yyyy/MM/dd");
+		}
+		
+		String gender= buyer.getGender();
+		Long headPortrait = buyer.getHeadPortrait();
+		Long id= buyer.getId();
+		String mobile = buyer.getMobile();
+		String nickName = buyer.getNickname();
+		String signature= buyer.getSignature();
+		
+		File headPFile= this.fileMapper.selectByPrimaryKey(headPortrait);
+		
+		object.accumulate(Constants.SUCCESS, true)
+		.accumulate("birthday", birthday==null ? "" : birthday)
+		.accumulate("gender", gender == null ? "" : gender)
+		.accumulate("nickName", nickName == null ? "" : nickName)
+		.accumulate("signature", signature == null ? "" : signature)
+		.accumulate("mobile", mobile == null ? "" : mobile)
+		.accumulate("uriPath", headPFile == null ? "" : headPFile.getUriPath())
+		.accumulate("id", id)
+		;
 		return object.toString();
 	}
 	
@@ -325,6 +376,37 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 		object.accumulate(Constants.SUCCESS, true)
 		.accumulate("newMobile", newMobile)
 		;
+		return object.toString();
+	}
+	
+	/**
+	 * 修改买家密码
+	 * @return
+	 */
+	public String updateBuyerPass(String vercode, String mobile, String password, String sign){
+		JSONObject object = new JSONObject();
+		if(!sign.equals(Security.getSign(new String[]{
+				"vercode","mobile","password"
+		}))){
+			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
+		}
+		
+		MobileVercodeLog param = new MobileVercodeLog();
+		param.setMobile(mobile);
+		param.setVercode(vercode);
+		List<MobileVercodeLog> mvlList = this.mobileVercodeLogMapper.getVercodeByMobile(param);
+		if (mvlList.size() > 0) {
+			
+		} else {
+			object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "验证码错误!");
+			return object.toString();
+		}
+		
+		Buyers buyers= this.m.findBuyerByMobile(mobile);
+		String encPass = EncryptionTool.addSaltEncrypt(password, Security.getPasswordSalt());
+		buyers.setPassword(encPass);
+		this.m.updateByPrimaryKeySelective(buyers);
+		object.accumulate(Constants.SUCCESS, true);
 		return object.toString();
 	}
 

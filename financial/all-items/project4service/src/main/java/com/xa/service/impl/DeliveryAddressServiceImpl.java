@@ -23,6 +23,7 @@ import com.xa.service.AreaService;
 import com.xa.service.DeliveryAddressService;
 import com.xa.service.FileService;
 import com.xa.service.GoodsService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
@@ -73,6 +74,7 @@ public class DeliveryAddressServiceImpl extends BaseServiceImpl<DeliveryAddress,
 		fileService.uploadFile( idCardBackFile, PhotoType.CERTIFICATION_BACK_PHOTO, backFile);
 		address.setCardIdBackFile(backFile.getId());
 		
+		address.setUsed(1);
 		this.m.insert(address);
 		object.accumulate(Constants.SUCCESS, true)
 		.accumulate("id", address.getId())
@@ -153,7 +155,10 @@ public class DeliveryAddressServiceImpl extends BaseServiceImpl<DeliveryAddress,
 		 }))){
 			 return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		 }
-		 this.m.deleteByPrimaryKey(id);
+//		 this.m.deleteByPrimaryKey(id);
+		 DeliveryAddress address= this.m.selectByPrimaryKey(id);
+		 address.setUsed(0);
+		 this.m.updateByPrimaryKeySelective(address);
 		 object.accumulate(Constants.SUCCESS, true);
 		 return object.toString();
 	}
@@ -163,16 +168,54 @@ public class DeliveryAddressServiceImpl extends BaseServiceImpl<DeliveryAddress,
 	 * @param address
 	 * @param sign
 	 * @return
+	 * @throws IOException 
+	 * @throws IllegalStateException 
 	 */
-	public String updateAddress(DeliveryAddress address,String sign){
+	public String updateAddress(DeliveryAddress address,
+			MultipartFile idCardFrontFile, 
+			MultipartFile idCardBackFile,
+			FileService<File> fileService,
+			String sign) throws IllegalStateException, IOException{
 		JSONObject object = new JSONObject();
 		if(!sign.equals(Security.getSign(new String[]{
-			"name",	"mobile","areaId","address","id"
+			"name",	"mobile","areaId","address","id","idcard","idCardFrontFile","idCardBackFile"
 		}))){
 			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
+		
+		DeliveryAddress fullAddress= this.m.selectByPrimaryKey(address.getId());
+		Long cardIdBack=fullAddress.getCardIdBackFile();
+		Long cartIdFront=fullAddress.getCardIdFrontFile();
+		address.setCardIdBackFile(cardIdBack);
+		address.setCardIdFrontFile(cartIdFront);
+		
+		//正面照
+		if(null != idCardFrontFile && idCardFrontFile.getSize() > 0){
+			File frontFile = new File();
+			frontFile.setId(cartIdFront);
+			fileService.editFile(idCardFrontFile, PhotoType.CERTIFICATION_FRONT_PHOTO, frontFile );
+		}
+		
+		//背面照
+		if(null != idCardBackFile && idCardBackFile.getSize() > 0){
+			File backFile = new File();
+			backFile.setId(cardIdBack);
+			fileService.editFile(idCardBackFile, PhotoType.CERTIFICATION_BACK_PHOTO, backFile);
+		}
+		
+		
 		this.m.updateByPrimaryKeySelective(address);
-		object.accumulate(Constants.SUCCESS, true);
+		
+		Long backId= fullAddress.getCardIdBackFile();
+		Long frontId= fullAddress.getCardIdFrontFile();
+		File backFile= this.fileMapper.selectByPrimaryKey(backId);
+		File frontFile= this.fileMapper.selectByPrimaryKey(frontId);
+		String idCart= fullAddress.getIdcard();
+		object.accumulate(Constants.SUCCESS, true)
+		.accumulate("idCart", idCart)
+		.accumulate("backUriPath", backFile.getUriPath())
+		.accumulate("frontUriPath", frontFile.getUriPath())
+		;
 		return object.toString();
 	}
 	

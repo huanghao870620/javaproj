@@ -20,8 +20,20 @@ public class DeliveryAddress {
     private String address;
 
     private Integer isDefault;
+    
+    private Integer used; // 是否使用
+    
+    
 
-    public Long getId() {
+    public Integer getUsed() {
+		return used;
+	}
+
+	public void setUsed(Integer used) {
+		this.used = used;
+	}
+
+	public Long getId() {
         return id;
     }
 

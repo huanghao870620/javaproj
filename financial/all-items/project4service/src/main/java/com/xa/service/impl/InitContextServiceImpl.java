@@ -23,6 +23,7 @@ import com.xa.mapper.MobileVercodeLogMapper;
 import com.xa.mapper.OrdersMapper;
 import com.xa.mapper.UserMapper;
 import com.xa.service.InitContextService;
+import com.xa.service.impl.BaseServiceImpl;
 
 @Service
 @Transactional

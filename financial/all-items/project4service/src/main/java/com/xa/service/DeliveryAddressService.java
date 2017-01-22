@@ -10,6 +10,8 @@ import com.xa.entity.Area;
 import com.xa.entity.DeliveryAddress;
 import com.xa.entity.File;
 import com.xa.entity.Goods;
+import com.xa.service.BaseServiceInte;
+import com.xa.service.FileService;
 
 public interface DeliveryAddressService<T> extends BaseServiceInte<T> {
 
@@ -57,7 +59,11 @@ public interface DeliveryAddressService<T> extends BaseServiceInte<T> {
 	 * @param sign
 	 * @return
 	 */
-	public String updateAddress(DeliveryAddress address,String sign);
+	public String updateAddress(DeliveryAddress address,
+			MultipartFile idCardFrontFile, 
+			MultipartFile idCardBackFile,
+			FileService<File> fileService,
+			String sign) throws IllegalStateException, IOException;
 	
 	/**
 	 * 获取默认地址

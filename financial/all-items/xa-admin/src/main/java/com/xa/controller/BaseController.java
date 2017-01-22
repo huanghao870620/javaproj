@@ -28,4 +28,12 @@ public class BaseController {
 		write.print(msg);
 		write.flush();
 	}
+	
+	public void sendHtml(String msg) throws IOException {
+		this.response.setCharacterEncoding("UTF-8");
+		this.response.setContentType("text/html");
+		PrintWriter write = this.response.getWriter();
+		write.print(msg);
+		write.flush();
+	}
 }

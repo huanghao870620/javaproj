@@ -1,5 +1,7 @@
 package com.xa.service;
 
+import com.xa.service.BaseServiceInte;
+
 public interface BrandService<T> extends BaseServiceInte<T> {
 
 	/**
@@ -16,5 +18,5 @@ public interface BrandService<T> extends BaseServiceInte<T> {
 	 * @param sign
 	 * @return
 	 */
-	public String getGoodsByBrandId(Long brandId, String sign);
+	public String getGoodsByBrandId(Long brandId,Integer pageNum,Integer pageSize, String sign);
 }

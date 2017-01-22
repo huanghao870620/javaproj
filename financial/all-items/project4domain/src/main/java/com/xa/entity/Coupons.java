@@ -5,6 +5,8 @@ import java.util.Date;
 public class Coupons {
     private Long id;
 
+    private String name;
+    
     private Float price;
 
     private Float sill;
@@ -16,12 +18,43 @@ public class Coupons {
     private Date limitEnd;
 
     private Long classId;
+    
+    private Long countryId;
+    
+    private Long allocTypeId;
 
     private Long brandId;
 
     private String note;
+    
+    
+    
 
-    public Long getId() {
+    public Long getAllocTypeId() {
+		return allocTypeId;
+	}
+
+	public void setAllocTypeId(Long allocTypeId) {
+		this.allocTypeId = allocTypeId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getCountryId() {
+		return countryId;
+	}
+
+	public void setCountryId(Long countryId) {
+		this.countryId = countryId;
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -368,9 +368,16 @@
     <module>project4domain</module>
     <module>project4dao</module>
     <module>project4service</module>
+	<module>xaAdminService</module>
+	<module>base_service</module>
+	<module>sharedService</module>
+	<!-- <module>project4addition</module> -->
     <module>front-web</module>
     <module>admin-web</module>
     <module>xa-admin</module>
+  	<!-- <module>base_service</module> --> 
+    <module>enumeration</module>
+    <module>util</module>
   </modules>
   
   <build>

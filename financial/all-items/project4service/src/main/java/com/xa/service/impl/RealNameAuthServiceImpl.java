@@ -14,6 +14,7 @@ import com.xa.enumeration.PhotoType;
 import com.xa.mapper.RealNameAuthMapper;
 import com.xa.service.FileService;
 import com.xa.service.RealNameAuthService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;

@@ -12,6 +12,7 @@ import com.xa.mapper.BankCardMapper;
 import com.xa.mapper.BankCardTypeMapper;
 import com.xa.mapper.BankTypeMapper;
 import com.xa.service.BankCardService;
+import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
