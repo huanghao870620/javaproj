@@ -23,8 +23,18 @@ public class Activity {
 
     private Date upTime;
     
+    private Integer shelves; //是否上架
+    
 
-    public Long getImgAdvId() {
+    public Integer getShelves() {
+		return shelves;
+	}
+
+	public void setShelves(Integer shelves) {
+		this.shelves = shelves;
+	}
+
+	public Long getImgAdvId() {
 		return imgAdvId;
 	}
 

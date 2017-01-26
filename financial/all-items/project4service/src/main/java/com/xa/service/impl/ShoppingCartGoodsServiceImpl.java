@@ -16,6 +16,7 @@ import com.xa.entity.ShoppingCartGoods;
 import com.xa.enumeration.OrdersState;
 import com.xa.enumeration.PhotoType;
 import com.xa.enumeration.ScgState;
+import com.xa.mapper.ActivityMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodsMapper;
 import com.xa.mapper.OrdersMapper;
@@ -49,6 +50,10 @@ public class ShoppingCartGoodsServiceImpl extends BaseServiceImpl<ShoppingCartGo
 	
 	@Autowired
 	private ScgOrderReleaseMapper scgOrderReleaseMapper;
+	
+	@Autowired
+	private ActivityMapper activityMapper;
+	
 	
 	/**
 	 * 添加商品到购物车
@@ -122,7 +127,13 @@ public class ShoppingCartGoodsServiceImpl extends BaseServiceImpl<ShoppingCartGo
 				
 				List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(map);
 				File thumbFile=fileList.get(0);
-				
+				Long goodCount= this.activityMapper.selectCountByGoodId(goodId);
+				boolean flag=false;
+				if(goodCount>0){
+					flag=true;
+				}else {
+					flag=false;
+				}
 				Goods good= this.goodsMapper.selectByPrimaryKey(goodId);
 				String goodName= good.getName();
 				Float price = good.getPrice();
@@ -133,6 +144,7 @@ public class ShoppingCartGoodsServiceImpl extends BaseServiceImpl<ShoppingCartGo
 				.accumulate("price", price)
 				.accumulate("goodName", goodName)
 				.accumulate("scgId", scgId)
+				.accumulate("flag", flag)
 				.accumulate("goodId", good.getId())
 				;
 				array.add(scgObj);

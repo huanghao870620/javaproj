@@ -154,5 +154,120 @@
     t.* from activity t
   </select>
   
+  <select id="getActivityGoodIdList" resultType="long" >
+ 
+SELECT DISTINCT
+	good_id
+FROM
+	(
+		SELECT
+			t.activity_id,
+			t.activity_type,
+			CASE t.activity_type
+		WHEN 1 THEN
+			(
+				SELECT
+					id
+				FROM
+					goods
+				WHERE
+					brand_id = t.associate_id
+			)
+		WHEN 2 THEN
+			'分类'
+		WHEN 3 THEN
+			(
+				SELECT
+					id
+				FROM
+					goods
+				WHERE
+					country_id = t.associate_id
+			)
+		ELSE
+			'bb'
+		END AS good_id
+		FROM
+			(
+				SELECT
+					aa.associate_id,
+					a.activity_type,
+					a.id AS activity_id
+				FROM
+					activity a
+				LEFT JOIN activity_associated aa ON a.id = aa.activity_id
+				WHERE
+					aa.associate_id IS NOT NULL
+			) t
+	) t
+WHERE
+	t.good_id IS NOT NULL
+  
+  </select>
+  
+  
+  <select id="selectCountByGoodId" resultType="long" parameterType="long">
+   
+SELECT
+	count(1)
+FROM
+	(
+		SELECT
+			*
+		FROM
+			(
+				SELECT DISTINCT
+					good_id
+				FROM
+					(
+						SELECT
+							t.activity_id,
+							t.activity_type,
+							CASE t.activity_type
+						WHEN 1 THEN
+							(
+								SELECT
+									id
+								FROM
+									goods
+								WHERE
+									brand_id = t.associate_id
+							)
+						WHEN 2 THEN
+							'分类'
+						WHEN 3 THEN
+							(
+								SELECT
+									id
+								FROM
+									goods
+								WHERE
+									country_id = t.associate_id
+							)
+						ELSE
+							'bb'
+						END AS good_id
+						FROM
+							(
+								SELECT
+									aa.associate_id,
+									a.activity_type,
+									a.id AS activity_id
+								FROM
+									activity a
+								LEFT JOIN activity_associated aa ON a.id = aa.activity_id
+								WHERE
+									aa.associate_id IS NOT NULL
+							) t
+					) t
+				WHERE
+					t.good_id IS NOT NULL
+			) t
+		LEFT JOIN (SELECT #{goodId} AS id) t2 ON t.good_id = t2.id
+	) t
+WHERE
+	t.id IS NOT NULL
+  </select>
+  
   
 </mapper>

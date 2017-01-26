@@ -26,13 +26,18 @@ import com.xa.mapper.ClassificationMapper;
 import com.xa.mapper.CountryMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.service.ActivityService;
+import com.xa.service.BrandService;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
+/**
+ * 
+ * @author burgess
+ *
+ */
 @Service
 @Transactional
 public class ActivityServiceImpl extends BaseServiceImpl<Activity, ActivityMapper>
@@ -154,6 +159,59 @@ public class ActivityServiceImpl extends BaseServiceImpl<Activity, ActivityMappe
 		 .accumulate(Constants.DATA, array)
 		 ;
 		 
+		 return object.toString();
+	}
+	
+	/**
+	 * 根据活动id获取关联信息
+	 * @param activityId
+	 * @return
+	 */
+	public String getAssocByActivityId(Long activityId,Integer type, String sign){
+		JSONObject object = new JSONObject();
+		return object.toString();
+	}
+	
+	/**
+	 * 根据活动id获取商品
+	 * @param id
+	 * @param sign
+	 * @return
+	 */
+	public String getGoodsByActivityId(Long id,Integer type,String sign){
+		JSONObject object = new JSONObject();
+//		List<ActivityAssociated> aaList= this.activityAssociatedMapper.getAssoByActivityId(id);
+//		JSONArray array = new JSONArray();
+//		 for(int i=0; i<aaList.size(); i++){
+//			 JSONObject  aaObject = new JSONObject();
+//			  ActivityAssociated activityAssociated= aaList.get(i);
+//			  Long aId= activityAssociated.getAssociateId();
+//			  if(type.intValue() == 1){//品牌
+//				  Brand brand= this.brandMapper.selectByPrimaryKey(aId);
+//				  this.brandMapper.
+//			  }else if(type.intValue() == 2){//分类
+//				  Classification classification= this.classificationMapper.selectByPrimaryKey(aId);
+//			  }else if(type.intValue() == 3){//国家
+//				  Country country= this.countryMapper.selectByPrimaryKey(aId);
+//			  }
+//		 }
+		return object.toString();
+	}
+	
+	/**
+	 * 根据商品id获取活动信息
+	 * @param goodId
+	 * @return
+	 */
+	public String getActivityByGoodId(Long goodId){
+		 JSONObject object = new JSONObject();
+//		 List<Activity> activityList= this.m.findAll();
+//		 for(int i=0; i<activityList.size(); i++){
+//			 Activity activity = activityList.get(i);
+//			 List<ActivityAssociated> aaList= this.activityAssociatedMapper.getAssoByActivityId(activityId);
+//			 JSONArray array = new JSONArray();
+//			 for(int i=0; i<aaList.size(); i++){
+//		 }
 		 return object.toString();
 	}
 }
