@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.GoodsSearchRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.GoodsSearchRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="buyer_id" property="buyerId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, buyer_id, name, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods_search_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from goods_search_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.GoodsSearchRecord" useGeneratedKeys="true" keyProperty="id">
+    insert into goods_search_record (id, buyer_id, name, 
+      add_time)
+    values (#{id,jdbcType=BIGINT}, #{buyerId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.GoodsSearchRecord" >
+    insert into goods_search_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="buyerId != null" >
+        buyer_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="buyerId != null" >
+        #{buyerId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.GoodsSearchRecord" >
+    update goods_search_record
+    <set >
+      <if test="buyerId != null" >
+        buyer_id = #{buyerId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.GoodsSearchRecord" >
+    update goods_search_record
+    set buyer_id = #{buyerId,jdbcType=BIGINT},
+      name = #{name,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+  <select id="getGSRByBuyerId" resultType="com.xa.entity.GoodsSearchRecord" parameterType="long">
+
+SELECT
+	t. NAME
+FROM
+	(
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					t.buyer_id AS buyerId,
+					t.add_time AS addTime,
+					t.*
+				FROM
+					goods_search_record t
+				WHERE
+					buyer_id = #{buyerId}
+			) t
+		ORDER BY
+			t.add_time DESC
+		LIMIT 10
+	) t
+GROUP BY
+	t. NAME
+
+
+  </select>
+  
+  <select id="getHotSearch" resultType="com.xa.dto.HotSearchDto">
+SELECT
+	*
+FROM
+	(
+		SELECT
+			NAME,
+			count(1) AS total
+		FROM
+			goods_search_record
+		GROUP BY
+			NAME
+	) t
+ORDER BY
+	t.total DESC
+LIMIT 5
+  </select>
+  
+  
+  <delete id="deleteGSRByBuyerId" parameterType="long">
+    delete from goods_search_record where buyer_id=#{buyerId}
+  </delete>
+  
+  
+</mapper>

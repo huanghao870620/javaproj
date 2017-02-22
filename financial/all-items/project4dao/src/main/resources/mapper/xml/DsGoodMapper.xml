@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.DsGoodMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.DsGood" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="ds_id" property="dsId" jdbcType="BIGINT" />
+    <result column="good_id" property="goodId" jdbcType="BIGINT" />
+    <result column="inventory" property="inventory" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ds_id, good_id,inventory
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ds_good
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ds_good
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.DsGood"  keyProperty="id" useGeneratedKeys="true">
+    insert into ds_good (id, ds_id, good_id,inventory
+      )
+    values (#{id,jdbcType=BIGINT}, #{dsId,jdbcType=BIGINT}, #{goodId,jdbcType=BIGINT},#{inventory}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.DsGood" >
+    insert into ds_good
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dsId != null" >
+        ds_id,
+      </if>
+      <if test="goodId != null" >
+        good_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="dsId != null" >
+        #{dsId,jdbcType=BIGINT},
+      </if>
+      <if test="goodId != null" >
+        #{goodId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.DsGood" >
+    update ds_good
+    <set >
+      <if test="dsId != null" >
+        ds_id = #{dsId,jdbcType=BIGINT},
+      </if>
+      <if test="goodId != null" >
+        good_id = #{goodId,jdbcType=BIGINT},
+      </if>
+      <if test="inventory != null">
+       inventory=#{inventory}
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.DsGood" >
+    update ds_good
+    set ds_id = #{dsId,jdbcType=BIGINT},
+      good_id = #{goodId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+  <select id="getDSGoodByDSID" parameterType="long" resultType="com.xa.entity.DsGood">
+    select 
+    t.ds_id as dsId,
+    t.good_id as goodId,
+    t.* from (
+     SELECT * from ds_good  WHERE ds_id=#{dsId}
+     ) t
+  </select>
+  
+  
+  <select id="getDGBySCGID" parameterType="long" resultType="com.xa.entity.DsGood">
+SELECT dg.* from (
+ SELECT sd.dg_id as dgId from scg_dg sd where scg_id=#{scgId}
+  ) sd left join ds_good dg on sd.dgId=dg.id
+  </select>
+  
+  
+  <select id="getDsGoodByGoodId" parameterType="long" resultType="com.xa.entity.DsGood">
+   
+ SELECT 
+ t.ds_id as dsId,
+ t.good_id as goodId,
+t.* from ds_good t where good_id=#{goodId}
+  </select>
+  
+  
+</mapper>

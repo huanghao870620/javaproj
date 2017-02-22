@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.FbsDsMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.FbsDs" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="fbs_id" property="fbsId" jdbcType="BIGINT" />
+    <result column="ds_id" property="dsId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fbs_id, ds_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from fbs_ds
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from fbs_ds
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.FbsDs"   keyProperty="id" useGeneratedKeys="true">
+    insert into fbs_ds (id, fbs_id, ds_id)
+    values (#{id,jdbcType=BIGINT}, #{fbsId,jdbcType=BIGINT}, #{dsId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.FbsDs" >
+    insert into fbs_ds
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fbsId != null" >
+        fbs_id,
+      </if>
+      <if test="dsId != null" >
+        ds_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="fbsId != null" >
+        #{fbsId,jdbcType=BIGINT},
+      </if>
+      <if test="dsId != null" >
+        #{dsId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.FbsDs" >
+    update fbs_ds
+    <set >
+      <if test="fbsId != null" >
+        fbs_id = #{fbsId,jdbcType=BIGINT},
+      </if>
+      <if test="dsId != null" >
+        ds_id = #{dsId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.FbsDs" >
+    update fbs_ds
+    set fbs_id = #{fbsId,jdbcType=BIGINT},
+      ds_id = #{dsId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getDebrisSessionByFBSID" resultType="com.xa.entity.DebrisSession" parameterType="long">
+     select t.* from (
+	 select ds.id,ds.cron_time as cronTime from (
+	  SELECT * from  fbs_ds where fbs_id=#{fbsId} 
+	  ) fd left join debris_session ds on fd.ds_id=ds.id
+	  ) t order by t.cronTime asc
+  </select>
+  
+  <!-- 获取某日的所有抢购时间 -->
+  <select id="getCronTimeByFbsIdAndDate" resultType="com.xa.entity.DebrisSession" parameterType="java.util.Map">
+   
+SELECT
+	*
+FROM
+	(
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					ds.cron_time AS cronTime,
+					DATE_FORMAT(ds.cron_time, '%m月%d日') AS date,
+					ds.id
+				FROM
+					(
+						SELECT
+							*
+						FROM
+							fbs_ds
+						WHERE
+							fbs_id = ${fbsId}
+					) fd
+				LEFT JOIN debris_session ds ON fd.ds_id = ds.id
+			) t
+		ORDER BY
+			t.cronTime ASC
+	) t
+WHERE
+	t.date = '${date}'
+  </select>
+  
+  <!-- 获取所有日期 -->
+   <select id="getAllDateByfbsId" resultType="string" parameterType="long">
+   
+SELECT
+	t.date
+FROM
+	(
+		SELECT
+			ds.cron_time AS cronTime,
+			DATE_FORMAT(ds.cron_time, '%m月%d日') AS date
+		FROM
+			(
+				SELECT
+					*
+				FROM
+					fbs_ds
+				WHERE
+					fbs_id = #{fbsId}
+			) fd
+		LEFT JOIN debris_session ds ON fd.ds_id = ds.id
+	) t
+GROUP BY
+	t.date
+   </select>
+   
+   <select id="getFBSIDByGoodId" resultType="long" parameterType="long">
+  
+SELECT
+	fd.fbs_id AS fbsId
+FROM
+	(
+		SELECT
+			ds_id AS dsId
+		FROM
+			ds_good
+		WHERE
+			good_id = #{goodId}
+		LIMIT 1
+	) dg
+LEFT JOIN fbs_ds fd ON fd.ds_id = dg.dsId
+   </select>
+   
+  
+   
+  
+</mapper>

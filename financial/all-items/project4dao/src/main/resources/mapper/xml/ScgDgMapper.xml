@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.ScgDgMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.ScgDg" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="scg_id" property="scgId" jdbcType="BIGINT" />
+    <result column="dg_id" property="dgId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, scg_id, dg_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from scg_dg
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from scg_dg
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.ScgDg" >
+    insert into scg_dg (id, scg_id, dg_id)
+    values (#{id,jdbcType=BIGINT}, #{scgId,jdbcType=BIGINT}, #{dgId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.ScgDg" >
+    insert into scg_dg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="scgId != null" >
+        scg_id,
+      </if>
+      <if test="dgId != null" >
+        dg_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="scgId != null" >
+        #{scgId,jdbcType=BIGINT},
+      </if>
+      <if test="dgId != null" >
+        #{dgId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.ScgDg" >
+    update scg_dg
+    <set >
+      <if test="scgId != null" >
+        scg_id = #{scgId,jdbcType=BIGINT},
+      </if>
+      <if test="dgId != null" >
+        dg_id = #{dgId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.ScgDg" >
+    update scg_dg
+    set scg_id = #{scgId,jdbcType=BIGINT},
+      dg_id = #{dgId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+  <select id="getSDBySCGIDAndDgId" parameterType="java.util.Map" resultType="com.xa.entity.ScgDg">
+     select 
+     t.scg_id as scgId,
+     t.dg_id as dgId,
+     t.* from scg_dg t where scg_id=#{scgId} and dg_id=#{dgId}
+  </select>
+  
+  
+</mapper>

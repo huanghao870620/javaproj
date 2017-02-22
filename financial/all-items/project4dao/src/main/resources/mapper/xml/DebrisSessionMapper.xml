@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.DebrisSessionMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.DebrisSession" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="cron_time" property="cronTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cron_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from debris_session
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from debris_session
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.DebrisSession" keyProperty="id" useGeneratedKeys="true">
+    insert into debris_session (id, cron_time)
+    values (#{id,jdbcType=BIGINT}, #{cronTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.DebrisSession" >
+    insert into debris_session
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cronTime != null" >
+        cron_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="cronTime != null" >
+        #{cronTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.DebrisSession" >
+    update debris_session
+    <set >
+      <if test="cronTime != null" >
+        cron_time = #{cronTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.DebrisSession" >
+    update debris_session
+    set cron_time = #{cronTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 获取开始和结束时间 -->
+   <select id="getDsByFbsIdAndDsId" resultType="com.xa.entity.DebrisSession" parameterType="java.util.Map">
+   <!-- 
+SELECT
+	t.*
+FROM
+	(
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					ds.cron_time as cronTime,
+					ds.*
+				FROM
+					(
+						SELECT
+							ds_id AS dsId
+						FROM
+							fbs_ds
+						WHERE
+							fbs_id = ${fbsId}
+					) fd
+				LEFT JOIN debris_session ds ON fd.dsId = ds.id
+			) t
+		ORDER BY
+			t.cron_time ASC
+	) t
+WHERE
+	t.cron_time >  (SELECT cron_time from debris_session WHERE id=${dsId})
+LIMIT 2
+ -->
+
+
+
+SELECT
+	t.*
+FROM
+	(
+		SELECT
+			t.*
+		FROM
+			(
+				SELECT
+					*
+				FROM
+					(
+						SELECT
+							ds.cron_time AS cronTime,
+							ds.*
+						FROM
+							(
+								SELECT
+									ds_id AS dsId
+								FROM
+									fbs_ds
+								WHERE
+									fbs_id = ${fbsId}
+							) fd
+						LEFT JOIN debris_session ds ON fd.dsId = ds.id
+					) t
+				ORDER BY
+					t.cron_time ASC
+			) t
+		WHERE
+			t.cron_time > (
+				SELECT
+					cron_time
+				FROM
+					debris_session
+				WHERE
+					id = ${dsId}
+			)
+		LIMIT 2
+	) t
+UNION
+	SELECT
+		end_time AS cronTime,
+		NULL AS id,
+		NULL AS cron_time
+	FROM
+		fast_buy_session
+	WHERE
+		id = ${fbsId}
+   
+   </select>
+  
+</mapper>
