@@ -12,6 +12,8 @@ public class Orders {
     private Long buyerId;
 
     private Integer state;
+    
+    private Integer src; // 订单来源   1-秒杀专场    
 
     private Integer receWay; // 收货方式  1-自提  2-地址
     
@@ -19,11 +21,16 @@ public class Orders {
     
     private Date generateTime;
     
-    
-    
-    
 
-    public Long getAddressId() {
+    public Integer getSrc() {
+		return src;
+	}
+
+	public void setSrc(Integer src) {
+		this.src = src;
+	}
+
+	public Long getAddressId() {
 		return addressId;
 	}
 

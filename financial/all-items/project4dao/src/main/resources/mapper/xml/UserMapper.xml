@@ -4,10 +4,11 @@
   <resultMap id="BaseResultMap" type="com.xa.entity.User" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, account, password
+    id, account, email,password
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -20,9 +21,11 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xa.entity.User" >
-    insert into user (id, account, password
+    insert into user (id, account,email, password
       )
-    values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
+    values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR},
+    #{email},
+     #{password,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.User" >
@@ -56,6 +59,11 @@
       <if test="account != null" >
         account = #{account,jdbcType=VARCHAR},
       </if>
+      
+      <if test="email != null">
+       email=#{email},
+      </if>
+      
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
       </if>
@@ -76,6 +84,13 @@
   
   <select id="selectUserByUserPass" resultType="com.xa.entity.User" parameterType="com.xa.entity.User">
     select * from user where account=#{account} and password=#{password}
+  </select>
+  
+  
+  <select id="findAll" resultType="com.xa.entity.User">
+     select 
+     
+     t.* from user t
   </select>
   
 </mapper>

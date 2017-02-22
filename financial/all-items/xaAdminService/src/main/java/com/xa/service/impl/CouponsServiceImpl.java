@@ -62,8 +62,8 @@ public class CouponsServiceImpl extends BaseServiceImpl<Coupons, CouponsMapper> 
 			 AllocType allocType= this.allocTypeMapper.selectByPrimaryKey(allocTypeId);
 			 String allocTypeName= allocType.getName();
 			 String name= coupon.getName();
-			 String lStart= DateFormatUtils.format(limitStart, "yyyy-MM-dd HH:mm:ss");
-			 String lEnd= DateFormatUtils.format(limitEnd, "yyyy-MM-dd HH:mm:ss");
+			 String lStart= DateFormatUtils.format(limitStart, Constants.COMMON_DATE_FORMAT);
+			 String lEnd= DateFormatUtils.format(limitEnd, Constants.COMMON_DATE_FORMAT);
 			 couponObj.accumulate("id", id)
 			 .accumulate("price", price)
 			 .accumulate("name", name)
@@ -100,8 +100,8 @@ public class CouponsServiceImpl extends BaseServiceImpl<Coupons, CouponsMapper> 
 		  
 		  Date limitStart= coupons.getLimitStart();
 		  Date limitEnd= coupons.getLimitEnd();
-		  String lStart= DateFormatUtils.format(limitStart, "yyyy-MM-dd HH:mm:ss");
-		  String lEnd= DateFormatUtils.format(limitEnd, "yyyy-MM-dd HH:mm:ss");
+		  String lStart= DateFormatUtils.format(limitStart, Constants.COMMON_DATE_FORMAT);
+		  String lEnd= DateFormatUtils.format(limitEnd, Constants.COMMON_DATE_FORMAT);
 		  modelAndView.addObject("lStart",lStart);
 		  modelAndView.addObject("lEnd",lEnd);
 	}

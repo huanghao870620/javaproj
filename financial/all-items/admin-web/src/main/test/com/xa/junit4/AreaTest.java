@@ -29,4 +29,29 @@ public class AreaTest {
 		String text=this.areaService.getAllArea("d", sign);
 		System.out.println(text);
 	}
+	
+	
+	@Test
+	public void testSort(){
+		
+		int [] array = new int []{88,56,22,10,25,500,47};
+		
+		int i,j,temp,length;
+		length = array.length;
+		for( j = 0; j < length; j ++){
+			for(i = 0;i < length - j - 1;i ++ ){
+				
+				if (array[i] > array[i + 1]) {  //
+					temp = array[i];
+					array[i] = array[i+1];
+					array[i+1] = temp;
+				}			
+			}
+			
+		}
+		for(int index = 0;index < length;index++){
+			System.out.println(array[index] + "-");
+		}
+	}
+	
 }

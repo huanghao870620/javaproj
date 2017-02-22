@@ -16,7 +16,9 @@ import com.xa.entity.ActivityFile;
 import com.xa.entity.Brand;
 import com.xa.entity.Classification;
 import com.xa.entity.Country;
+import com.xa.entity.FastBuySession;
 import com.xa.entity.File;
+import com.xa.enumeration.AOrFType;
 import com.xa.enumeration.ActivityType;
 import com.xa.mapper.ActivityAssociatedMapper;
 import com.xa.mapper.ActivityFileMapper;
@@ -24,6 +26,7 @@ import com.xa.mapper.ActivityMapper;
 import com.xa.mapper.BrandMapper;
 import com.xa.mapper.ClassificationMapper;
 import com.xa.mapper.CountryMapper;
+import com.xa.mapper.FastBuySessionMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.service.ActivityService;
 import com.xa.service.BrandService;
@@ -61,6 +64,12 @@ public class ActivityServiceImpl extends BaseServiceImpl<Activity, ActivityMappe
 	@Autowired
 	private ClassificationMapper classificationMapper;
 	
+	@Autowired
+	private FastBuySessionMapper fastBuySessionMapper;
+	
+	
+	
+	
 
 	/**
 	 * 获取活动轮播图
@@ -82,9 +91,32 @@ public class ActivityServiceImpl extends BaseServiceImpl<Activity, ActivityMappe
 			Long id= activity.getId();
 			File file= this.fileMapper.selectByPrimaryKey(imgAdvId);
 			activityObj.accumulate("id", id)
-			.accumulate("uriPath", file.getUriPath());
+			.accumulate("uriPath", file.getUriPath())
+			.accumulate("type", AOrFType.ACTIVTY.getValue())//活动
+			;
 			array.add(activityObj);
 		}
+		
+		
+		
+		List<FastBuySession> fbsList= this.fastBuySessionMapper.findAll();
+		for(int i=0;i<fbsList.size(); i++){
+			 JSONObject fbsObj = new JSONObject();
+			 FastBuySession fbs= fbsList.get(i);
+			 fbs.getStartTime();
+			 fbs.getEndTime();
+			 Long imgAdvId= fbs.getImgAdvId();
+			 File imgFile= this.fileMapper.selectByPrimaryKey(imgAdvId);
+			 Long id= fbs.getId();
+			 fbsObj.accumulate("id", id)
+			 .accumulate("uriPath", imgFile.getUriPath())
+			 .accumulate("type", AOrFType.SESSION.getValue())//专场
+			 ;
+			 array.add(fbsObj);
+		}
+		
+		
+		
 		object.accumulate(Constants.SUCCESS, true)
 		.accumulate(Constants.DATA, array);
 		return object.toString();

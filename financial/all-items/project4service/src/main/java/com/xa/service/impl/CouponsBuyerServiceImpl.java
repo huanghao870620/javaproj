@@ -67,8 +67,8 @@ public class CouponsBuyerServiceImpl extends BaseServiceImpl<CouponsBuyer, Coupo
 			float price= coupon.getPrice();
 			float sill= coupon.getSill();
 			Long cbId = cb.getId();
-			String lStartStr= DateFormatUtils.format(lStart, "yyyy-MM-dd HH:mm:ss");
-		    String lEndStr= DateFormatUtils.format(lEnd, "yyyy-MM-dd HH:mm:ss");
+			String lStartStr= DateFormatUtils.format(lStart, Constants.COMMON_DATE_FORMAT);
+		    String lEndStr= DateFormatUtils.format(lEnd, Constants.COMMON_DATE_FORMAT);
 //			
 			couponObj.accumulate("name", name)
 			.accumulate("lStartStr", lStartStr)

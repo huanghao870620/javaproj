@@ -45,7 +45,7 @@
 	<h2></h2>
 	<p></p>
 	<div style="margin:20px 0;"></div>
-	<table id="dg" title="商品列表" style="width:100%;height:auto"
+	<table id="dg" title="国家列表" style="width:100%;height:auto"
 			data-options="rownumbers:true,singleSelect:true,pagination:true,url:'getCountrysByPaging.htm',method:'get'">
 		<thead>
 			<tr>

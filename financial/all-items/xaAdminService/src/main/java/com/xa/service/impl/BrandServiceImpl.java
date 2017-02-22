@@ -112,39 +112,6 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, BrandMapper> implem
 	
 	
 	/**
-	 * 根据品牌id获取商品
-	 * @return
-	 */
-	public String getGoodsByBrandId(Long brandId, String sign){
-		JSONObject object = new JSONObject();
-		if(!sign.equals(Security.getSign(new String[]{
-		   "brandId"		
-		}))){
-			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
-		}
-
-		List<Goods> list= this.goodsMapper.getGoodsByBrandId(brandId);
-		JSONArray array = new JSONArray();
-		for(int i=0;i<list.size();i++){
-			Goods good= list.get(i);
-			JSONObject goodObj = new JSONObject();
-			float price= good.getPrice();
-			String name= good.getName();
-			Map<String, Object> mapPic = new HashMap<String,Object>();
-			mapPic.put("goodId", good.getId());
-			mapPic.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
-			
-			List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(mapPic);
-			com.xa.entity.File thumbFile=fileList.get(0);
-			String uriPath= thumbFile.getUriPath();
-			goodObj.accumulate("name", name).accumulate("price", price).accumulate("uriPath", uriPath);
-			array.add(goodObj);
-		}
-		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
-		return object.toString();
-	}
-	
-	/**
 	 * 删除品牌根据id
 	 */
 	public String delByBrandId(Long brandId,FileService<File> fileService){

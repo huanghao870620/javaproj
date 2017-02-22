@@ -17,4 +17,20 @@ public interface ClassificationService<T> extends BaseServiceInte<T> {
 	 * @return
 	 */
 	public String getChildByClassId(String sign,Long pid);
+	
+	
+	/**
+	 * 
+	 * @param pid
+	 * @return
+	 */
+	public String getChildIdByPid(Long pid);
+	
+	/**
+	 * 
+	 * @param sign
+	 * @param pid
+	 * @return
+	 */
+	public String getChildByNoteClassId(String sign,Long pid);
 }

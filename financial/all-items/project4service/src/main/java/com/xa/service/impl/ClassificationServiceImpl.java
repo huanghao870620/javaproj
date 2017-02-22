@@ -1,10 +1,12 @@
 package com.xa.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.ls.LSException;
 
 import com.xa.entity.Classification;
 import com.xa.entity.File;
@@ -111,4 +113,74 @@ public class ClassificationServiceImpl extends BaseServiceImpl<Classification, C
 		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
 		return object.toString();
 	}
+	
+	
+	
+	/**
+	 * 根据父分类id获取子分类
+	 * @return
+	 */
+	public String getChildByNoteClassId(String sign,Long pid){
+		JSONObject object = new JSONObject();
+		if(!sign.equals(Security.getSign(new String[]{
+				"pid"
+		}))){
+			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
+		}
+		
+		List<Classification> childs = this.m.findClassByPid(pid);
+		JSONArray array = new JSONArray();
+		array.add(new JSONObject().accumulate("name", "推荐"));
+		array.add(new JSONObject().accumulate("name", "关注"));
+		for(int i=0;i<childs.size();i++){
+			JSONObject childObj = new JSONObject();
+			Classification child= childs.get(i);
+			Long imgId= child.getImgId();
+			String name= child.getName();
+			File img= this.fileMapper.selectByPrimaryKey(imgId);
+			String uriPath = null;
+			if(img != null){
+				uriPath = img.getUriPath();
+			}
+			childObj.accumulate("name", name).accumulate("imgPath",uriPath==null ? "" : uriPath )
+			.accumulate("id", child.getId());
+			array.add(childObj);
+		}
+		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
+		return object.toString();
+	}
+	
+	
+	public String getChildIdByPid(Long pid){
+		StringBuilder sb = new StringBuilder(pid.toString());
+		List<Classification> list=new ArrayList<Classification>();
+		this.getChild(pid, list);
+		if(list.size()>0){
+			sb.append(",");
+		}
+		
+		for(int i=0;i<list.size();i++){
+			Classification cls=list.get(i);
+			sb.append(cls.getId());
+			if(i!=list.size()-1){
+				sb.append(",");
+			}
+		}
+		
+		return sb.toString();
+	}
+	
+	public void getChild(Long pid,List<Classification> clsList){
+		List<Classification> classifiList= this.m.findClassByPid(pid);
+		if(classifiList.size()>0){
+			for(int i=0;i<classifiList.size();i++){
+				Classification classification= classifiList.get(i);
+				clsList.add(classification);
+				this.getChild(classification.getId(), clsList);
+			}
+		}else{
+			
+		}
+	}
+	
 }

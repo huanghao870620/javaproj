@@ -8,8 +8,8 @@
 	<title>Basic Form - jQuery EasyUI Demo</title>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/res/css/themes/default/easyui.css">
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/res/css/themes/icon.css">
-	<script type="text/javascript" src="<%=request.getContextPath() %>/res/js/base.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath() %>/res/js/jquery.min.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/res/js/base.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath() %>/res/js/jquery.easyui.min.js"></script>
 	
 	<script type="text/javascript">

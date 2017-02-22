@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,7 +32,6 @@ import com.xa.mapper.MallMapper;
 import com.xa.mapper.ShoppingCartGoodsMapper;
 import com.xa.service.FileService;
 import com.xa.service.GoodsService;
-import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
@@ -340,49 +338,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		return object.toString();
 	}
 
-	/**
-	 * 获取商品根据class id
-	 * @return
-	 */
-	public String getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign){
-		JSONObject object = new JSONObject();
-		if(!sign.equals(Security.getSign(new String[]{
-			"classid","pageNum","pageSize"	
-		}))){
-			 return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
-		}
-		
-		PageHelper.startPage(pageNum, pageSize, true);
-		List<Goods> goodsList = this.m.getGoodsByClassId(classid);
-		JSONArray array = new JSONArray();
-		for(int i=0;i<goodsList.size();i++){
-			JSONObject goodObj = new JSONObject();
-			Goods good = goodsList.get(i);
-			String name = good.getName();
-			String info = good.getInfo();
-			float price = good.getPrice();
-			Map<String, Object> map = new HashMap<String,Object>();
-			map.put("goodId", good.getId());
-			map.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
-			
-		    JSONArray fileArray = new JSONArray();
-			List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(map );
-			for(int j=0;j<fileList.size();j++){
-				JSONObject fileObj = new JSONObject();
-				com.xa.entity.File file= fileList.get(j);
-				String uriPath= file.getUriPath();
-				fileObj.accumulate("uriPath", uriPath);
-				fileArray.add(fileObj);
-			}
-			goodObj.accumulate("name", name).accumulate("fileList",fileArray)
-			.accumulate("price", price)
-			.accumulate("id", good.getId());
-			array.add(goodObj);
-		}
-		
-		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
-		return object.toString();
-	}
+	
 	
 	/**
 	 * 获取商品详情
@@ -564,6 +520,51 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 		map.put("brandId", brandId);
 		map.put("countryId", countryId);
 		Page<Goods> goodPage = (Page<Goods>) this.m.searchGoods(map );
+		List<Goods> goodList= goodPage.getResult();
+		long total = goodPage.getTotal();
+		JSONArray array = new JSONArray();
+		for(int i=0;i<goodList.size();i++){	
+			JSONObject goodObj = new JSONObject();
+			Goods good= goodList.get(i);
+			if(null != good){
+				Float price= good.getPrice();
+				String name= good.getName();
+				String info= good.getInfo();
+				Integer shelves= good.getShelves();
+				String shelvesStr = null;
+				if(shelves==1){
+					shelvesStr="是";
+				}else if(shelves==0){
+					shelvesStr="否";
+				}
+				goodObj.accumulate("price", price)
+				.accumulate("id", good.getId())
+				.accumulate("name", name)
+				.accumulate("info", info)
+				.accumulate("shelves", shelvesStr)
+				;
+				array.add(goodObj);
+			}
+		}
+		object.accumulate(Constants.TOTAL, total).accumulate(Constants.ROWS, array);
+		return object.toString();
+	}
+	
+	
+	/**
+	 * 
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	public String getGoodsByDeSession(Integer page,Integer rows, String nameS, Long brandId, Long countryId) {
+		JSONObject object = new JSONObject();
+		PageHelper.startPage(page, rows);
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("nameS", nameS);
+		map.put("brandId", brandId);
+		map.put("countryId", countryId);
+		Page<Goods> goodPage = (Page<Goods>) this.m.getGoodsByDeSession(map);
 		List<Goods> goodList= goodPage.getResult();
 		long total = goodPage.getTotal();
 		JSONArray array = new JSONArray();

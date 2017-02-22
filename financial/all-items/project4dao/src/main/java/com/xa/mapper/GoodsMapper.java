@@ -14,7 +14,7 @@ public interface GoodsMapper extends BaseMapper<Goods>{
 	 * @param classid
 	 * @return
 	 */
-	List<Goods> getGoodsByClassId(Long classid);
+	List<Goods> getGoodsByClassId(Map<String, Object> map);
 	
 	
 	/**
@@ -22,14 +22,14 @@ public interface GoodsMapper extends BaseMapper<Goods>{
 	 * @param brandId
 	 * @return
 	 */
-	List<Goods> getGoodsByBrandId(Long brandId);
+	List<Goods> getGoodsByBrandId(Map<String, Object> map);
 	
 	/**
 	 * 根据国家获取商品
 	 * @param countryId
 	 * @return
 	 */
-	List<Goods> getGoodsByCountryId(Long countryId);
+	List<Goods> getGoodsByCountryId(Map<String, Object> map);
 	
 	/**
 	 * 搜索商品
@@ -37,4 +37,11 @@ public interface GoodsMapper extends BaseMapper<Goods>{
 	 * @return
 	 */
 	List<Goods> searchGoods(Map<String, Object> map);
+	
+	/**
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<Goods> getGoodsByDeSession(Map<String, Object> map);
 }

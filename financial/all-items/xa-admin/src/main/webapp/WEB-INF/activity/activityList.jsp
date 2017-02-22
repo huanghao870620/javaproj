@@ -16,14 +16,13 @@
 	$(function(){
 		var pager = $('#dg').datagrid({
 			onDblClickRow: function(rowIndex,rowData){
-				 window.location.href = "<%=request.getContextPath()%>/brand/toEditBrand.htm?brandId=" + rowData.id;
-				//iframesrc($('#content_iframe'),'<%=request.getContextPath()%>/goods/toEditGood.htm?id=' + rowData.id);
+				 window.location.href = "<%=request.getContextPath()%>/activity/toEditActivity.htm?id=" + rowData.id;
 			},
 			 toolbar:[
 			         
             {text:'删除', iconCls:'icon-remove', handler:function(){
            	 var row = $('#dg').datagrid('getSelected');
-           	  $.post("<%=request.getContextPath()%>/brand/delByBrandId.htm",{brandId:row.id},function(data){
+           	  $.post("<%=request.getContextPath()%>/activity/deleteActivity.htm",{id:row.id},function(data){
            		    if(data.success){
            		    	$('#dg').datagrid('reload');
            		    }

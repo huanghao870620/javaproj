@@ -17,8 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.xa.convert.DatePropertyEditor;
+import com.xa.entity.Classification;
 import com.xa.entity.File;
 import com.xa.entity.Goods;
+import com.xa.service.ClassificationService;
 import com.xa.service.FileService;
 import com.xa.service.GoodsService;
 
@@ -31,6 +33,9 @@ public class GoodsController extends BaseController {
 	
 	@Autowired
 	private FileService<File> fileService;
+	
+	@Autowired
+	private ClassificationService<Classification> classificationService;
 	
 	/**
 	 * @return
@@ -101,9 +106,9 @@ public class GoodsController extends BaseController {
 	     * @param sign
 	     */
 	    @RequestMapping("getGoodsByClassifi")
-	    public void getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign){
+	    public void getGoodsByClassifi(Long classid,String nameS,Long buyerId,Integer pageNum, Integer pageSize, String sign){
 	    	try {
-				this.sendAjaxMsg(this.goodsService.getGoodsByClassifi(classid,pageNum,pageSize, sign));
+				this.sendAjaxMsg(this.goodsService.getGoodsByClassifi(classid,nameS,buyerId,pageNum,pageSize, sign,classificationService));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

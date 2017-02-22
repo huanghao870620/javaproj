@@ -36,9 +36,10 @@
   </resultMap>
  <sql id="Base_Column_List" >
     id, name, info, capacity, lowest_price, upload_type_id, norms_id, is_recommended, 
-    price, adv_pic, price_currency_id, highest_price, brand_id, shelf_life, color, purchasing_position, 
+    price, adv_pic, price_currency_id, highest_price, brand_id as brandId, shelf_life, color, purchasing_position, 
     date_of_production, bar_code, speed_awb, goods_according_to_positive, left_photo, 
-    right_photo, goods_invoice, express_single, classid, country_id, limit_count,inventory,state,shelves, add_time
+    right_photo, goods_invoice, express_single, classid, country_id, limit_count,
+    inventory,state,shelves, add_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -269,19 +270,38 @@
   </select>
   
   <!-- 获取商品根据分类id -->
-  <select id="getGoodsByClassId" resultType="com.xa.entity.Goods" parameterType="long">
+  <select id="getGoodsByClassId" resultType="com.xa.entity.Goods" parameterType="java.util.Map">
   select * from (
-   select * from ( SELECT * from goods WHERE classid in (select id from classification where pid=#{pid} union select #{pid}) ) t order by t.date_of_production desc
-   ) t where t.shelves=1
+   select * from ( SELECT * from goods WHERE 1=1 
+   <if test="pid != null">
+   and classid in (${classids}) 
+    </if>
+   ) t order by t.date_of_production desc
+   ) t where t.shelves=1 
+    <if test="nameS != null">
+   		and t.name like '%${nameS}%'
+     </if>
   </select>
   
   <!-- 获取 -->
-  <select id="getGoodsByBrandId" resultType="com.xa.entity.Goods" parameterType="long">
-    select * from goods where brand_id=#{brandId}
+  <select id="getGoodsByBrandId" resultType="com.xa.entity.Goods" parameterType="java.util.Map">
+   select * from (
+    select * from goods where brand_id=${brandId}
+    ) t where t.shelves=1
+    <if test="nameS != null">
+   		and t.name like '%${nameS}%'
+     </if>
   </select>
   
-  <select id="getGoodsByCountryId" resultType="com.xa.entity.Goods" parameterType="long">
-    select * from (select g.* from goods g where country_id=#{countryId} ) t order by t.price desc
+  
+  
+  <select id="getGoodsByCountryId" resultType="com.xa.entity.Goods" parameterType="java.util.Map">
+    select * from (
+     select g.* from goods g where country_id=${countryId} and g.shelves=1 
+        <if test="nameS != null">
+   		and g.name like '%${nameS}%'
+     </if> 
+     ) t order by t.price desc
   </select>
   
   <select id="findAll" resultType="com.xa.entity.Goods" >
@@ -291,16 +311,73 @@
   
   <!-- 搜索商品 -->
   <select id="searchGoods" resultType="com.xa.entity.Goods" parameterType="java.util.Map">
-    <!-- 
-      select 
-      g.* from goods g order by g.shelves
-     -->
       select * from (
      select * from goods where 1=1
         <if test="nameS != null">
-          and name like '%#{nameS}%'
+          and name like '%${nameS}%'
         </if>
+        
+        <if test="brandId != null">
+         and brand_id=${brandId}
+        </if>
+        
+        <if test="countryId != null">
+          and country_id=${countryId}
+        </if>
+        
          ) t order by t.shelves
+  </select>
+  
+  <!--  -->
+  <select id="getGoodsByDeSession" resultType="com.xa.entity.Goods" parameterType="java.util.Map">
+  
+SELECT
+	*
+FROM
+	(
+		SELECT
+			g.*
+		FROM
+			(
+				SELECT
+					t.id
+				FROM
+					(
+						SELECT
+							g.id,
+							t.goodId
+						FROM
+							goods g
+						LEFT JOIN (
+							SELECT
+								t.goodId
+							FROM
+								(
+									SELECT
+										dg.good_id AS goodId
+									FROM
+										(
+											SELECT
+												ds_id
+											FROM
+												fbs_ds											
+										) fd
+									LEFT JOIN ds_good dg ON fd.ds_id = dg.ds_id
+								) t
+							GROUP BY
+								t.goodId
+						) t ON g.id = t.goodId
+					) t
+				WHERE
+					t.goodId IS NULL
+			) t
+		LEFT JOIN goods g ON t.id = g.id
+	) t
+WHERE
+	t.shelves=1
+	<if test="nameS != null">
+          and t.name like '%${nameS}%'
+        </if>
   </select>
   
 </mapper>

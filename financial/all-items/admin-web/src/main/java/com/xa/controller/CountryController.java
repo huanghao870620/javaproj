@@ -37,9 +37,9 @@ public class CountryController extends BaseController {
 	 * @param sign
 	 */
 	@RequestMapping("getGoodsByCountry")
-	public void getGoodsByCountry(Long countryId,  Integer pageNum,Integer pageSize,String sign){
+	public void getGoodsByCountry(Long countryId, String nameS,Long buyerId, Integer pageNum,Integer pageSize,String sign){
 		try {
-			this.sendAjaxMsg(this.countryService.getGoodsByCountry(countryId,pageNum,pageSize, sign));
+			this.sendAjaxMsg(this.countryService.getGoodsByCountry(countryId,nameS,buyerId,pageNum,pageSize, sign));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

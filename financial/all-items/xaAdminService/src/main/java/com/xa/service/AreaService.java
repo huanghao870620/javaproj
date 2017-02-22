@@ -33,4 +33,11 @@ public interface AreaService<T> extends BaseServiceInte<T> {
 	 * @return
 	 */
 	public String delAreaById(Long id);
+	
+	/**
+	 * 获取完整地址通过区域id
+	 * @param areaId
+	 * @return
+	 */
+	public String getFullAddress(Long areaId);
 }

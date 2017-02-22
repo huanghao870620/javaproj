@@ -2,31 +2,30 @@ package com.xa.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.ListModel;
-
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageHelper;
-import com.meterware.httpunit.javascript.JavaScript.Image;
 import com.xa.compare.CompareCountry;
+import com.xa.dto.HotSearchDto;
 import com.xa.entity.Country;
 import com.xa.entity.File;
 import com.xa.entity.Goods;
+import com.xa.entity.GoodsSearchRecord;
 import com.xa.enumeration.PhotoType;
 import com.xa.mapper.CountryMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodsMapper;
+import com.xa.mapper.GoodsSearchRecordMapper;
 import com.xa.service.CountryService;
-import com.xa.service.GoodsOrderReleaseService;
-import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.GetPinyin;
 import com.xa.util.Msg;
@@ -45,6 +44,9 @@ public class CountryServiceImpl extends BaseServiceImpl<Country, CountryMapper> 
 	
 	@Autowired
 	private GoodsMapper goodsMapper;
+	
+	@Autowired
+	private GoodsSearchRecordMapper goodsSearchRecordMapper;
 
 	/**
 	 * 获取所有国家
@@ -165,16 +167,31 @@ public class CountryServiceImpl extends BaseServiceImpl<Country, CountryMapper> 
 	 * @param sign
 	 * @return
 	 */
-	public String getGoodsByCountry(Long countryId,Integer pageNum,Integer pageSize, String sign){
+	public String getGoodsByCountry(Long countryId,String nameS,Long buyerId,Integer pageNum,Integer pageSize, String sign){
 		JSONObject object = new JSONObject();
 		if(!sign.equals(Security.getSign(new String[]{
-			"countryId","pageNum","pageSize"
+			"countryId","pageNum","pageSize","nameS","buyerId"
 		}))){
 			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
+		
+		
+		if(!StringUtils.isBlank(nameS)){
+			GoodsSearchRecord record = new GoodsSearchRecord();
+			record.setAddTime(new Date());
+			record.setName(nameS);
+			record.setBuyerId(buyerId);
+			goodsSearchRecordMapper.insert(record );
+		}
+		
 
 		PageHelper.startPage(pageNum, pageSize, true);
-		List<Goods> goodList= this.goodsMapper.getGoodsByCountryId(countryId);
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("countryId", countryId);
+		if(!StringUtils.isBlank(nameS)){
+			map.put("nameS", nameS);
+		}
+		List<Goods> goodList= this.goodsMapper.getGoodsByCountryId(map );
 		JSONArray array = new JSONArray();
 		for(int i=0; i<goodList.size(); i++){
 			 Goods good = goodList.get(i);
@@ -199,7 +216,34 @@ public class CountryServiceImpl extends BaseServiceImpl<Country, CountryMapper> 
 			 array.add(countryObj);
 		}
 		
-		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
+		
+
+		List<GoodsSearchRecord> gsrList= this.goodsSearchRecordMapper.getGSRByBuyerId(buyerId);
+		JSONArray gsrArray = new JSONArray();
+		for(int i=0; i<gsrList.size(); i++){
+				GoodsSearchRecord gsr= gsrList.get(i);
+				JSONObject gsrObj = new JSONObject();
+				gsr.getAddTime();
+				String historySearchRecord= gsr.getName();
+				gsrObj.accumulate("historySearchRecord", historySearchRecord);
+				gsrArray.add(gsrObj);
+		}
+		
+		List<HotSearchDto> hsdList= this.goodsSearchRecordMapper.getHotSearch();
+		JSONArray hsdArray = new JSONArray();
+		for(int i=0;i<hsdList.size();i++){
+			JSONObject hsdObj = new JSONObject();
+			HotSearchDto hotSearchDto= hsdList.get(i);
+			String name= hotSearchDto.getName();
+			hotSearchDto.getTotal();
+			hsdObj.accumulate("name", name);
+			hsdArray.add(hsdObj);
+		}
+		
+		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array)
+		.accumulate("gsrArray", gsrArray)
+		.accumulate("hsdArray", hsdArray)
+		;
 	    return object.toString();	
 	}
 	

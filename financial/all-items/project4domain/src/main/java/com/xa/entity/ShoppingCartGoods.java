@@ -11,6 +11,7 @@ public class ShoppingCartGoods {
     
     private int state;
     
+    
 
     public int getState() {
 		return state;

@@ -18,5 +18,5 @@ public interface BrandService<T> extends BaseServiceInte<T> {
 	 * @param sign
 	 * @return
 	 */
-	public String getGoodsByBrandId(Long brandId,Integer pageNum,Integer pageSize, String sign);
+	public String getGoodsByBrandId(Long brandId,String nameS,Long buyerId,Integer pageNum,Integer pageSize, String sign);
 }

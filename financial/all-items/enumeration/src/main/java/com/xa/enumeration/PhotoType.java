@@ -29,7 +29,9 @@ public enum PhotoType {
 	BUYER_HEAD_PORTIAL(22L), /*买家头像*/
 	ACTIVITY_BY_FIGURE(23L), /*活动轮播图*/
 	ACTIVITY_DETAIL_FIGURE(24L),  /*活动详情图*/
-	GOOD_BY_FIGURE(25L)  /*商品轮播图*/
+	GOOD_BY_FIGURE(25L),  /*商品轮播图*/
+	FAST_BUY_SESSION_FIGURE(26L), /*秒杀专场轮播图*/
+	NOTE_IMG(27L) /*晒物笔记图片*/
 	;
 	private Long value;
 

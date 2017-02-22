@@ -4,10 +4,21 @@ public class User {
     private Long id;
 
     private String account;
+    
+    private String email;
 
     private String password;
+    
 
-    public Long getId() {
+    public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Long getId() {
         return id;
     }
 

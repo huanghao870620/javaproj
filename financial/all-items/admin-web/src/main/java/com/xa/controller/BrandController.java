@@ -36,9 +36,9 @@ public class BrandController extends BaseController {
 	 * @param sign
 	 */
 	@RequestMapping("getGoodsByBrandId")
-	public void getGoodsByBrandId(Long brandId, Integer pageNum,Integer pageSize,String sign){
+	public void getGoodsByBrandId(Long brandId,String nameS,Long buyerId, Integer pageNum,Integer pageSize,String sign){
 		 try {
-			this.sendAjaxMsg(this.brandService.getGoodsByBrandId(brandId,pageNum,pageSize, sign));
+			this.sendAjaxMsg(this.brandService.getGoodsByBrandId(brandId,nameS,buyerId,pageNum,pageSize, sign));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

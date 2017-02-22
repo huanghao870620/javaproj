@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xa.entity.Classification;
 import com.xa.entity.File;
 import com.xa.entity.Goods;
 import com.xa.service.BaseServiceInte;
@@ -65,7 +66,7 @@ public interface GoodsService<T> extends BaseServiceInte<T> {
 	 * @param sign
 	 * @return
 	 */
-	public String getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign);
+	public String getGoodsByClassifi(Long classid,String nameS,Long buyerId,Integer pageNum, Integer pageSize, String sign,ClassificationService<Classification> classificationService);
 	
 	/**
 	 * 获取商品详情

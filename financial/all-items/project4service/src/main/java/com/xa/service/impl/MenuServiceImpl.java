@@ -25,21 +25,7 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, MenuMapper> implement
 	@Autowired
 	private MenuMapper menuMapper;
 
-	/**
-	 * 获取菜单
-	 */
-	@Override
-	public String getMenuForStr() {
-		JSONArray array = new JSONArray();
-		List<Menu> topMenus = this.menuMapper.selectTopMenu();
-		for (int i = 0; i < topMenus.size(); i++) {
-			Menu menu = topMenus.get(i);
-			JSONObject obj = new JSONObject();
-			this.getChild(menu, obj);
-			array.add(obj);
-		}
-		return array.toString();
-	}
+
 
 	/**
 	 * 获取孩子

@@ -7,6 +7,7 @@
     <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
     <result column="buyer_id" property="buyerId" jdbcType="BIGINT" />
     <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="src" property="src" jdbcType="INTEGER" />
     <result column="rece_way" property="receWay" jdbcType="INTEGER"/>
     <result column="address_id" property="addressId" jdbcType="BIGINT" />
     <result column="generate_time" property="generateTime" jdbcType="TIMESTAMP" />
@@ -17,6 +18,7 @@
     order_no, 
     buyer_id, 
     state, 
+    src,
     rece_way,
     address_id,
     generate_time
@@ -30,6 +32,7 @@
     insert into orders (id, sum_price, order_no, 
       buyer_id,
        state,
+       src,
         rece_way,
         address_id,
         generate_time
@@ -37,6 +40,7 @@
     values (#{id,jdbcType=BIGINT}, #{sumPrice,jdbcType=REAL}, #{orderNo,jdbcType=VARCHAR}, 
       #{buyerId,jdbcType=BIGINT},
        #{state,jdbcType=INTEGER},
+       #{src},
        #{receWay}, 
        #{addressId},
        #{generateTime,jdbcType=TIMESTAMP}
@@ -79,6 +83,10 @@
         state = #{state,jdbcType=INTEGER},
       </if>
       
+      <if test="src != null">
+        src=#{src},
+      </if>
+      
       <if test="receWay != null">
          rece_way = #{receWay},
       </if>
@@ -111,6 +119,7 @@
   </select>
   
   <select id="getOrdersByState" resultType="com.xa.entity.Orders" parameterType="java.util.Map">
+  select t.* from (
    SELECT 
    t.sum_price as sumPrice,
    t.order_no as orderNo,
@@ -119,6 +128,7 @@
    t.rece_way as receWay,
    t.address_id as addressId,
    t.* from orders t where buyer_id=#{buyerId} and  state=#{state}
+   ) t order by t.generateTime desc
   </select>
   
   <select id="findOrderByOrderNo" parameterType="java.lang.String" resultType="com.xa.entity.Orders">
@@ -182,6 +192,161 @@ WHERE
 	t.good_id = #{goodId}
  ) t 
   
+  </select>
+  
+  <select id="findAll" resultType="com.xa.entity.Orders">
+    select 
+    t.sum_price as sumPrice,
+    t.order_no as orderNo,
+    t.buyer_id as buyerId,
+    t.rece_way as receWay,
+    t.address_id as addressId,
+    t.generate_time as generateTime,
+    t.* from orders t
+  </select>
+  
+  <!-- 搜索订单 -->
+  <select id="searchOrder" resultType="com.xa.dto.OrderDto" parameterType="java.util.Map">
+   select * from (
+  select o.*,
+  b.mobile from (
+   select 
+    round(t.sum_price,2) as sumPrice,
+    t.order_no as orderNo,
+    t.buyer_id as buyerId,
+    t.id as orderId,
+    t.rece_way as receWay,
+    t.address_id as addressId,
+    t.generate_time as generateTime,
+    t.* from orders t where 1=1 
+    
+    <if test="stateS != null">
+        and state = ${stateS}
+    </if>
+    
+    <if test="receWayS != null">
+       and rece_way = ${receWayS}
+    </if>
+    
+    <if test="startTime != null">
+        and generate_time &gt; '${startTime}'
+    </if>
+    
+    <if test="endTime != null">
+        and generate_time &lt; '${endTime}'
+    </if>
+    
+    ) o left join buyers b on o.buyerId=b.id where 1=1
+    
+     <if test="nameS != null" >
+    	and (o.order_no like '%${nameS}%' or b.mobile like '%${nameS}%' )
+    </if>
+    ) t  order by t.generateTime desc
+  </select>
+  
+  <select id="getOrderDtoByOrderId" resultType="com.xa.dto.OrderDto" parameterType="long">
+  select o.*,
+  b.mobile from (
+   select 
+    t.sum_price as sumPrice,
+    t.order_no as orderNo,
+    t.buyer_id as buyerId,
+    t.id as orderId,
+    t.rece_way as receWay,
+    t.address_id as addressId,
+    t.generate_time as generateTime,
+    t.* from orders t where t.id=#{orderId} 
+    ) o left join buyers b on o.buyerId=b.id 
+     
+  </select>
+  
+  <!-- 获取订单中可以使用优惠券的商品 -->
+  <select id="getCanUseCouponsGood" parameterType="java.util.Map" resultType="java.lang.Long">
+
+SELECT
+	*
+FROM
+	(
+		SELECT
+			<!-- 
+			t.id,-->
+			t2.goodId 
+		FROM
+			(
+				SELECT
+					t.id
+				FROM
+					(
+					<if test="brandId != null">
+						SELECT
+							*
+						FROM
+							goods
+						WHERE
+							brand_id = ${brandId}
+					</if>
+					<if test="brandId != null &amp;&amp; classId != null">
+						UNION
+					</if>
+					<if test="classId != null">
+							SELECT
+								*
+							FROM
+								goods
+							WHERE
+								classid = ${classId}
+					</if>
+					<if test="classId != null &amp;&amp; countryId != null">
+							UNION
+					</if>
+					<if test="countryId !=null">
+								SELECT
+									*
+								FROM
+									goods
+								WHERE
+									country_id = ${countryId}
+					</if>
+					) t
+				GROUP BY
+					t.id
+			) t
+		LEFT JOIN (
+			SELECT
+				t.*
+			FROM
+				(
+					SELECT
+						og.*
+					FROM
+						(
+							SELECT
+								good_id AS goodId
+							FROM
+								order_good
+							WHERE
+								order_id = ${orderId}
+						) og
+					LEFT JOIN goods g ON og.goodId = g.id
+				) t
+			UNION
+				SELECT
+					scg.goods_id AS goodId
+				FROM
+					(
+						SELECT
+							scg_id AS scgId
+						FROM
+							scg_order_release
+						WHERE
+							order_id = ${orderId}
+					) sor
+				LEFT JOIN shopping_cart_goods scg ON sor.scgId = scg.id
+		) t2 ON t.id = t2.goodId
+	) t
+WHERE
+	t.goodId IS NOT NULL
+
   </select>
   
 </mapper>

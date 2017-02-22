@@ -11,7 +11,7 @@ public interface ShoppingCartGoodsService<T> extends BaseServiceInte<T> {
 	 * @param sign
 	 * @return
 	 */
-	public String addGoodsToCart(ShoppingCartGoods scg, String sign);
+	public String addGoodsToCart(ShoppingCartGoods scg,Long dgId, String sign);
 	
 	/**
 	 * 
@@ -19,7 +19,7 @@ public interface ShoppingCartGoodsService<T> extends BaseServiceInte<T> {
 	 * @param sign
 	 * @return
 	 */
-	public String getAllCartGoods(Long cartId, String sign);
+	public String getAllCartGoods(Long cartId,Integer pageNum,Integer pageSize, String sign);
 	
 	/**
 	 * 删除购物车中的商品

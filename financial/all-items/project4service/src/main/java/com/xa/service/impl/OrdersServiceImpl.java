@@ -12,11 +12,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.Timer;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.net.nntp.NewGroupsOrNewsQuery;
+import org.apache.commons.lang.time.DateUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -31,7 +32,10 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xa.entity.Coupons;
 import com.xa.entity.CouponsBuyer;
+import com.xa.entity.DebrisSession;
 import com.xa.entity.DeliveryAddress;
+import com.xa.entity.DsGood;
+import com.xa.entity.FastBuySession;
 import com.xa.entity.File;
 import com.xa.entity.Goods;
 import com.xa.entity.OrderGood;
@@ -41,10 +45,16 @@ import com.xa.entity.ShoppingCartGoods;
 import com.xa.enumeration.CouponsState;
 import com.xa.enumeration.OrdersState;
 import com.xa.enumeration.PhotoType;
+import com.xa.enumeration.ReceWay;
 import com.xa.enumeration.ScgState;
+import com.xa.enumeration.SrcState;
 import com.xa.mapper.CouponsBuyerMapper;
 import com.xa.mapper.CouponsMapper;
+import com.xa.mapper.DebrisSessionMapper;
 import com.xa.mapper.DeliveryAddressMapper;
+import com.xa.mapper.DsGoodMapper;
+import com.xa.mapper.FastBuySessionMapper;
+import com.xa.mapper.FbsDsMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodsMapper;
 import com.xa.mapper.OrderGoodMapper;
@@ -52,7 +62,7 @@ import com.xa.mapper.OrdersMapper;
 import com.xa.mapper.ScgOrderReleaseMapper;
 import com.xa.mapper.ShoppingCartGoodsMapper;
 import com.xa.service.OrdersService;
-import com.xa.service.impl.BaseServiceImpl;
+import com.xa.timer.SecondBuyTimerTask;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.PayCommonUtil;
@@ -93,6 +103,19 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 	
 	@Autowired
 	private CouponsBuyerMapper couponsBuyerMapper;
+	
+	@Autowired
+	private DsGoodMapper dsGoodMapper;
+	
+	@Autowired
+	private FbsDsMapper fbsDsMapper;
+	
+	@Autowired
+	private FastBuySessionMapper fastBuySessionMapper;
+	
+	@Autowired
+	private DebrisSessionMapper debrisSessionMapper;
+	
 
 	/**
 	 * 获取订单
@@ -164,7 +187,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		order.setSumPrice(sum);
 		order.setGenerateTime(new Date());
 		order.setBuyerId(buyerId);
-		
+		order.setReceWay(ReceWay.SINCE_THE_LIFT.getValue()); //自提
 		this.m.insert(order);
 		
 		StringBuilder sb = new StringBuilder();
@@ -213,8 +236,38 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		 
 		 Coupons coupon= this.couponsMapper.selectByPrimaryKey(cBuyer.getCouponsId());
 		 float price= coupon.getPrice();
-		 if(order.getSumPrice()<coupon.getSill()){
+//		 if(order.getSumPrice()<coupon.getSill()){
+//			  return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "此订单未达到使用门槛，无法使用!").toString();
+//		 }
+		 
+		 Long brandId= coupon.getBrandId();
+		 Long countryId= coupon.getCountryId();
+		 Long classId= coupon.getClassId();
+		 
+		 Map<String, Object> map = new HashMap<String,Object>();
+		 map.put("brandId", brandId);
+		 map.put("classId", classId);
+		 map.put("countryId", countryId);
+		 map.put("orderId", orderId);
+		 List<Long> goodIds= this.m.getCanUseCouponsGood(map );
+		 Float couponsSumPrice=0f;
+		 if(!goodIds.isEmpty()){
+			  for(int i=0;i<goodIds.size();i++){
+				  Goods good= this.goodsMapper.selectByPrimaryKey(goodIds.get(i));
+				  couponsSumPrice+=good.getPrice();
+			  }
+		 }
+		 if(couponsSumPrice<coupon.getSill()){
 			  return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "此订单未达到使用门槛，无法使用!").toString();
+		 }
+		 
+		 Date currentDate = new Date();
+		 if(currentDate.after(coupon.getLimitEnd())){
+			 return object.accumulate(Constants.SUCCESS,false).accumulate(Constants.MSG,"此优惠券已经过期!").toString();
+		 }
+		 
+		 if(currentDate.before(coupon.getLimitStart())){
+			 return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "此优惠券还未到达使用时间!").toString();
 		 }
 		 
 		 order.setSumPrice(order.getSumPrice()-price);
@@ -268,8 +321,9 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		order.setSumPrice(good.getPrice());
 		order.setGenerateTime(new Date());
 		order.setBuyerId(buyerId);
-		
+		order.setReceWay(ReceWay.SINCE_THE_LIFT.getValue()); //自提
 		this.m.insert(order);
+		
 		
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -283,6 +337,121 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		orderGood.setGoodId(goodId);
 		orderGood.setOrderId(id);
 		this.orderGoodMapper.insert(orderGood );
+		
+		
+		
+		
+		object.accumulate(Constants.SUCCESS, true)
+		.accumulate("id", order.getId())
+		.accumulate("orderNo", order.getOrderNo())
+		.accumulate("couponsCount", cbPage.getTotal())
+		;
+		return object.toString();
+	}
+	
+	
+	
+	/**
+	 * 立即购买 生成订单 (秒杀专场)
+	 * @param goodId
+	 * @param buyerId
+	 * @param sign
+	 * @return
+	 */
+	public String addOrder(Long goodId,Long buyerId, Integer src, Long dgId, String sign){
+		JSONObject object = new JSONObject();
+		if(!sign.equals(Security.getSign(new String[]{
+				"goodId","buyerId","src","dgId"
+		}))){
+			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
+		}
+		
+		
+		Map<String, Object> couMap = new HashMap<String,Object>();
+		couMap.put("buyerId", buyerId);
+		couMap.put("state", CouponsState.NOT_USE.getValue());
+		
+		PageHelper.startPage(1, 10000,true);
+		Page<CouponsBuyer> cbPage=(Page<CouponsBuyer>) this.couponsBuyerMapper.findCouponsByState(couMap);
+		this.logger.debug("buyerId : " + buyerId + " , 优惠券总数 : " + cbPage.getTotal());
+		
+		
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("buyerId", buyerId);
+		map.put("goodId", goodId);
+		Long count= this.m.getOrderCountByGoodId(map );
+		Goods good= this.goodsMapper.selectByPrimaryKey(goodId);
+		if(count >= good.getLimitCount()){
+			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, "您已经超过了限购次数!").toString();
+		}
+		
+		Orders order = new Orders();
+		order.setState(OrdersState.FOR_PAYMENT.getValue());
+		Float goodPrice = good.getPrice();
+		
+		Long fbsId= this.fbsDsMapper.getFBSIDByGoodId(goodId);
+//		List<DsGood> dgList= this.dsGoodMapper.getDsGoodByGoodId(goodId);
+		DsGood dGood = null;
+//		if(null != dgList && dgList.size() > 0){
+//			dGood= dgList.get(0);
+			Map<String, Object> dsMap = new HashMap<String,Object>();
+			dsMap.put("fbsId", fbsId);
+			
+			
+			dGood=this.dsGoodMapper.selectByPrimaryKey(dgId);
+			dsMap.put("dsId", dGood.getDsId());
+			List<DebrisSession> dsList= debrisSessionMapper.getDsByFbsIdAndDsId(dsMap);
+			if(null != dsList&&dsList.size() > 0){
+//			   Date startDate = dsList.get(0).getCronTime();
+				DebrisSession ds= debrisSessionMapper.selectByPrimaryKey(dGood.getDsId());
+			   Date startDate = ds.getCronTime();
+			   Date endDate = dsList.get(0).getCronTime();
+			   Date now =new Date();
+			   
+			   
+			   if(null != startDate && null != endDate){
+				   if(now.after(startDate) && now.before(endDate)){
+					   if(null != fbsId){
+						   FastBuySession fastBuySession= this.fastBuySessionMapper.selectByPrimaryKey(fbsId);
+						   Float discount= fastBuySession.getDiscount();
+						   goodPrice=goodPrice*discount;
+					   }
+				   }
+			   }
+			}
+//		}
+		
+		
+		order.setSumPrice(goodPrice);
+		order.setGenerateTime(new Date());
+		order.setBuyerId(buyerId);
+		order.setReceWay(ReceWay.SINCE_THE_LIFT.getValue()); //自提
+		order.setSrc(src);
+		this.m.insert(order);
+		
+		
+		StringBuilder sb = new StringBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String timeStr= sdf.format(new Date());
+		Long id=  order.getId();
+		sb.append(timeStr).append(this.getOrderId(id));
+		order.setOrderNo(sb.toString());
+		this.m.updateByPrimaryKeySelective(order);
+		
+		OrderGood orderGood = new OrderGood();
+		orderGood.setGoodId(goodId);
+		orderGood.setOrderId(id);
+		this.orderGoodMapper.insert(orderGood );
+		
+		Date callBackDate= DateUtils.addMinutes(new Date(), 10); // 10分钟后查看状态
+		
+		/**
+		 * 如果订单来自秒杀专场
+		 */
+		if(src.intValue() == SrcState.SECOND_SESSION.getValue().intValue()){
+			 new Timer().schedule(new SecondBuyTimerTask(this.m,id,this.dsGoodMapper,dgId), callBackDate);
+		}
+		
 		
 		object.accumulate(Constants.SUCCESS, true)
 		.accumulate("id", order.getId())
@@ -331,6 +500,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		}
 		
 		List<ScgOrderRelease> list= this.scgOrderReleaseMapper.getSCGByOrderId(orderId);
+		Orders order= this.m.selectByPrimaryKey(orderId);
 		if(list.size() > 0){
 			JSONArray array = new JSONArray();
 			for(int i=0;i<list.size();i++){
@@ -355,6 +525,36 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 				List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(map );
 				File thumbFile= fileList.get(0);
 				
+				
+				Long fbsId= this.fbsDsMapper.getFBSIDByGoodId(goodId);
+				List<DsGood> dgList= this.dsGoodMapper.getDsGoodByGoodId(goodId);
+				DsGood dGood = null;
+				if(null != dgList && dgList.size() > 0){
+					dGood= dgList.get(0);
+					Map<String, Object> dsMap = new HashMap<String,Object>();
+					dsMap.put("fbsId", fbsId);
+					dsMap.put("dsId", dGood.getDsId());
+					List<DebrisSession> dsList= debrisSessionMapper.getDsByFbsIdAndDsId(dsMap);
+					if(null != dsList&&dsList.size() > 0){
+//					   Date startDate = dsList.get(0).getCronTime();
+						DebrisSession ds= debrisSessionMapper.selectByPrimaryKey(dGood.getDsId());
+					   Date startDate = ds.getCronTime();
+					   Date endDate = dsList.get(0).getCronTime();
+					   Date now =new Date();
+					   if(null != startDate && null != endDate){
+						   if(now.after(startDate) && now.before(endDate)){
+							   if(null != fbsId){
+								   FastBuySession fastBuySession= this.fastBuySessionMapper.selectByPrimaryKey(fbsId);
+								   Float discount= fastBuySession.getDiscount();
+								   price=price*discount;
+							   }
+						   }
+					   }
+					}
+				}
+				
+				
+				
 				scgObj.accumulate("goodId", goodId).accumulate("goodName", goodName).accumulate("price", price)
 				.accumulate("count", count).accumulate("thumbPath", thumbFile.getUriPath()).accumulate("capacity", capacity);
 				array.add(scgObj);
@@ -371,11 +571,42 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 			
 			List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(map );
 			File thumbFile= fileList.get(0);
-			scgObj.accumulate("goodId", good.getId()).accumulate("goodName", good.getName()).accumulate("price", good.getPrice())
+			
+			
+			Long fbsId= this.fbsDsMapper.getFBSIDByGoodId(good.getId());
+			Float price= good.getPrice();
+			List<DsGood> dgList= this.dsGoodMapper.getDsGoodByGoodId(good.getId());
+			DsGood dGood = null;
+			if(null != dgList && dgList.size() > 0){
+				dGood= dgList.get(0);
+				Map<String, Object> dsMap = new HashMap<String,Object>();
+				dsMap.put("fbsId", fbsId);
+				dsMap.put("dsId", dGood.getDsId());
+				List<DebrisSession> dsList= debrisSessionMapper.getDsByFbsIdAndDsId(dsMap);
+				if(null != dsList&&dsList.size() > 0){
+					DebrisSession ds =this.debrisSessionMapper.selectByPrimaryKey(dGood.getDsId());
+//					Date startDate = dsList.get(0).getCronTime();
+				   Date startDate = ds.getCronTime();
+				   Date endDate = dsList.get(0).getCronTime();
+				   Date now =new Date();
+				   if(null != startDate && null != endDate){
+					   if(now.after(startDate) && now.before(endDate)){
+						   if(null != fbsId){
+							   FastBuySession fastBuySession= this.fastBuySessionMapper.selectByPrimaryKey(fbsId);
+							   Float discount= fastBuySession.getDiscount();
+							   price=price*discount;
+						   }
+					   }
+				   }
+				}
+			}
+			
+			scgObj.accumulate("goodId", good.getId()).accumulate("goodName", good.getName()).accumulate("price", price)
 			.accumulate("count", 1).accumulate("thumbPath", thumbFile.getUriPath()).accumulate("capacity", good.getCapacity());
 			array.add(scgObj);
 			object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
 		}
+		object.accumulate("src", order.getSrc()); // 来源
 		return object.toString();
 	}
 	
@@ -629,38 +860,40 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 					array.add(orderObj);
 				}else {
 					JSONArray goodArray = new JSONArray();
-					Goods good= this.orderGoodMapper.getDetailByOrderId(orderId);
-					Map<String, Object> mapChild = new HashMap<String,Object>();
-					mapChild.put("goodId", good.getId());
-					mapChild.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
-					
-					List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(mapChild);
-					File thumbFile = null;
-					if(null != fileList && fileList.size() > 0){
-						thumbFile = fileList.get(0);
-					}
+					Goods good= this.orderGoodMapper.getDetailByOrderId(orderId);	
+					if(null != good){
+						Map<String, Object> mapChild = new HashMap<String,Object>();
+						mapChild.put("goodId", good.getId());
+						mapChild.put("typeId", PhotoType.COMMODITY_THUMBNAIL.getValue());/*商品缩略图*/
+						
+						List<com.xa.entity.File> fileList = this.fileMapper.getFileByGoodIdAndTypeId(mapChild);
+						File thumbFile = null;
+						if(null != fileList && fileList.size() > 0){
+							thumbFile = fileList.get(0);
+						}
 //					goodObj.accumulate("goodId", good.getId()).accumulate("goodName", good.getName()).accumulate("price", good.getPrice())
 //					.accumulate("count", 1).accumulate("thumbPath", thumbFile.getUriPath()).accumulate("capacity", good.getCapacity());
-					DeliveryAddress address= this.deliveryAddressMapper.getDefaultAddressByBuyerId(buyerId);
-					JSONObject goodObj = new JSONObject();
-					goodObj.accumulate("goodName", good.getName()).accumulate("price", good.getPrice())
-					.accumulate("capacity", good.getCapacity())
-					.accumulate("count", 1)
-					.accumulate("goodId", good.getId())
-					.accumulate("info", good.getInfo())
-					.accumulate("hp", good.getHighestPrice())
-					.accumulate("lp", good.getLowestPrice())
-					.accumulate("address",null == address ? "": address.getAddress())
-					.accumulate("filePath", null == thumbFile ? "" : thumbFile.getUriPath())
-					;
-					
-					goodArray.add(goodObj);
-					orderObj.accumulate("buyerId", buyerId).accumulate("orderNo", orderNo).accumulate("orderState", orderState)
-					.accumulate("gt", gt)
-					.accumulate("orderId", orderId)
-					.accumulate("sumPrice", sumPrice).accumulate(Constants.DATA, goodArray);
-					
-					array.add(orderObj);
+						DeliveryAddress address= this.deliveryAddressMapper.getDefaultAddressByBuyerId(buyerId);
+						JSONObject goodObj = new JSONObject();
+						goodObj.accumulate("goodName", good.getName()).accumulate("price", good.getPrice())
+						.accumulate("capacity", good.getCapacity())
+						.accumulate("count", 1)
+						.accumulate("goodId", good.getId())
+						.accumulate("info", good.getInfo())
+						.accumulate("hp", good.getHighestPrice())
+						.accumulate("lp", good.getLowestPrice())
+						.accumulate("address",null == address ? "": address.getAddress())
+						.accumulate("filePath", null == thumbFile ? "" : thumbFile.getUriPath())
+						;
+						
+						goodArray.add(goodObj);
+						orderObj.accumulate("buyerId", buyerId).accumulate("orderNo", orderNo).accumulate("orderState", orderState)
+						.accumulate("gt", gt)
+						.accumulate("orderId", orderId)
+						.accumulate("sumPrice", sumPrice).accumulate(Constants.DATA, goodArray);
+						
+						array.add(orderObj);
+					}
 				}
 				
 			}
@@ -740,5 +973,6 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 		;
 		return object.toString();
 	}
+
 	 
 }

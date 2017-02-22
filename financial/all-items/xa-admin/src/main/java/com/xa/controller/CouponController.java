@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +21,7 @@ import com.xa.service.AllocTypeService;
 import com.xa.service.BrandService;
 import com.xa.service.CountryService;
 import com.xa.service.CouponsService;
+import com.xa.util.Constants;
 
 /**
  * 
@@ -122,6 +122,6 @@ public class CouponController extends BaseController {
 	@InitBinder
 	 protected void initBinder(HttpServletRequest request,
 	    ServletRequestDataBinder binder) throws Exception {
-		binder.registerCustomEditor(Date.class, new DatePropertyEditor("MM/dd/yyyy HH:mm:ss"));
+		binder.registerCustomEditor(Date.class, new DatePropertyEditor(Constants.DEFAULT_DATE_FORMAT));
 	 }
 }

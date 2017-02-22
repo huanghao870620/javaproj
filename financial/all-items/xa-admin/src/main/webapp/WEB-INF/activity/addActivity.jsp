@@ -184,7 +184,7 @@
 		<div title="分类" style="padding:10px">
 			  <ul id="tt" class="easyui-tree" ></ul>
 		</div>
-		<div title="国家" data-options="iconCls:'icon-help',closable:true" style="padding:10px">
+		<div title="国家"  style="padding:10px">
 					<c:forEach items="${countrys}" var="c">
 						<input type="checkbox" name="countryId" value="${c.id}" />${c.name }
 					</c:forEach>

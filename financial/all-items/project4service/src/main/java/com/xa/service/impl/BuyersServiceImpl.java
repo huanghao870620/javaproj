@@ -171,7 +171,7 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 		}
 		
 		Date birthDay = buyer.getBirthday();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat(Constants.COMMON_DATE_FORMAT);
 		String dateStr = null;
 		if(null != birthDay){
 			dateStr = sdf.format(birthDay);

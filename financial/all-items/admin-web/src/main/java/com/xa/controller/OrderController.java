@@ -109,6 +109,19 @@ public class OrderController extends BaseController {
 	}
 
 	/**
+	 * 秒杀专场生成订单
+	 */
+	@RequestMapping("addOrderBySecondKill")
+	public void addOrderBySecondKill(Long goodId,Long buyerId,Integer src, Long dgId, String sign){
+		try {
+			this.sendAjaxMsg(this.ordersService.addOrder(goodId, buyerId, src, dgId, sign));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
 	 * 支付宝回调
 	 * @param request
 	 */

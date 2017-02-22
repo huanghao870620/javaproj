@@ -28,9 +28,9 @@ public class ShoppingCartController extends BaseController {
 	 * @param sign
 	 */
 	@RequestMapping("addGoodsToCart")
-	public void addGoodsToCart(ShoppingCartGoods scg, String sign){
+	public void addGoodsToCart(ShoppingCartGoods scg,Long dgId, String sign){
 		  try {
-			this.sendAjaxMsg(this.shoppingCartGoodsService.addGoodsToCart(scg, sign));
+			this.sendAjaxMsg(this.shoppingCartGoodsService.addGoodsToCart(scg, dgId, sign));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -57,9 +57,9 @@ public class ShoppingCartController extends BaseController {
 	 * @param sign
 	 */
 	@RequestMapping("getAllCartGoods")
-	public void getAllCartGoods(Long cartId, String sign){
+	public void getAllCartGoods(Long cartId,Integer pageNum,Integer pageSize, String sign){
 		try {
-			this.sendAjaxMsg(this.shoppingCartGoodsService.getAllCartGoods(cartId, sign));
+			this.sendAjaxMsg(this.shoppingCartGoodsService.getAllCartGoods(cartId,pageNum, pageSize, sign));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

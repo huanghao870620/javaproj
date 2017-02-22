@@ -20,13 +20,6 @@ public interface BrandService<T> extends BaseServiceInte<T> {
 	 */
 	public void getBrands(ModelAndView mav);
 	
-	/**
-	 * 根据品牌id获取商品
-	 * @param brandId
-	 * @param sign
-	 * @return
-	 */
-	public String getGoodsByBrandId(Long brandId, String sign);
 	
 	/**
 	 * 获取品牌

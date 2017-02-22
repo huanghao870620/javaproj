@@ -41,7 +41,7 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 			   Date birthday= buyer.getBirthday();
 			   String birthdayStr = null;
 			   if(null != birthday){
-				   birthdayStr = DateFormatUtils.format(birthday, "yyyy-MM-dd HH:mm:ss");
+				   birthdayStr = DateFormatUtils.format(birthday, Constants.COMMON_DATE_FORMAT);
 			   }
 			   buyer.getBuyerType();
 			   String gender= buyer.getGender();

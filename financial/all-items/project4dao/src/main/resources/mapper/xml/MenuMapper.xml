@@ -80,8 +80,8 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
-  <select id="selectTopMenu" resultType="com.xa.entity.Menu">
-      select * from menu where pid=-1
+  <select id="selectTopMenu" resultType="com.xa.entity.Menu" parameterType="long">
+      select * from menu where pid=#{pid}
   </select>
   
   <select id="getChildMenu" resultType="com.xa.entity.Menu" parameterType="java.lang.Long">

@@ -27,14 +27,6 @@ public class GoodsTest {
 	@Autowired
 	private FileService<com.xa.entity.File> testFileService;
 
-	@Test
-	public void testGetGoodsByClassifi(){
-		  String sign = Security.getSign(new String[]{
-				  "classid"
-		  });
-		String text=  this.goodsService.getGoodsByClassifi(69L, 0,0,sign);
-		System.out.println(text);
-	}
 	
 	
 	@Test

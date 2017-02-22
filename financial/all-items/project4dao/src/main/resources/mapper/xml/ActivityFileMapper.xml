@@ -7,7 +7,7 @@
     <result column="file_id" property="fileId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, activity_id, file_id
+    id, activity_id as activityId, file_id as fileId
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -76,4 +76,6 @@
        t.file_id as fileId,
        t.* from activity_file t where activity_id=#{activityId}
   </select>
+  
+  
 </mapper>

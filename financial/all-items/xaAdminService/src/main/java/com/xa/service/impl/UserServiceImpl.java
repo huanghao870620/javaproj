@@ -5,6 +5,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.text.View;
 
+import org.apache.poi.poifs.crypt.EcmaDecryptor;
+import org.springframework.security.providers.dao.UserCache;
+import org.springframework.security.userdetails.UserDetailsByNameServiceWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
@@ -65,7 +68,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserMapper> implement
 		  request.getSession().invalidate();
 	}
 	
-	
+	/**
+	 * 获取用户
+	 */
 	public String getUsers(Integer pageNum, Integer pageSize){
 		JSONObject object = new JSONObject();
 		PageHelper.startPage(pageNum, pageSize, true);
@@ -76,11 +81,66 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserMapper> implement
 			 JSONObject userObj = new JSONObject();
 			 User user= userList.get(i);
 			 String account = user.getAccount();
-			 userObj.accumulate("account", account);
+			 String email = user.getEmail();
+			 userObj.accumulate("account", account)
+			 .accumulate("email", email)
+			 ;
 			 array.add(userObj);
 		}
 		object.accumulate(Constants.ROWS, array)
 		.accumulate(Constants.TOTAL, userPage.getTotal());
 		return object.toString();
+	}
+	
+	/**
+	 * 获取用户信息
+	 * @param modelAndView
+	 * @param request
+	 */
+	public void getUser(ModelAndView modelAndView,HttpServletRequest request){
+		User user=(User) request.getSession().getAttribute("user");
+		user=this.m.selectByPrimaryKey(user.getId());
+		modelAndView.addObject("user",user);
+	}
+	
+	/**
+	 * 修改用户信息
+	 * @param user
+	 */
+	public void editUser(User user){
+		this.m.updateByPrimaryKeySelective(user);
+	}
+	
+	/**
+	 * 验证密码
+	 * @param user
+	 * @return
+	 */
+	public void validatePassword(ModelAndView modelAndView,User user){
+		 User userDb= this.m.selectByPrimaryKey(user.getId());
+		 String encPass = EncryptionTool.addSaltEncrypt(user.getPassword(), Security.getPasswordSalt());
+		 if(encPass.equals(userDb.getPassword())){
+		 }else {
+			 modelAndView.addObject(Constants.MSG, "密码不正确!");
+			 modelAndView.setViewName("userCenter/validatePassword");
+		 }
+	}
+	
+	/**
+	 * 修改密码
+	 * @param user
+	 * @param repeatPass
+	 */
+	public void updatePass(ModelAndView modelAndView, User user, String repeatPass){
+		
+		if(!user.getPassword().equals(repeatPass)){
+			modelAndView.addObject(Constants.MSG, "两次密码输入不一致!");
+			modelAndView.setViewName("userCenter/updatePassword");
+			return;
+		}
+		
+		String encPass = EncryptionTool.addSaltEncrypt(user.getPassword(), Security.getPasswordSalt());
+		user.setPassword(encPass);
+		this.m.updateByPrimaryKeySelective(user);
 	}
 }

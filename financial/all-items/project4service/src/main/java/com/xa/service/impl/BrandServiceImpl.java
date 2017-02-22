@@ -1,23 +1,27 @@
 package com.xa.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
+import com.xa.dto.HotSearchDto;
 import com.xa.entity.Brand;
 import com.xa.entity.File;
 import com.xa.entity.Goods;
+import com.xa.entity.GoodsSearchRecord;
 import com.xa.enumeration.PhotoType;
 import com.xa.mapper.BrandMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodsMapper;
+import com.xa.mapper.GoodsSearchRecordMapper;
 import com.xa.service.BrandService;
-import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
@@ -37,6 +41,9 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, BrandMapper> implem
 	
 	@Autowired
 	private GoodsMapper goodsMapper;
+	
+	@Autowired
+	private GoodsSearchRecordMapper goodsSearchRecordMapper;
 	
 	/**
 	 * 获取所有品牌
@@ -74,13 +81,22 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, BrandMapper> implem
 	 * 根据品牌id获取商品
 	 * @return
 	 */
-	public String getGoodsByBrandId(Long brandId,Integer pageNum,Integer pageSize, String sign){
+	public String getGoodsByBrandId(Long brandId,String nameS,Long buyerId,Integer pageNum,Integer pageSize, String sign){
 		JSONObject object = new JSONObject();
 		if(!sign.equals(Security.getSign(new String[]{
-		   "brandId","pageNum","pageSize"		
+		   "brandId","pageNum","pageSize","nameS","buyerId"		
 		}))){
 			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
+		
+		if(!StringUtils.isBlank(nameS)){
+			GoodsSearchRecord record = new GoodsSearchRecord();
+			record.setAddTime(new Date());
+			record.setName(nameS);
+			record.setBuyerId(buyerId);
+			goodsSearchRecordMapper.insert(record );
+		}
+		
 
 		Brand brand = this.m.selectByPrimaryKey(brandId);
 		Long dp= brand.getDetailPic();
@@ -103,7 +119,12 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, BrandMapper> implem
 		
 		
 		PageHelper.startPage(pageNum, pageSize,true);
-		List<Goods> list= this.goodsMapper.getGoodsByBrandId(brandId);
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("brandId", brandId);
+		if(!StringUtils.isBlank(nameS)){
+			map.put("nameS", nameS);
+		}
+		List<Goods> list= this.goodsMapper.getGoodsByBrandId(map );
 		JSONArray array = new JSONArray();
 		for(int i=0;i<list.size();i++){
 			Goods good= list.get(i);
@@ -126,8 +147,37 @@ public class BrandServiceImpl extends BaseServiceImpl<Brand, BrandMapper> implem
 			.accumulate("price", price).accumulate("uriPath", uriPath==null ? "" : uriPath);
 			array.add(goodObj);
 		}
+		
+		
+		List<GoodsSearchRecord> gsrList= this.goodsSearchRecordMapper.getGSRByBuyerId(buyerId);
+		JSONArray gsrArray = new JSONArray();
+		for(int i=0; i<gsrList.size(); i++){
+				GoodsSearchRecord gsr= gsrList.get(i);
+				JSONObject gsrObj = new JSONObject();
+				gsr.getAddTime();
+				String historySearchRecord= gsr.getName();
+				gsrObj.accumulate("historySearchRecord", historySearchRecord);
+				gsrArray.add(gsrObj);
+		}
+		
+		List<HotSearchDto> hsdList= this.goodsSearchRecordMapper.getHotSearch();
+		JSONArray hsdArray = new JSONArray();
+		for(int i=0;i<hsdList.size();i++){
+			JSONObject hsdObj = new JSONObject();
+			HotSearchDto hotSearchDto= hsdList.get(i);
+			String name= hotSearchDto.getName();
+			hotSearchDto.getTotal();
+			hsdObj.accumulate("name", name);
+			hsdArray.add(hsdObj);
+		}
+		
+		
+		
 		object.accumulate(Constants.SUCCESS, true)
-		.accumulate(Constants.DATA, array);
+		.accumulate(Constants.DATA, array)
+		.accumulate("gsrArray", gsrArray)
+		.accumulate("hsdArray", hsdArray)
+		;
 		return object.toString();
 	}
 }

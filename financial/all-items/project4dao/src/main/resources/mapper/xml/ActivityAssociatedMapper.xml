@@ -85,4 +85,62 @@
   </select>  
   
   
+  <delete id="deleteASByActivityId" parameterType="long">
+    delete from activity_associated where activity_id=#{activityId}
+  </delete>
+  
+  <select id="getCheckBrandByActivityId" parameterType="long" resultType="com.xa.dto.AssoActivityDto">
+SELECT
+	t.*
+FROM
+	(
+		SELECT
+			b.id,
+			b.name,
+		IF (
+			aa.associateId IS NOT NULL,
+			TRUE,
+			FALSE
+		) AS checked
+		FROM
+			brand b
+		LEFT JOIN (
+			SELECT
+				associate_id AS associateId
+			FROM
+				activity_associated
+			WHERE
+				activity_id = #{activityId}
+		) aa ON b.id = aa.associateId
+	) t
+  </select>
+  
+  <select id="getCheckCountryByActivityId" parameterType="long" resultType="com.xa.dto.AssoActivityDto">
+   
+  SELECT
+	t.*
+FROM
+	(
+		SELECT
+			c.id,
+			c.name,
+		IF (
+			aa.associateId IS NOT NULL,
+			TRUE,
+			FALSE
+		) AS checked
+		FROM
+		  country c
+		LEFT JOIN (
+			SELECT
+				associate_id AS associateId
+			FROM
+				activity_associated
+			WHERE
+				activity_id = #{activityId}
+		) aa ON c.id = aa.associateId
+	) t
+  </select>
+  
+  
 </mapper>

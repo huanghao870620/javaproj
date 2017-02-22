@@ -150,4 +150,11 @@ select t.scgId from (
     
   </select>
   
+  
+   
+   <select id="getSCGByGoodIdAndShoppingCartId" parameterType="java.util.Map" resultType="com.xa.entity.ShoppingCartGoods">
+       select * from shopping_cart_goods where goods_id=${goodId} and shopping_cart_id=${cartId}
+   </select>
+  
+  
 </mapper>

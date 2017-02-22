@@ -91,6 +91,30 @@ public class AreaServiceImpl extends BaseServiceImpl<Area, AreaMapper> implement
 	}
 	
 	/**
+	 * 获取完整地址通过区域id
+	 * @param areaId
+	 * @return
+	 */
+	public String getFullAddress(Long areaId){
+		StringBuilder sb = new StringBuilder();
+		List<Area> list = new ArrayList<Area>();
+		Area area = this.m.selectByPrimaryKey(areaId);
+		list.add(area);
+		
+		while (area.getPid()!=1) {
+			 area = this.m.selectByPrimaryKey(area.getPid());
+			 list.add(area);
+		}
+		
+		for(int i=list.size()-1;i>=0;i--){
+			Area  area2= list.get(i);
+			sb.append(area2.getName());
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
 	 * 添加区域
 	 * @param area
 	 * @return

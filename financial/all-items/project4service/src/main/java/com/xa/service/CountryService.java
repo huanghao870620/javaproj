@@ -28,6 +28,6 @@ public interface CountryService<T> extends BaseServiceInte<T> {
 	 * @param sign
 	 * @return
 	 */
-	public String getGoodsByCountry(Long countryId, Integer pageNum,Integer pageSize, String sign);
+	public String getGoodsByCountry(Long countryId,String nameS,Long buyerId, Integer pageNum,Integer pageSize, String sign);
 
 }

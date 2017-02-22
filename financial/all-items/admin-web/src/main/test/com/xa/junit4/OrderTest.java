@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xa.entity.Area;
 import com.xa.mapper.AreaMapper;
+import com.xa.util.Constants;
 
 /**
  * 
@@ -137,5 +141,18 @@ public class OrderTest {
 				   }
 			 }
 			
+	}
+	
+	
+	@Test
+	public void testAddTime(){
+		Date date = new Date();
+		Date addDate= DateUtils.addMinutes(date, 10);
+		
+		String dateStr= DateFormatUtils.format(date, Constants.COMMON_DATE_FORMAT);
+		String addDateStr= DateFormatUtils.format(addDate, Constants.COMMON_DATE_FORMAT);
+		
+		System.out.println(dateStr);
+		System.out.println(addDateStr);
 	}
 }

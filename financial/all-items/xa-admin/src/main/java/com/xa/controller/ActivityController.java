@@ -79,6 +79,41 @@ public class ActivityController extends BaseController {
 		return modelAndView;
 	}
 	
+	
+	/**
+	 * 去编辑活动
+	 * @return
+	 */
+	@RequestMapping("toEditActivity")
+	public ModelAndView toEditActivity(Long id){
+		 ModelAndView modelAndView = new ModelAndView("activity/editActivity");
+		 this.activityService.getActivity(id, modelAndView);
+		 this.brandService.getBrands(modelAndView); //品牌
+		 this.classificationService.getFirstClass(modelAndView); //一级分类
+		 this.countryService.getAllCountry(modelAndView);
+		 return modelAndView;
+	}
+	
+	/**
+	 * 编辑活动
+	 * @return
+	 */
+	@RequestMapping("editActivity")
+	public ModelAndView editActivity(Activity activity,
+			@RequestParam(value = "imgAdvFile", required = false)MultipartFile imgAdvFile,
+			Long ids[]){
+		ModelAndView modelAndView = new ModelAndView("redirect:toListActivity.htm");
+		try {
+			this.activityService.editActivity(activity, modelAndView, imgAdvFile, ids, fileService);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return modelAndView; 
+	}
+	
+	
 	/**
 	 * 跳转到活动列表页面
 	 * @return
@@ -101,4 +136,68 @@ public class ActivityController extends BaseController {
 		}
 	}
 	
+	/**
+	 * 删除活动
+	 * @param id
+	 */
+	@RequestMapping("deleteActivity")
+	public void deleteActivity(Long id){
+		try {
+			this.sendAjaxMsg(this.activityService.deleteActivityById(id));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 获取活动详情
+	 * @param activityId
+	 * @param pageNum
+	 * @param pageSize
+	 */
+	@RequestMapping("getDetailPicByActivityId")
+	public void getDetailPicByActivityId(Long activityId,Integer page,Integer rows){
+		   try {
+			this.sendAjaxMsg(this.activityService.getDetailPicByActivityId(activityId, page, rows));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 添加活动详情图
+	 * @param activityId
+	 * @param detailPicFile
+	 * @param fileService
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	@RequestMapping("addActivityDetailPic")
+	public ModelAndView addActivityDetailPic(Long activityId, 
+			@RequestParam(value = "detailPicFile", required = false)MultipartFile detailPicFile)
+			{
+		ModelAndView modelAndView = new ModelAndView("redirect:toEditActivity.htm?id="+activityId);
+		try {
+			this.activityService.addActivityDetailPic(activityId, detailPicFile, fileService);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return modelAndView;
+	}
+	
+
+	/**
+	 * 删除活动详情图
+	 * @param picId
+	 */
+	@RequestMapping("deleteActivityDetailPic")
+	public void deleteActivityDetailPic(Long afId){
+		  try {
+			this.sendAjaxMsg(this.activityService.deleteActivityDetailPic(afId, fileService));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

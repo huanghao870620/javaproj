@@ -17,15 +17,4 @@ public class MenuController extends BaseController {
 	@Autowired
 	private MenuService<Menu> menuService;
 	
-	/**
-	 * 
-	 */
-	@RequestMapping("getMenu")
-	public void getMenu(){
-		 try {
-			this.sendAjaxMsg(this.menuService.getMenuForStr());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

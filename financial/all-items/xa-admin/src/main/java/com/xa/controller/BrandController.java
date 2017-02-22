@@ -61,19 +61,6 @@ public class BrandController extends BaseController {
 		return modelAndView;
 	}
 
-	/**
-	 * 根据品牌id获取商品
-	 * @param brandId
-	 * @param sign
-	 */
-	@RequestMapping("getGoodsByBrandId")
-	public void getGoodsByBrandId(Long brandId, String sign){
-		 try {
-			this.sendAjaxMsg(this.brandService.getGoodsByBrandId(brandId, sign));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	
 	/**

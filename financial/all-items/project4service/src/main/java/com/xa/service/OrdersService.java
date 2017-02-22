@@ -62,14 +62,6 @@ public interface OrdersService<T> extends BaseServiceInte<T> {
 	 */
 	public String cancelOrder(Long orderId,String sign);
 	
-	/**
-	 * 立即购买生成订单
-	 * @param goodId
-	 * @param buyerId
-	 * @param sign
-	 * @return
-	 */
-	public String addOrder(Long goodId,Long buyerId,  String sign);
 	
 	/**
 	 * 支付宝回调
@@ -105,4 +97,25 @@ public interface OrdersService<T> extends BaseServiceInte<T> {
 	 * @return
 	 */
 	public String updateOrderPrice(Long cbId, Long orderId, String sign);
+	
+	/**
+	 * 立即购买
+	 * @param goodId
+	 * @param buyerId
+	 * @param sign
+	 * @return
+	 */
+	public String addOrder(Long goodId,Long buyerId,  String sign);
+	
+	
+	/**
+	 * 秒杀专场
+	 * @param goodId
+	 * @param buyerId
+	 * @param src
+	 * @param dgId
+	 * @param sign
+	 * @return
+	 */
+	public String addOrder(Long goodId,Long buyerId, Integer src, Long dgId, String sign);
 }

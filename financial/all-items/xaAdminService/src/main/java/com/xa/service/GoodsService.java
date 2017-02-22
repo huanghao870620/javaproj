@@ -43,18 +43,6 @@ public interface GoodsService<T> extends BaseServiceInte<T> {
 	 */
 	public String getGoodsByPaging(Integer pageNum, Integer pageSize, String sign);
 	
-	
-	
-	
-	
-	/**
-	 * 获取商品根据分类
-	 * @param classid
-	 * @param sign
-	 * @return
-	 */
-	public String getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign);
-	
 	/**
 	 * 获取商品详情
 	 * @param id
@@ -148,5 +136,17 @@ public interface GoodsService<T> extends BaseServiceInte<T> {
 	 * @param fileService
 	 */
 	public String delBigPic(Long gfId, FileService<File> fileService);
+	
+	
+	/**
+	 * 获取商品
+	 * @param page
+	 * @param rows
+	 * @param nameS
+	 * @param brandId
+	 * @param countryId
+	 * @return
+	 */
+	public String getGoodsByDeSession(Integer page,Integer rows, String nameS, Long brandId, Long countryId);
 	
 }

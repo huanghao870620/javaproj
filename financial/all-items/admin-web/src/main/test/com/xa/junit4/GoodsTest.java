@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xa.entity.Goods;
 import com.xa.service.FileService;
 import com.xa.service.GoodsService;
-import com.xa.util.Security;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
@@ -26,15 +25,6 @@ public class GoodsTest {
 	
 	@Autowired
 	private FileService<com.xa.entity.File> testFileService;
-
-	@Test
-	public void testGetGoodsByClassifi(){
-		  String sign = Security.getSign(new String[]{
-				  "classid"
-		  });
-		String text=  this.goodsService.getGoodsByClassifi(69L, 0,0,sign);
-		System.out.println(text);
-	}
 	
 	
 	@Test

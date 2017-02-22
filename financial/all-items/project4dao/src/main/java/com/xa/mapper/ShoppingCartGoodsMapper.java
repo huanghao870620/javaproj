@@ -36,4 +36,15 @@ public interface ShoppingCartGoodsMapper extends BaseMapper<ShoppingCartGoods>{
 	 */
 	ShoppingCartGoods getSCGByCartIdAndGoodId(Map<String, Object> map);
 	
+	
+	/**
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<ShoppingCartGoods> getSCGByGoodIdAndShoppingCartId(Map<String, Object> map);
+	
+	
+	
+	
 }

@@ -195,19 +195,6 @@ public class GoodsController extends BaseController {
 	    }
 	    
 
-	    /**
-	     * 获取商品分解分类id
-	     * @param classid
-	     * @param sign
-	     */
-	    @RequestMapping("getGoodsByClassifi")
-	    public void getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign){
-	    	try {
-				this.sendAjaxMsg(this.goodsService.getGoodsByClassifi(classid,pageNum,pageSize, sign));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	    }
 
 	    /**
 	     * 获取商品详情
@@ -337,6 +324,23 @@ public class GoodsController extends BaseController {
 	    public void delGoodPic(Long gfId){
 	    	try {
 				this.sendAjaxMsg(this.goodsService.delBigPic(gfId, fileService));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }
+	    
+	    /**
+	     * 
+	     * @param page
+	     * @param rows
+	     * @param nameS
+	     * @param brandId
+	     * @param countryId
+	     */
+	    @RequestMapping("getGoodsByDeSession")
+	    public void getGoodsByDeSession(Integer page,Integer rows, String nameS, Long brandId, Long countryId){
+	    	try {
+				this.sendAjaxMsg(this.goodsService.getGoodsByDeSession(page, rows, nameS, brandId, countryId));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

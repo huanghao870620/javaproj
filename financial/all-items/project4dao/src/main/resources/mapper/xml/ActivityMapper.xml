@@ -206,10 +206,11 @@ WHERE
   </select>
   
   
-  <select id="selectCountByGoodId" resultType="long" parameterType="long">
-   
+  <select id="selectActivityByGoodId" resultType="com.xa.dto.ActivityDto" parameterType="long">
+	
 SELECT
-	count(1)
+  t.good_id as goodId,
+	t.activityId
 FROM
 	(
 		SELECT
@@ -217,7 +218,8 @@ FROM
 		FROM
 			(
 				SELECT DISTINCT
-					good_id
+					good_id ,
+					activity_id as activityId
 				FROM
 					(
 						SELECT
@@ -267,6 +269,8 @@ FROM
 	) t
 WHERE
 	t.id IS NOT NULL
+	
+	
   </select>
   
   

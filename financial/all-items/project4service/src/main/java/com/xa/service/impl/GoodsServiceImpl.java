@@ -1,22 +1,28 @@
 package com.xa.service.impl;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.xa.dto.HotSearchDto;
 import com.xa.entity.Brand;
+import com.xa.entity.Classification;
 import com.xa.entity.File;
 import com.xa.entity.GoodFile;
 import com.xa.entity.Goods;
+import com.xa.entity.GoodsSearchRecord;
 import com.xa.entity.Mall;
 import com.xa.entity.MallGoods;
 import com.xa.entity.ShoppingCartGoods;
@@ -25,12 +31,13 @@ import com.xa.mapper.BrandMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodFileMapper;
 import com.xa.mapper.GoodsMapper;
+import com.xa.mapper.GoodsSearchRecordMapper;
 import com.xa.mapper.MallGoodsMapper;
 import com.xa.mapper.MallMapper;
 import com.xa.mapper.ShoppingCartGoodsMapper;
+import com.xa.service.ClassificationService;
 import com.xa.service.FileService;
 import com.xa.service.GoodsService;
-import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
@@ -67,6 +74,11 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 	
 	@Autowired
 	private GoodFileMapper goodFileMapper;
+	
+	@Autowired
+	private GoodsSearchRecordMapper goodsSearchRecordMapper;
+	
+	
 
 	/**
 	 * 添加商品
@@ -364,16 +376,39 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 	 * 获取商品根据class id
 	 * @return
 	 */
-	public String getGoodsByClassifi(Long classid,Integer pageNum, Integer pageSize, String sign){
+	public String getGoodsByClassifi(Long classid,
+			String nameS,
+			Long buyerId, 
+			Integer pageNum, 
+			Integer pageSize, 
+			String sign,
+			ClassificationService<Classification> classificationService){
 		JSONObject object = new JSONObject();
 		if(!sign.equals(Security.getSign(new String[]{
-			"classid","pageNum","pageSize"	
+			"classid","pageNum","pageSize","nameS","buyerId"	
 		}))){
 			 return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
+		if(!StringUtils.isBlank(nameS)){
+			GoodsSearchRecord record = new GoodsSearchRecord();
+			record.setAddTime(new Date());
+			record.setName(nameS);
+			record.setBuyerId(buyerId);
+			goodsSearchRecordMapper.insert(record );
+		}
 		
+		
+		Map<String, Object> searchMap = new HashMap<String,Object>();
+		
+		String classids= classificationService.getChildIdByPid(classid);
+		searchMap.put("classids", classids);
+		searchMap.put("pid", classid);
+		if(!StringUtils.isBlank(nameS)){
+			searchMap.put("nameS", nameS);
+		}
 		PageHelper.startPage(pageNum, pageSize, true);
-		List<Goods> goodsList = this.m.getGoodsByClassId(classid);
+		Page<Goods> goodsPage = (Page<Goods>)this.m.getGoodsByClassId(searchMap );
+		List<Goods> goodsList = goodsPage.getResult();
 		JSONArray array = new JSONArray();
 		for(int i=0;i<goodsList.size();i++){
 			JSONObject goodObj = new JSONObject();
@@ -400,7 +435,32 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 			array.add(goodObj);
 		}
 		
-		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
+		List<GoodsSearchRecord> gsrList= this.goodsSearchRecordMapper.getGSRByBuyerId(buyerId);
+		JSONArray gsrArray = new JSONArray();
+		for(int i=0; i<gsrList.size(); i++){
+				GoodsSearchRecord gsr= gsrList.get(i);
+				JSONObject gsrObj = new JSONObject();
+				gsr.getAddTime();
+				String historySearchRecord= gsr.getName();
+				gsrObj.accumulate("historySearchRecord", historySearchRecord);
+				gsrArray.add(gsrObj);
+		}
+		
+		List<HotSearchDto> hsdList= this.goodsSearchRecordMapper.getHotSearch();
+		JSONArray hsdArray = new JSONArray();
+		for(int i=0;i<hsdList.size();i++){
+			JSONObject hsdObj = new JSONObject();
+			HotSearchDto hotSearchDto= hsdList.get(i);
+			String name= hotSearchDto.getName();
+			hotSearchDto.getTotal();
+			hsdObj.accumulate("name", name);
+			hsdArray.add(hsdObj);
+		}
+		
+		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array)
+		.accumulate("gsrArray", gsrArray)
+		.accumulate("hsdArray", hsdArray)
+		;
 		return object.toString();
 	}
 	

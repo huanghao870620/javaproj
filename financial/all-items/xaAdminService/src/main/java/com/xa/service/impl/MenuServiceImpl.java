@@ -33,7 +33,7 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, MenuMapper> implement
 	@Override
 	public String getMenuForStr(HttpServletRequest request) {
 		JSONArray array = new JSONArray();
-		List<Menu> topMenus = this.menuMapper.selectTopMenu();
+		List<Menu> topMenus = this.menuMapper.selectTopMenu(43L);
 		for (int i = 0; i < topMenus.size(); i++) {
 			Menu menu = topMenus.get(i);
 			JSONObject obj = new JSONObject();
