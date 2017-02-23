@@ -140,6 +140,8 @@ public class FastBuySessionServiceImpl extends BaseServiceImpl<FastBuySession, F
 	public void editSession(FastBuySession session,
 			MultipartFile imgAdvFile,
 			FileService<File> fileService) throws IllegalStateException, IOException{
+		Float discount= session.getDiscount();
+		session.setDiscount(discount*0.1f);
 		if(session.getImgAdvId() == null){
 			if(null != imgAdvFile && imgAdvFile.getSize() > 0){
 				File file = new File();
@@ -162,6 +164,7 @@ public class FastBuySessionServiceImpl extends BaseServiceImpl<FastBuySession, F
 	 */
 	public void getSession(ModelAndView modelAndView, Long id){
 		 FastBuySession session= this.m.selectByPrimaryKey(id);
+		 session.setDiscount(session.getDiscount()*10);
 		 Long imgAdvId= session.getImgAdvId();
 		 File file= this.fileMapper.selectByPrimaryKey(imgAdvId);
 		 modelAndView.addObject("file",file);

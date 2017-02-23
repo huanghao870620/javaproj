@@ -77,6 +77,11 @@
 			
 			
 			<div style="margin-bottom:20px">
+				<input class="easyui-numberspinner" name="discount" id="discount" value="${session.discount }" data-options="label:'折扣:',required:true,labelPosition:'top',spinAlign:'right'" style="width:40%;">
+			</div>
+			
+			
+			<div style="margin-bottom:20px">
 				<input class="easyui-datetimebox" value="${startTimeStr }" name="startTime" id="limitStart" label="开始时间:" labelPosition="top" style="width:40%;">
 			</div>
 			
