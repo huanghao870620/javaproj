@@ -39,7 +39,7 @@ public class AreaTest {
 	
 	@Test
 	public void testSort(){
-		int [] num = {1,8,9,2,6,4};
+		int [] arr = {1,8,9,2,6,4};
 //		int tem;
 //		for(int i = 0;i<num.length;i++){
 //			for(int j = num.length - i;j<num.length;j++){
@@ -54,11 +54,10 @@ public class AreaTest {
 //			System.out.print(num[n]+",");
 //		}
 		
-		
-		for(int i=0; i<num.length; i++){
-			 for(int j=1; j<num.length; j++){
-				 
-			 }
+		int count=0;
+		int min = arr[0];
+	
+		for(int i=1; i<arr.length; i++){
 		}
 		
 	}
