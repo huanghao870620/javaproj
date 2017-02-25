@@ -62,4 +62,10 @@ public interface FastBuySessionService<T> extends BaseServiceInte<T> {
 	 * @param id
 	 */
 	public void getSessionByCommonFormat(ModelAndView modelAndView, Long id) ;
+	
+	/**
+	 * 删除秒杀专场
+	 * @param fbsId
+	 */
+	public String delSession(Long fbsId);
 }

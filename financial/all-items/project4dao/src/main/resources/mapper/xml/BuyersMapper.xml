@@ -143,4 +143,13 @@
     select * from buyers
   </select>
   
+  <select id="searchBuyer" resultType="com.xa.entity.Buyers" parameterType="java.util.Map">
+  	  select * from buyers 
+  	   <where>
+  	        <if test="nameS != null">
+  	         and mobile like '%${nameS}%'
+  	        </if>
+  	   </where>
+  </select>
+  
 </mapper>

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,7 +78,7 @@
 			
 			
 			<div style="margin-bottom:20px">
-				<input class="easyui-numberspinner" name="discount" id="discount" value="${session.discount }" data-options="label:'折扣:',required:true,labelPosition:'top',spinAlign:'right'" style="width:40%;">
+				<input class="easyui-textbox" name="discount" id="discount"  value="<fmt:formatNumber value='${session.discount }' type='currency' pattern='.0'/>" data-options="label:'折扣:',required:true" style="width:40%;">
 			</div>
 			
 			

@@ -133,8 +133,8 @@ GROUP BY
 	t.date
    </select>
    
+	<!--  -->   
    <select id="getFBSIDByGoodId" resultType="long" parameterType="long">
-  
 SELECT
 	fd.fbs_id AS fbsId
 FROM
@@ -150,7 +150,18 @@ FROM
 LEFT JOIN fbs_ds fd ON fd.ds_id = dg.dsId
    </select>
    
+  <!--  -->
+  <delete id="deleteFDByFbsId" parameterType="long">
+    delete from fbs_ds where fbs_id=#{fbsId}
+  </delete>
   
+  <!--  -->
+  <select id="getFbsDsByFbsId" resultType="com.xa.entity.FbsDs" parameterType="long">
+    select 
+    t.ds_id as dsId,
+    t.fbs_id as fbsId,
+    t.* from fbs_ds t where t.fbs_id=#{fbsId}
+  </select>
    
   
 </mapper>

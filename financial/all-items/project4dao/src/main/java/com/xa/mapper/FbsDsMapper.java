@@ -38,4 +38,17 @@ public interface FbsDsMapper extends BaseMapper<FbsDs> {
 	 * @return
 	 */
 	Long  getFBSIDByGoodId(Long goodId);
+	
+	/**
+	 * 
+	 * @param fbsId
+	 */
+	void deleteFDByFbsId(Long fbsId);
+	
+	/**
+	 * 
+	 * @param fbsId
+	 * @return
+	 */
+	List<FbsDs> getFbsDsByFbsId(Long fbsId);
 }

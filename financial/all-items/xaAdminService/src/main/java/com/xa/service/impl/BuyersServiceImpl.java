@@ -1,8 +1,11 @@
 package com.xa.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.ibatis.exceptions.IbatisException;
 import org.springframework.stereotype.Service;
@@ -18,7 +21,11 @@ import com.xa.util.Constants;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
+/**
+ * 
+ * @author burgess
+ *
+ */
 @Service
 @Transactional
 public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> implements BuyersService<Buyers> {
@@ -28,10 +35,14 @@ public class BuyersServiceImpl extends BaseServiceImpl<Buyers, BuyersMapper> imp
 	 * 获取买家信息
 	 * @return
 	 */
-	public String getBuyers(Integer pageNum,Integer pageSize){
+	public String getBuyers(String nameS, Integer pageNum,Integer pageSize){
 		JSONObject object = new JSONObject();
 		PageHelper.startPage(pageNum, pageSize,true);
-		Page<Buyers> buyerPage=(Page<Buyers>) this.m.findAll();
+		Map<String, Object> map = new HashMap<String,Object>();
+		if(!StringUtils.isBlank(nameS)){
+			map.put("nameS", nameS);
+		}
+		Page<Buyers> buyerPage=(Page<Buyers>) this.m.searchBuyer(map);
 		List<Buyers> buyers= buyerPage.getResult();
 		JSONArray array = new JSONArray();
 		for (int i = 0; i < buyers.size(); i++) {

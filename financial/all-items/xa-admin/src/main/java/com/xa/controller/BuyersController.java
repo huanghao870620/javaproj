@@ -34,9 +34,9 @@ public class BuyersController extends BaseController {
 	 * @param rows
 	 */
 	@RequestMapping("getBuyers")
-	public void getBuyers(Integer page,Integer rows){
+	public void getBuyers(String nameS, Integer page,Integer rows){
 		try {
-			this.sendAjaxMsg(this.buyersService.getBuyers(page, rows));
+			this.sendAjaxMsg(this.buyersService.getBuyers(nameS,page, rows));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

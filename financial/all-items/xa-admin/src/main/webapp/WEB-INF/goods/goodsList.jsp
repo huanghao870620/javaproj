@@ -40,51 +40,18 @@
 			onDblClickRow: function(rowIndex,rowData){
 				 window.location.href = "<%=request.getContextPath()%>/goods/toEditGood.htm?id=" + rowData.id;
 			},
-			 //pageSize:50,
-			 //pageList: [50,15,20,100],
 		     toolbar: '#tb'
-			// toolbar:[
-			     /*     
-             {text:'删除', iconCls:'icon-remove', handler:function(){
-            	 var row = $('#dg').datagrid('getSelected');
-            	  $.post("<%=request.getContextPath()%>/goods/delGood.htm",{id:row.id},function(data){
-            		    if(data.success){
-            		    	$('#dg').datagrid('reload');
-            		    }
-            	  });*/
-            	/* if (row) {
-                     var rowIndex = $('#dg').datagrid('getRowIndex', row);
-                     $('#dg').datagrid('deleteRow', rowIndex);  
-            		 }*/	
-            	 //$('#dg').datagrid('deleteRow', x); 
-           //  }}
-			    /*  {  
-                 text:'增加',iconCls:'icon-add',handler:function(){  
-                     window.location.href='StuAdd.aspx';  
-                 }  
-             },  
-             {text:'导入',iconCls:'icon-add',handler:function(){  
-                 window.location.href='StuImport.aspx'  
-                 }  
-             },  
-             {text:'查找',iconCls:'icon-search'}  */
-            // ]
 		}).datagrid('getPager');	// get the pager of datagrid
 		pager.pagination({
 			buttons:[{
-				iconCls:'icon-search',
+				iconCls:'icon-remove',
 				handler:function(){
-					alert('search');
-				}
-			},{
-				iconCls:'icon-add',
-				handler:function(){
-					alert('add');
-				}
-			},{
-				iconCls:'icon-edit',
-				handler:function(){
-					console.log("2");
+					var row = $('#dg').datagrid('getSelected');
+	            	  $.post("<%=request.getContextPath()%>/goods/delGood.htm",{id:row.id},function(data){
+	            		    if(data.success){
+	            		    	$('#dg').datagrid('reload');
+	            		    }
+	            	  });
 				}
 			}]
 		
@@ -108,11 +75,6 @@
 				 return formatCurrency(a)+'元';
 				}">商品价格</th>
 				<th data-options="field:'shelves',width:200,align:'right'">上架</th>
-				<%--
-				<th data-options="field:'unitcost',width:80,align:'right'">Unit Cost</th>
-				<th data-options="field:'attr1',width:240">Attribute</th>
-				<th data-options="field:'status',width:60,align:'center'">Status</th>
-				 --%>
 			</tr>
 		</thead>
 	</table>

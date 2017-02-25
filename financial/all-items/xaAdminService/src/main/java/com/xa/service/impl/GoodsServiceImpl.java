@@ -194,8 +194,14 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods, GoodsMapper> implem
 	 */
 	public String delGoodById(Long id){
 		JSONObject object = new JSONObject();
-		Goods good= this.m.selectByPrimaryKey(id);
 		
+		List<GoodFile> gfList= goodFileMapper.selectGoodFileByGoodId(id);
+		for(int i=0;i<gfList.size();i++){
+			GoodFile gFile= gfList.get(i);
+			Long fileId= gFile.getFileId();
+			goodFileMapper.deleteByPrimaryKey(gFile.getId());
+			fileMapper.deleteByPrimaryKey(fileId);
+		}
 		
 		this.m.deleteByPrimaryKey(id);
 		object.accumulate(Constants.SUCCESS, true);

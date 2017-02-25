@@ -10,5 +10,5 @@ public interface BuyersService<T> extends BaseServiceInte<T> {
 	 * @param pageSize
 	 * @return
 	 */
-	public String getBuyers(Integer pageNum,Integer pageSize);
+	public String getBuyers(String nameS, Integer pageNum,Integer pageSize);
 }

@@ -137,7 +137,7 @@ public class FastBuySessionServiceImpl extends BaseServiceImpl<FastBuySession, F
 					  .accumulate("dgId", dgId)
 					  .accumulate("price", price)
 					  .accumulate("disPrice", disPrice)
-					  .accumulate("discount", discount)
+					  .accumulate("discount", discount*10)
 					  .accumulate("goodName", goodName)
 					  .accumulate("brandName", brandName)
 					  ;
@@ -184,7 +184,6 @@ public class FastBuySessionServiceImpl extends BaseServiceImpl<FastBuySession, F
 	 * 获取所有活动
 	 * @return
 	 */
-	@RequestMapping("getFBS")
 	public String getFBS(String random, String sign){
 		JSONObject object = new JSONObject();
 		if(!sign.equals(Security.getSign(new String[]{

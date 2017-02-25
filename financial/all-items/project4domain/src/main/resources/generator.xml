@@ -19,7 +19,7 @@
   </commentGenerator> 
   	
     <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-        connectionURL="jdbc:mysql://192.168.1.102:3306/test"
+        connectionURL="jdbc:mysql://192.168.0.102:3306/test"
         userId="root"
         password="xa">
     </jdbcConnection>
@@ -40,6 +40,7 @@
       <property name="enableSubPackages" value="false" />
     </javaClientGenerator>
 
+<!-- 
    	   <table schema="" 
     	 catalog=""
     	 tableName="buy_hand" 
@@ -837,6 +838,21 @@
     	 catalog=""
     	 tableName="note_praise" 
     	 domainObjectName="NotePraise" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	  -->
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="capacity_type" 
+    	 domainObjectName="CapacityType" 
     	 enableCountByExample="false" 
     	 enableUpdateByExample="false" 
     	 enableDeleteByExample="false" 

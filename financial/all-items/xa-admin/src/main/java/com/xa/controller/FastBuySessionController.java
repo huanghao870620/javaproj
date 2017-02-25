@@ -130,6 +130,20 @@ public class FastBuySessionController extends BaseController {
 		}
 	}
 	
+	/**
+	 * 删除专场
+	 * @param fbsId
+	 */
+	@RequestMapping("delSession")
+	public void delSession(Long fbsId){
+		try {
+			this.sendAjaxMsg(this.fastBuySessionService.delSession(fbsId));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	@InitBinder
 	 protected void initBinder(HttpServletRequest request,
 	    ServletRequestDataBinder binder) throws Exception {

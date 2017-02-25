@@ -122,6 +122,7 @@ public class FastBuySessionServiceImpl extends BaseServiceImpl<FastBuySession, F
 			String info= fbs.getInfo();
 			fbsObj.accumulate("name", name)
 			.accumulate("id", id)
+			.accumulate("info", info)
 			.accumulate("uriPath", uriPath)
 			;
 			array.add(fbsObj);
@@ -225,5 +226,26 @@ public class FastBuySessionServiceImpl extends BaseServiceImpl<FastBuySession, F
 		object.accumulate(Constants.ROWS, array);
 		return object.toString();
 	}
-	
+
+	/**
+	 * 删除秒杀专场
+	 * @param fbsId
+	 */
+	public String delSession(Long fbsId){
+		 JSONObject object = new JSONObject();
+		 List<FbsDs> fdList= this.fbsDsMapper.getFbsDsByFbsId(fbsId);
+		 for(int i=0;i<fdList.size();i++){
+			 FbsDs fd= fdList.get(i);
+			 Long dsId= fd.getDsId();
+			 List<DsGood> dgList= this.dsGoodMapper.getDSGoodByDSID(dsId);
+			 for(int j=0;j<dgList.size();j++){
+				  DsGood dg= dgList.get(j);
+				  dsGoodMapper.deleteByPrimaryKey(dg.getId());
+			 }
+			 fbsDsMapper.deleteByPrimaryKey(fd.getId());
+		 }
+		 this.m.deleteByPrimaryKey(fbsId);
+		 object.accumulate(Constants.SUCCESS, true);
+		 return object.toString();
+	}
 }
