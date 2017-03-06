@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xa.mapper.NoteCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.xa.entity.NoteComment" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="note_id" property="noteId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="buyer_id" property="buyerId" jdbcType="BIGINT" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, note_id, content, buyer_id, add_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from note_comment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from note_comment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xa.entity.NoteComment" >
+    insert into note_comment (id, note_id, content, 
+      buyer_id, add_time)
+    values (#{id,jdbcType=BIGINT}, #{noteId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, 
+      #{buyerId,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xa.entity.NoteComment" >
+    insert into note_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="noteId != null" >
+        note_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="buyerId != null" >
+        buyer_id,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="noteId != null" >
+        #{noteId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerId != null" >
+        #{buyerId,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xa.entity.NoteComment" >
+    update note_comment
+    <set >
+      <if test="noteId != null" >
+        note_id = #{noteId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerId != null" >
+        buyer_id = #{buyerId,jdbcType=BIGINT},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xa.entity.NoteComment" >
+    update note_comment
+    set note_id = #{noteId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      buyer_id = #{buyerId,jdbcType=BIGINT},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getNoteCommentByNoteId" resultType="com.xa.entity.NoteComment" parameterType="long">
+SELECT
+	t.note_id AS noteId,
+	t.buyer_id AS buyerId,
+	t.add_time AS addTime,
+	t.*
+FROM
+	note_comment t
+WHERE
+	note_id = #{noteId}
+  </select>
+  
+</mapper>
