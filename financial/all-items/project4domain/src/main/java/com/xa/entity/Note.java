@@ -14,7 +14,6 @@ public class Note {
     private Long buyerId;
     
 
-    private Long imgId;
 
     private Date addTime;
     
@@ -60,13 +59,6 @@ public class Note {
         this.content = content;
     }
 
-    public Long getImgId() {
-        return imgId;
-    }
-
-    public void setImgId(Long imgId) {
-        this.imgId = imgId;
-    }
 
     public Date getAddTime() {
         return addTime;

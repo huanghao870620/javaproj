@@ -1,29 +1,34 @@
 package com.xa.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.ls.LSException;
 
 import com.xa.entity.Classification;
 import com.xa.entity.File;
 import com.xa.mapper.ClassificationMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.service.ClassificationService;
-import com.xa.service.impl.BaseServiceImpl;
 import com.xa.util.Constants;
 import com.xa.util.Msg;
 import com.xa.util.Security;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
+/**
+ * 
+ * @author burgess
+ *
+ */
 @Service
 @Transactional
-public class ClassificationServiceImpl extends BaseServiceImpl<Classification, ClassificationMapper> implements ClassificationService<Classification> {
+public class ClassificationServiceImpl extends BaseServiceImpl<Classification, ClassificationMapper> 
+implements ClassificationService<Classification> {
 
 	
 	@Autowired
@@ -149,6 +154,9 @@ public class ClassificationServiceImpl extends BaseServiceImpl<Classification, C
 		object.accumulate(Constants.SUCCESS, true).accumulate(Constants.DATA, array);
 		return object.toString();
 	}
+	
+	
+	
 	
 	
 	public String getChildIdByPid(Long pid){

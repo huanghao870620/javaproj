@@ -33,7 +33,7 @@
 	<p></p>
 	<div style="margin:20px 0;"></div>
 	<div class="easyui-panel" title="" style="width:100%;max-width:700px;padding:30px 60px;">
-		<form id="ff" method="post" enctype="multipart/form-data" action="<%=request.getContextPath()%>/allocType/addAllocType.htm">
+		<form id="ff" method="post" enctype="multipart/form-data" action="<%=request.getContextPath()%>/allocType/editAllocType.htm">
 			<div style="margin-bottom:20px">
 			    <input type="hidden" name="id" value="${allocType.id }" />
 				<input class="easyui-textbox" name="name" value="${allocType.name }" style="width:60%" data-options="label:'名称:',required:true">

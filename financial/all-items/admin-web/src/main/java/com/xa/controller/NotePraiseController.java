@@ -27,6 +27,7 @@ public class NotePraiseController extends BaseController {
 	 * @param sign
 	 * @return
 	 */
+	@RequestMapping("addNotePraise")
 	public void addNotePraise(NotePraise notePraise,String sign){
 		try {
 			this.sendAjaxMsg(this.notePraiseService.addNotePraise(notePraise, sign));
@@ -41,6 +42,7 @@ public class NotePraiseController extends BaseController {
 	 * @param sign
 	 * @return
 	 */
+	@RequestMapping("disabPraise")
 	public void disabPraise(NotePraise notePraise, String sign){
 		try {
 			this.sendAjaxMsg(this.notePraiseService.disabPraise(notePraise, sign));

@@ -101,6 +101,11 @@
 			</div>
 			
 			<div style="margin-bottom:20px">
+				<input class="easyui-textbox" name="scoreSill" value="${coupons.scoreSill }" style="width:60%" data-options="label:'积分门槛:',required:true">
+			</div>
+			
+			
+			<div style="margin-bottom:20px">
 				<input class="easyui-datetimebox" id="limitStart" name="limitStart" value="${coupons.limitStart }" label="开始时间:" labelPosition="top" style="width:40%;">
 			</div>
 			

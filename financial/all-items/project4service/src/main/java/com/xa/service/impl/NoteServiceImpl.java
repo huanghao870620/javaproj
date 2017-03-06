@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +15,11 @@ import com.github.pagehelper.PageHelper;
 import com.xa.entity.Buyers;
 import com.xa.entity.File;
 import com.xa.entity.Note;
+import com.xa.entity.NoteFile;
 import com.xa.enumeration.PhotoType;
 import com.xa.mapper.BuyersMapper;
 import com.xa.mapper.FileMapper;
+import com.xa.mapper.NoteFileMapper;
 import com.xa.mapper.NoteMapper;
 import com.xa.mapper.NotePraiseMapper;
 import com.xa.service.FileService;
@@ -36,8 +39,6 @@ import net.sf.json.JSONObject;
 @Transactional
 public class NoteServiceImpl extends BaseServiceImpl<Note, NoteMapper> implements NoteService<Note> {
 
-	@Autowired
-	private NoteMapper noteMapper;
 	
 	@Autowired
 	private FileMapper fileMapper;
@@ -48,6 +49,9 @@ public class NoteServiceImpl extends BaseServiceImpl<Note, NoteMapper> implement
 	@Autowired
 	private BuyersMapper buyersMapper;
 	
+	@Autowired
+	private NoteFileMapper noteFileMapper;
+	
 	/**
 	 * 
 	 * @param note
@@ -56,7 +60,7 @@ public class NoteServiceImpl extends BaseServiceImpl<Note, NoteMapper> implement
 	 * @throws IOException 
 	 * @throws IllegalStateException 
 	 */
-	public String addNote(Note note, MultipartFile imgFile, String sign,FileService<File> fileService) throws IllegalStateException, IOException{
+	public String addNote(Note note, MultipartFile []imgFiles, String sign,FileService<File> fileService) throws IllegalStateException, IOException{
 		JSONObject object = new JSONObject();
 		if(!sign.equals(Security.getSign(new String[]{
 				"title","content","classId","buyerId","imgFile"
@@ -64,14 +68,21 @@ public class NoteServiceImpl extends BaseServiceImpl<Note, NoteMapper> implement
 			return object.accumulate(Constants.SUCCESS, false).accumulate(Constants.MSG, Msg.NOT_PERMISSION).toString();
 		}
 		
-		if(imgFile.getSize() > 0){
-			File file = new File();
-			fileService.uploadFile(imgFile, PhotoType.NOTE_IMG, file );
-			note.setImgId(file.getId());
+		note.setAddTime(new Date());
+		this.m.insert(note);
+		for(int i=0;i<imgFiles.length;i++){
+			if(imgFiles[i].getSize() > 0){
+				File file = new File();
+				fileService.uploadFile(imgFiles[i], PhotoType.NOTE_IMG, file );
+				
+				NoteFile noteFile = new NoteFile();
+				noteFile.setFileId(file.getId());
+				noteFile.setNoteId(note.getId());
+				this.noteFileMapper.insert(noteFile);
+			}
 		}
 		
-		
-		this.m.insert(note);
+		object.accumulate(Constants.SUCCESS, true);
 		return object.toString();
 	}
 	
@@ -99,23 +110,38 @@ public class NoteServiceImpl extends BaseServiceImpl<Note, NoteMapper> implement
 			   Date addTime= note.getAddTime();
 			   Long clssId= note.getClassId();
 			   String content= note.getContent();
-			   Long imgId= note.getImgId();
+			   String addTimeStr= DateFormatUtils.format(addTime, Constants.COMMON_DATE_FORMAT);
 			   String title= note.getTitle();
 			   Long buyerId= note.getBuyerId();
+			   Long noteId= note.getId();
+			   List<NoteFile> nfList= this.noteFileMapper.getNoteFileByNoteId(note.getId());
+			   JSONArray nfArray = new JSONArray();
+			   for(int j=0;j<nfList.size();j++){
+				    JSONObject nfObject = new JSONObject();
+				     NoteFile nFile= nfList.get(j);
+				     Long fileId= nFile.getFileId();
+				     File noteFile= this.fileMapper.selectByPrimaryKey(fileId);
+				     String noteFileUriPath= noteFile.getUriPath();
+				     nfObject.accumulate("noteFileUriPath", noteFileUriPath);
+				     nfArray.add(nfObject);
+			   }
 			   Buyers buyer= this.buyersMapper.selectByPrimaryKey(buyerId);
 			   Long hpId= buyer.getHeadPortrait();
-			   File hpFile= this.fileMapper.selectByPrimaryKey(hpId); 
-			   String hpUriPath= hpFile.getUriPath();
+			   File hpFile= this.fileMapper.selectByPrimaryKey(hpId);
+			   if(null != hpFile){
+				   String hpUriPath= hpFile.getUriPath();
+				   noteObj.accumulate("hpUriPath", hpUriPath);
+			   }
 			   String nickName= buyer.getNickname();
-			   File file= this.fileMapper.selectByPrimaryKey(imgId);
 			   Long praiseCount= this.notePraiseMapper.getPraiseCountByNoteId(note.getId());
-			   String uriPath= file.getUriPath();
 			   noteObj.accumulate("title", title)
 			   .accumulate("content", content)
-			   .accumulate("uriPath", uriPath)
 			   .accumulate("praiseCount", praiseCount)
-			   .accumulate("hpUriPath", hpUriPath)
 			   .accumulate("nickName", nickName)
+			   .accumulate("addTime", addTimeStr)
+			   .accumulate("colleCount", 0)
+			   .accumulate("noteId", noteId)
+			   .accumulate(Constants.DATA, nfArray)
 			   ;
 			   array.add(noteObj);
 		  }

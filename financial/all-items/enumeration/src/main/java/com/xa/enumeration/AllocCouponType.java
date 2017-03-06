@@ -6,15 +6,15 @@ package com.xa.enumeration;
  */
 public enum AllocCouponType {
 
-	REG(1) /*注册时*/
-	
+	REG(1L), /*注册时*/
+	EXCHANGE(2L) /*兑换优惠券*/
 	;
 	
-	private Integer value;
-	AllocCouponType(Integer value){
+	private Long value;
+	AllocCouponType(Long value){
 		this.value =value;
 	}
-	public Integer getValue() {
+	public Long getValue() {
 		return value;
 	}
 	

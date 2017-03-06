@@ -6,9 +6,11 @@
     <result column="coupons_id" property="couponsId" jdbcType="BIGINT" />
     <result column="buyer_id" property="buyerId" jdbcType="BIGINT" />
     <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    
   </resultMap>
   <sql id="Base_Column_List" >
-    id, coupons_id, buyer_id, state
+    id, coupons_id, buyer_id, state,add_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -21,9 +23,9 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xa.entity.CouponsBuyer" >
-    insert into coupons_buyer (id, coupons_id, buyer_id, state
+    insert into coupons_buyer (id, coupons_id, buyer_id, state,add_time
       )
-    values (#{id,jdbcType=BIGINT}, #{couponsId,jdbcType=BIGINT}, #{buyerId,jdbcType=BIGINT},#{state}
+    values (#{id,jdbcType=BIGINT}, #{couponsId,jdbcType=BIGINT}, #{buyerId,jdbcType=BIGINT},#{state},#{addTime}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xa.entity.CouponsBuyer" >
@@ -61,7 +63,10 @@
         buyer_id = #{buyerId,jdbcType=BIGINT},
       </if>
       <if test="state!=null">
-        state = #{state}
+        state = #{state},
+      </if>
+      <if test="addTime != null">
+          add_time=#{addTime}
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -79,6 +84,32 @@
      t.coupons_id as couponsId,
      t.buyer_id as buyerId,
      t.* from coupons_buyer t where buyer_id=#{buyerId} and state=#{state}
+  </select>
+  
+  <select id="getCBByBuyerId" resultType="com.xa.entity.CouponsBuyer" parameterType="long">
+   
+SELECT
+    t.coupons_id as couponsId,
+    t.buyer_id as buyerId,
+    t.add_time as addTime,
+	t.*
+FROM
+	(
+		SELECT
+			cb.*
+		FROM
+			(
+				SELECT
+					*
+				FROM
+					coupons
+				WHERE
+					alloc_type_id = 2
+			) c
+		LEFT JOIN coupons_buyer cb ON c.id = cb.coupons_id
+	) t
+WHERE
+	t.buyer_id = #{buyerId}
   </select>
   
 </mapper>

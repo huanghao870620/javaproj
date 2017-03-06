@@ -15,7 +15,7 @@ public interface NoteService<T> extends BaseServiceInte<T>{
 	 * @param sign
 	 * @return
 	 */
-	public String addNote(Note note, MultipartFile imgFile, String sign,FileService<File> fileService) throws IllegalStateException, IOException;
+	public String addNote(Note note, MultipartFile []imgFile, String sign,FileService<File> fileService) throws IllegalStateException, IOException;
 	
 	/**
 	 * 获取晒物信息

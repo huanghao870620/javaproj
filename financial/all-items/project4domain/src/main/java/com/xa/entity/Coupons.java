@@ -10,6 +10,8 @@ public class Coupons {
     private Float price;
 
     private Float sill;
+    
+    private Long scoreSill;
 
     private Integer state;
 
@@ -26,11 +28,17 @@ public class Coupons {
     private Long brandId;
 
     private String note;
-    
-    
-    
 
-    public Long getAllocTypeId() {
+
+	public Long getScoreSill() {
+		return scoreSill;
+	}
+
+	public void setScoreSill(Long scoreSill) {
+		this.scoreSill = scoreSill;
+	}
+
+	public Long getAllocTypeId() {
 		return allocTypeId;
 	}
 

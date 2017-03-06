@@ -1,5 +1,7 @@
 package com.xa.entity;
 
+import java.util.Date;
+
 public class CouponsBuyer {
     private Long id;
 
@@ -9,9 +11,21 @@ public class CouponsBuyer {
     
     private Integer state;
     
+    private Date addTime;
+    
+    
+    
     
 
-    public Integer getState() {
+    public Date getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(Date addTime) {
+		this.addTime = addTime;
+	}
+
+	public Integer getState() {
 		return state;
 	}
 

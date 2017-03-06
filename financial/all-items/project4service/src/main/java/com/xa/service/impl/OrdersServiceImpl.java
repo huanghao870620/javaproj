@@ -57,6 +57,7 @@ import com.xa.mapper.FastBuySessionMapper;
 import com.xa.mapper.FbsDsMapper;
 import com.xa.mapper.FileMapper;
 import com.xa.mapper.GoodsMapper;
+import com.xa.mapper.IntegralMapper;
 import com.xa.mapper.OrderGoodMapper;
 import com.xa.mapper.OrdersMapper;
 import com.xa.mapper.ScgOrderReleaseMapper;
@@ -115,6 +116,9 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 	
 	@Autowired
 	private DebrisSessionMapper debrisSessionMapper;
+	
+	@Autowired
+	private IntegralMapper integralMapper;
 	
 
 	/**
@@ -678,6 +682,8 @@ public class OrdersServiceImpl extends BaseServiceImpl<Orders, OrdersMapper> imp
 			order.setState(OrdersState.WAIT_ORDER.getValue()); //待接单
 			this.logger.debug("=======================修改订单状态完成=================================");
 			this.m.updateByPrimaryKeySelective(order);
+			
+//			this.integralMapper.getIntegralByUserId(buyerId);
 			this.logger.debug("=====================微信回调完成=================================");
 			return Constants.SUCCESS;
 //		}else {

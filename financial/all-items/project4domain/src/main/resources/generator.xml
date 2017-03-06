@@ -864,7 +864,102 @@
     	 </table>
     	 
     	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="color" 
+    	 domainObjectName="Color" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
     	 
+    	 
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="integral" 
+    	 domainObjectName="Integral" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	  <table schema="" 
+    	 catalog=""
+    	 tableName="note_file" 
+    	 domainObjectName="NoteFile" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	 </table>
+    	 
+    	 
+    	 
+    	 <table schema="" 
+    	 catalog=""
+    	 tableName="note_coll" 
+    	 domainObjectName="NoteColl" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	  </table>
+    	  
+    	  
+    	  
+    	   <table schema="" 
+    	 catalog=""
+    	 tableName="note_comment" 
+    	 domainObjectName="NoteComment" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	  </table>
+    	  
+    	  
+    	  
+    	  
+    	  
+    	    <table schema="" 
+    	 catalog=""
+    	 tableName="buyer_focus_on" 
+    	 domainObjectName="BuyerFocusOn" 
+    	 enableCountByExample="false" 
+    	 enableUpdateByExample="false" 
+    	 enableDeleteByExample="false" 
+    	 enableSelectByExample="false" 
+    	 selectByExampleQueryId="false"    	 
+    	 delimitIdentifiers="false"
+    	 delimitAllColumns="false"
+    	 >
+    	  </table>
+    	  
+    	  
     	 
       <!-- 
       <generatedKey column="user_id" sqlStatement="oracle" identity="true" />

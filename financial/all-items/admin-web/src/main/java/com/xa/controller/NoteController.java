@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.xa.entity.Classification;
@@ -38,9 +39,11 @@ public class NoteController extends BaseController {
 	 * @param sign
 	 */
 	@RequestMapping("addNote")
-	public void addNote(Note note, MultipartFile imgFile, String sign){
+	public void addNote(Note note, 
+			@RequestParam(value = "imgFile", required = false)MultipartFile[] imgFile,
+			String sign){
 		try {
-			this.noteService.addNote(note, imgFile, sign, fileService);
+			this.sendAjaxMsg(this.noteService.addNote(note, imgFile, sign, fileService));
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

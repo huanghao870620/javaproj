@@ -6,6 +6,7 @@
     <id column="name" property="name" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="REAL" />
     <result column="sill" property="sill" jdbcType="REAL" />
+    <result column="score_sill" property="scoreSill" jdbcType="BIGINT" />
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="limit_start" property="limitStart" jdbcType="TIMESTAMP" />
     <result column="limit_end" property="limitEnd" jdbcType="TIMESTAMP" />
@@ -16,7 +17,7 @@
     <result column="note" property="note" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id,name, price, sill, state, limit_start, limit_end, class_id,country_id, alloc_type_id,brand_id, note
+    id,name, price, sill, score_sill,state, limit_start, limit_end, class_id,country_id, alloc_type_id,brand_id, note
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -29,10 +30,12 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xa.entity.Coupons" >
-    insert into coupons (id,name, price, sill, state, 
+    insert into coupons (id,name, price, sill,score_sill, state, 
       limit_start, limit_end, class_id, country_id,alloc_type_id,
       brand_id, note)
-    values (#{id,jdbcType=BIGINT}, #{name},#{price,jdbcType=REAL}, #{sill,jdbcType=REAL}, #{state,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=BIGINT}, #{name},#{price,jdbcType=REAL}, #{sill,jdbcType=REAL},
+     #{scoreSill},
+     #{state,jdbcType=INTEGER}, 
       #{limitStart,jdbcType=TIMESTAMP}, #{limitEnd,jdbcType=TIMESTAMP}, #{classId,jdbcType=BIGINT}, #{countryId},
       #{allocTypeId},
       #{brandId,jdbcType=BIGINT}, #{note,jdbcType=VARCHAR})
@@ -110,6 +113,12 @@
       <if test="sill != null" >
         sill = #{sill,jdbcType=REAL},
       </if>
+      
+      <if test="scoreSill != null">
+        score_sill = #{scoreSill},
+      </if>
+      
+      
       <if test="state != null" >
         state = #{state,jdbcType=INTEGER},
       </if>
@@ -170,6 +179,7 @@
      t.class_id as classId,
      t.country_id as countryId,
      t.brand_id as brandId,
+     t.score_sill as scoreSill,
      t.alloc_type_id as allocTypeId,
     t.* from coupons t where alloc_type_id=#{allocTypeId}
   </select>
